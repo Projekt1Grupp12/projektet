@@ -18,9 +18,29 @@ public class Database {
         connection = DriverManager.getConnection("jdbc:mysql://localhost/" + database + "?" + "user="+user+"&password="+password);
 	}
 	
+	public void setupGame() {
+		
+	}
+	
+	public void endGame() {
+		
+	}
+	
+	public void updateGame() {
+		
+	}
+	
 	public ResultSet execute(String s) throws SQLException {
 		statement = connection.createStatement();
 		return statement.executeQuery(s);
+	}
+	
+	public void useDatabase(String name) throws SQLException {
+		execute("USE " + name);
+	}
+	
+	public void createDatabase(String name) throws SQLException {
+		execute("CREATE DATABASE " + name + ";");
 	}
 	
 	public int getInt(String selection, String column) throws SQLException {
