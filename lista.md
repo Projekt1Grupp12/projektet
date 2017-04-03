@@ -2,6 +2,8 @@
 
 - Ardurino
 
+- Ethernet Shield
+
 - Breadboard
 
 - Två motorer
