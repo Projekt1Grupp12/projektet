@@ -12,8 +12,8 @@ George- App och server
 
 Carl- Inbyggda system och kod 
 
-Tom- Inbyggda system och kod och assembly
+Tom- Inbyggda system och assembly och server/databas programmering
 
-Anna- 
+Anna- Server och inbyggda system
 
 
