@@ -33,7 +33,7 @@ public class Database {
 	
 	public boolean tableExists(String database, String table) throws SQLException {
 		useDatabase("game");
-		resultSet = execute("SELECT * FROM information_schema.tables WHERE table_schema = '"+database+"' AND table_name = '"+table+"' LIMIT 1");//"SELECT table_name \nFROM information_schema.tables \nWHERE table_schema = " + "\'" + database + "\' \nAND table_name = \'" + table + "\'");
+		resultSet = execute("SELECT * FROM information_schema.tables WHERE table_schema = '"+database+"' AND table_name = '"+table+"' LIMIT 1");
 		return resultSet.next();
 	}
 	
@@ -69,7 +69,7 @@ public class Database {
 		String columnsTotal = "";
 		String valuesTotal = "";
 		
-		resultSet = execute("SELECT * FROM Highscore");
+		resultSet = execute("SELECT * FROM " + table);
 		ResultSetMetaData m = resultSet.getMetaData();
 		String[] columns = new String[m.getColumnCount()];
 		
