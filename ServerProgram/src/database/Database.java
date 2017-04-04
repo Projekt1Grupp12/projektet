@@ -32,8 +32,9 @@ public class Database {
 	}
 	
 	public boolean tableExists(String database, String table) throws SQLException {
-		resultSet = execute("SELECT table_name \nFROM information_schema.table \nWHERE table_schema =" + "\'" + database + "\' \nAND table_name = \'" + table + "\'");
-		return resultSet.getRow() != 0;
+		useDatabase("game");
+		resultSet = execute("SELECT * FROM information_schema.tables WHERE table_schema = '"+database+"' AND table_name = '"+table+"' LIMIT 1");//"SELECT table_name \nFROM information_schema.tables \nWHERE table_schema = " + "\'" + database + "\' \nAND table_name = \'" + table + "\'");
+		return resultSet.next();
 	}
 	
 	public ResultSet execute(String s) throws SQLException {
@@ -93,5 +94,6 @@ public class Database {
 		Database d = new Database("game", "sqluser", "sqluserpw");
 		d.insert("Highscore", new String[]{"1", "200", "tes"});
 		System.out.println(d.getInt("SELECT * FROM Highscore ORDER BY id DESC LIMIT 1;", "score"));
+		System.out.println(d.tableExists("game", "Hidghscore"));
 	}
 }
