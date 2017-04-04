@@ -3,6 +3,7 @@ package database;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -30,9 +31,19 @@ public class Database {
 		
 	}
 	
+	public boolean tableExists(String database, String table) throws SQLException {
+		resultSet = execute("SELECT table_name \nFROM information_schema.table \nWHERE table_schema =" + "\'" + database + "\' \nAND table_name = \'" + table + "\'");
+		return resultSet.getRow() != 0;
+	}
+	
 	public ResultSet execute(String s) throws SQLException {
 		statement = connection.createStatement();
 		return statement.executeQuery(s);
+	}
+	
+	public int executeUpdate(String s) throws SQLException {
+		statement = connection.createStatement();
+		return statement.executeUpdate(s);
 	}
 	
 	public void useDatabase(String name) throws SQLException {
@@ -40,22 +51,47 @@ public class Database {
 	}
 	
 	public void createDatabase(String name) throws SQLException {
-		execute("CREATE DATABASE " + name + ";");
+		executeUpdate("CREATE DATABASE " + name + ";");
 	}
 	
 	public int getInt(String selection, String column) throws SQLException {
 		resultSet = execute(selection);
-		return resultSet.getInt(column);
+		return (resultSet.next()) ? resultSet.getInt(column) : -1;
 	}
 	
 	public String getString(String selection, String column) throws SQLException {
 		resultSet = execute(selection);
-		return resultSet.getString(column);
+		return (resultSet.next()) ? resultSet.getString(column) : "?";
+	}
+	
+	public void insert(String table, String[] values) throws SQLException {
+		String columnsTotal = "";
+		String valuesTotal = "";
+		
+		resultSet = execute("SELECT * FROM Highscore");
+		ResultSetMetaData m = resultSet.getMetaData();
+		String[] columns = new String[m.getColumnCount()];
+		
+		for(int i = 1; i <= m.getColumnCount(); i++)
+			columns[i-1] = m.getColumnName(i); 
+		
+		for(int i = 0; i < values.length; i++) {
+			columnsTotal += "`" + columns[i] + "`" + ((i < values.length-1) ? "," : "");
+			valuesTotal += "\'" + values[i] + "\'" + ((i < values.length-1) ? "," : "");
+		}
+		
+		executeUpdate("INSERT INTO `" + table + "` ("+columnsTotal+") VALUES ("+valuesTotal+")");
 	}
 	
 	public void close() throws SQLException {
 		connection.close();
 		resultSet.close();
 		statement.close();
+	}
+	
+	public static void main(String[] args) throws ClassNotFoundException, SQLException {
+		Database d = new Database("game", "sqluser", "sqluserpw");
+		d.insert("Highscore", new String[]{"1", "200", "tes"});
+		System.out.println(d.getInt("SELECT * FROM Highscore ORDER BY id DESC LIMIT 1;", "score"));
 	}
 }
