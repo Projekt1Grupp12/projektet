@@ -1,0 +1,103 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/send_form"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.udptest.MainActivity"
+    android:weightSum="1">
+
+    <!-- Login progress -->
+
+
+    <ScrollView
+        android:id="@+id/visible"
+        android:layout_width="294dp"
+        android:layout_height="584dp">
+
+        <LinearLayout
+            android:id="@+id/masked"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <EditText
+                    android:id="@+id/ip"
+                    android:layout_width="match_parent"
+                    android:layout_height="54dp"
+                    android:hint="@string/txt_IP"
+                    android:imeActionId="@+id/login"
+                    android:imeActionLabel="@string/action_sign_in_short"
+                    android:imeOptions="actionUnspecified"
+                    android:maxLines="1"
+                    android:singleLine="true" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/send_UDP_button"
+                    android:layout_centerHorizontal="true"
+                    android:text="@string/action_send_UDP"
+                    android:onClick="refreshStatus"
+
+                    />
+            </android.support.design.widget.TextInputLayout>
+
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="receive message"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:id="@+id/button_begin_graph"
+                android:onClick="sendMessage"
+                />
+
+
+            <Button
+                android:id="@+id/button_refresh_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/button_begin_graph"
+                android:layout_centerHorizontal="true"
+                android:onClick="refreshStatus"
+                android:text="Refresh status" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                android:text="Status: Unconnected"
+                android:textSize="12dp"
+                android:id="@+id/status"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_above="@id/status"
+                android:text="no message"
+                android:textSize="12dp"
+                android:id="@+id/message"
+                />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

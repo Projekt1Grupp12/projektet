@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="send_form" type="id">Send</item>
+    <item name="send_UDP_button" type="id">Send UDP</item>
+    <item name="status" type="id">no message</item>
+</resources>
