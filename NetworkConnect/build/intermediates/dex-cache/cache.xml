@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="C:\Users\George\Desktop\Universitet\VT17\Projekt 1 for ingenjorer\Dummy\NetworkConnect\Application\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="384e0e53eaa03a2d0f2460ea90cffa5067a6a46e">
+        <dex dex="C:\Users\George\Desktop\Universitet\VT17\Projekt 1 for ingenjorer\Dummy\NetworkConnect\Application\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_5c4e4684148bf0a87aa474dbf6d8d6caac31ee5c\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\George\Desktop\Universitet\VT17\Projekt 1 for ingenjorer\Dummy\NetworkConnect\Application\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="c82741bc129dd5f99f11a4ab8666ae24262053b6">
+        <dex dex="C:\Users\George\Desktop\Universitet\VT17\Projekt 1 for ingenjorer\Dummy\NetworkConnect\Application\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run_7ea581f1f8cbb92097ec3e324a5c9da525f3e50a\classes.dex" />
+    </item>
+
+</items>

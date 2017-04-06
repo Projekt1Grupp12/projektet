@@ -1,0 +1,85 @@
+-- Merging decision tree log ---
+manifest
+ADDED from C:\Users\George\Desktop\Universitet\VT17\Projekt 1 for ingenjorer\Dummy\NetworkConnect\Application\src\main\AndroidManifest.xml:20:1-47:12
+	package
+		ADDED from C:\Users\George\Desktop\Universitet\VT17\Projekt 1 for ingenjorer\Dummy\NetworkConnect\Application\src\main\AndroidManifest.xml:22:5-49
+	android:versionName
+		ADDED from C:\Users\George\Desktop\Universitet\VT17\Projekt 1 for ingenjorer\Dummy\NetworkConnect\Application\src\main\AndroidManifest.xml:24:5-30
+		INJECTED from C:\Users\George\Desktop\Universitet\VT17\Projekt 1 for ingenjorer\Dummy\NetworkConnect\Application\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\George\Desktop\Universitet\VT17\Projekt 1 for ingenjorer\Dummy\NetworkConnect\Application\src\main\AndroidManifest.xml
+	android:versionCode
+		ADDED from C:\Users\George\Desktop\Universitet\VT17\Projekt 1 for ingenjorer\Dummy\NetworkConnect\Application\src\main\AndroidManifest.xml:23:5-28
+		INJECTED from C:\Users\George\Desktop\Universitet\VT17\Projekt 1 for ingenjorer\Dummy\NetworkConnect\Application\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\George\Desktop\Universitet\VT17\Projekt 1 for ingenjorer\Dummy\NetworkConnect\Application\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from C:\Users\George\Desktop\Universitet\VT17\Projekt 1 for ingenjorer\Dummy\NetworkConnect\Application\src\main\AndroidManifest.xml:21:5-63
+uses-permission#android.permission.INTERNET
+ADDED from C:\Users\George\Desktop\Universitet\VT17\Projekt 1 for ingenjorer\Dummy\NetworkConnect\Application\src\main\AndroidManifest.xml:27:5-67
+	android:name
+		ADDED from C:\Users\George\Desktop\Universitet\VT17\Projekt 1 for ingenjorer\Dummy\NetworkConnect\Application\src\main\AndroidManifest.xml:27:22-64
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from C:\Users\George\Desktop\Universitet\VT17\Projekt 1 for ingenjorer\Dummy\NetworkConnect\Application\src\main\AndroidManifest.xml:28:5-79
+	android:name
+		ADDED from C:\Users\George\Desktop\Universitet\VT17\Projekt 1 for ingenjorer\Dummy\NetworkConnect\Application\src\main\AndroidManifest.xml:28:22-76
+application
+ADDED from C:\Users\George\Desktop\Universitet\VT17\Projekt 1 for ingenjorer\Dummy\NetworkConnect\Application\src\main\AndroidManifest.xml:30:5-46:19
+MERGED from [com.android.support:gridlayout-v7:25.0.1] C:\Users\George\.android\build-cache\62876b359d1545b1d8b352184677b6a89af5f1a7\output\AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:cardview-v7:25.0.1] C:\Users\George\.android\build-cache\6dfbc646fb5ef2b5bf37ef12f8504635e803891f\output\AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:appcompat-v7:25.0.1] C:\Users\George\.android\build-cache\f144f749e24521fd610a2ef778dfdac3470a03e8\output\AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:support-v4:25.0.1] C:\Users\George\.android\build-cache\d9046b3535ef6ed59b30407d69ac1062bcded005\output\AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:support-fragment:25.0.1] C:\Users\George\.android\build-cache\74fa988e1f40ceecdf1c3a1d0b2faf89279fe7db\output\AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:support-media-compat:25.0.1] C:\Users\George\.android\build-cache\8b97bf6f57a8bd42bf7595b5b75594dbb4ace8a1\output\AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:support-core-ui:25.0.1] C:\Users\George\.android\build-cache\0c49f086d3879718d6fa562859427c59547d0653\output\AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:support-core-utils:25.0.1] C:\Users\George\.android\build-cache\ed290345540393e8ec328f94c4208e4c7a0cc245\output\AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:animated-vector-drawable:25.0.1] C:\Users\George\.android\build-cache\197ccffdd02aba18480c631b36f88a30ac5f17ae\output\AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:support-vector-drawable:25.0.1] C:\Users\George\.android\build-cache\ce8f77ae2314d8f1f037e9da2713762325624688\output\AndroidManifest.xml:23:5-20
+MERGED from [com.android.support:support-compat:25.0.1] C:\Users\George\.android\build-cache\f5c2c4d76fb2705e757179440bd53f8962af023d\output\AndroidManifest.xml:25:5-20
+	android:label
+		ADDED from C:\Users\George\Desktop\Universitet\VT17\Projekt 1 for ingenjorer\Dummy\NetworkConnect\Application\src\main\AndroidManifest.xml:31:9-41
+	android:allowBackup
+		ADDED from C:\Users\George\Desktop\Universitet\VT17\Projekt 1 for ingenjorer\Dummy\NetworkConnect\Application\src\main\AndroidManifest.xml:34:9-35
+	android:icon
+		ADDED from C:\Users\George\Desktop\Universitet\VT17\Projekt 1 for ingenjorer\Dummy\NetworkConnect\Application\src\main\AndroidManifest.xml:32:9-45
+	android:networkSecurityConfig
+		ADDED from C:\Users\George\Desktop\Universitet\VT17\Projekt 1 for ingenjorer\Dummy\NetworkConnect\Application\src\main\AndroidManifest.xml:35:9-69
+	android:theme
+		ADDED from C:\Users\George\Desktop\Universitet\VT17\Projekt 1 for ingenjorer\Dummy\NetworkConnect\Application\src\main\AndroidManifest.xml:33:9-44
+activity#com.example.android.networkconnect.MainActivity
+ADDED from C:\Users\George\Desktop\Universitet\VT17\Projekt 1 for ingenjorer\Dummy\NetworkConnect\Application\src\main\AndroidManifest.xml:36:9-45:20
+	android:label
+		ADDED from C:\Users\George\Desktop\Universitet\VT17\Projekt 1 for ingenjorer\Dummy\NetworkConnect\Application\src\main\AndroidManifest.xml:38:13-45
+	android:uiOptions
+		ADDED from C:\Users\George\Desktop\Universitet\VT17\Projekt 1 for ingenjorer\Dummy\NetworkConnect\Application\src\main\AndroidManifest.xml:39:13-57
+	android:name
+		ADDED from C:\Users\George\Desktop\Universitet\VT17\Projekt 1 for ingenjorer\Dummy\NetworkConnect\Application\src\main\AndroidManifest.xml:37:13-75
+intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
+ADDED from C:\Users\George\Desktop\Universitet\VT17\Projekt 1 for ingenjorer\Dummy\NetworkConnect\Application\src\main\AndroidManifest.xml:41:13-44:29
+action#android.intent.action.MAIN
+ADDED from C:\Users\George\Desktop\Universitet\VT17\Projekt 1 for ingenjorer\Dummy\NetworkConnect\Application\src\main\AndroidManifest.xml:42:17-69
+	android:name
+		ADDED from C:\Users\George\Desktop\Universitet\VT17\Projekt 1 for ingenjorer\Dummy\NetworkConnect\Application\src\main\AndroidManifest.xml:42:25-66
+category#android.intent.category.LAUNCHER
+ADDED from C:\Users\George\Desktop\Universitet\VT17\Projekt 1 for ingenjorer\Dummy\NetworkConnect\Application\src\main\AndroidManifest.xml:43:17-77
+	android:name
+		ADDED from C:\Users\George\Desktop\Universitet\VT17\Projekt 1 for ingenjorer\Dummy\NetworkConnect\Application\src\main\AndroidManifest.xml:43:27-74
+uses-sdk
+INJECTED from C:\Users\George\Desktop\Universitet\VT17\Projekt 1 for ingenjorer\Dummy\NetworkConnect\Application\src\main\AndroidManifest.xml reason: use-sdk injection requested
+MERGED from [com.android.support:gridlayout-v7:25.0.1] C:\Users\George\.android\build-cache\62876b359d1545b1d8b352184677b6a89af5f1a7\output\AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:cardview-v7:25.0.1] C:\Users\George\.android\build-cache\6dfbc646fb5ef2b5bf37ef12f8504635e803891f\output\AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:appcompat-v7:25.0.1] C:\Users\George\.android\build-cache\f144f749e24521fd610a2ef778dfdac3470a03e8\output\AndroidManifest.xml:21:5-23:78
+MERGED from [com.android.support:support-v4:25.0.1] C:\Users\George\.android\build-cache\d9046b3535ef6ed59b30407d69ac1062bcded005\output\AndroidManifest.xml:21:5-23:54
+MERGED from [com.android.support:support-fragment:25.0.1] C:\Users\George\.android\build-cache\74fa988e1f40ceecdf1c3a1d0b2faf89279fe7db\output\AndroidManifest.xml:21:5-23:60
+MERGED from [com.android.support:support-media-compat:25.0.1] C:\Users\George\.android\build-cache\8b97bf6f57a8bd42bf7595b5b75594dbb4ace8a1\output\AndroidManifest.xml:21:5-23:63
+MERGED from [com.android.support:support-core-ui:25.0.1] C:\Users\George\.android\build-cache\0c49f086d3879718d6fa562859427c59547d0653\output\AndroidManifest.xml:21:5-23:58
+MERGED from [com.android.support:support-core-utils:25.0.1] C:\Users\George\.android\build-cache\ed290345540393e8ec328f94c4208e4c7a0cc245\output\AndroidManifest.xml:21:5-23:61
+MERGED from [com.android.support:animated-vector-drawable:25.0.1] C:\Users\George\.android\build-cache\197ccffdd02aba18480c631b36f88a30ac5f17ae\output\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:25.0.1] C:\Users\George\.android\build-cache\ce8f77ae2314d8f1f037e9da2713762325624688\output\AndroidManifest.xml:21:5-43
+MERGED from [com.android.support:support-compat:25.0.1] C:\Users\George\.android\build-cache\f5c2c4d76fb2705e757179440bd53f8962af023d\output\AndroidManifest.xml:21:5-23:58
+	tools:overrideLibrary
+		ADDED from [com.android.support:appcompat-v7:25.0.1] C:\Users\George\.android\build-cache\f144f749e24521fd610a2ef778dfdac3470a03e8\output\AndroidManifest.xml:23:9-75
+	android:targetSdkVersion
+		INJECTED from C:\Users\George\Desktop\Universitet\VT17\Projekt 1 for ingenjorer\Dummy\NetworkConnect\Application\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\George\Desktop\Universitet\VT17\Projekt 1 for ingenjorer\Dummy\NetworkConnect\Application\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from C:\Users\George\Desktop\Universitet\VT17\Projekt 1 for ingenjorer\Dummy\NetworkConnect\Application\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\George\Desktop\Universitet\VT17\Projekt 1 for ingenjorer\Dummy\NetworkConnect\Application\src\main\AndroidManifest.xml
