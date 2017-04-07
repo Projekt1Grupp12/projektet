@@ -28,7 +28,7 @@ public class Server implements Runnable {
 		String m = "";
 		
 		try {
-			while((m = in.readLine()) != null) {
+			while(!m.equals("close") || (m = in.readLine()) != null) {
 				out.println(0);
 				System.out.println(m + " | server");
 			}

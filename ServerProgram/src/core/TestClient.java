@@ -26,10 +26,6 @@ public class TestClient implements Runnable {
 	public void run() {
 		 String m;
 		 out.println(1);
-		 out.println(1);
-		 out.println(1);
-		 out.println(1);
-		 out.println(1);
 		 
 	     try {
 	    	 while ((m = in.readLine()) != null) {
