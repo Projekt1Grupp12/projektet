@@ -6,11 +6,26 @@ import java.util.Random;
 
 import javax.swing.JOptionPane;
 
-class UDPServer
-{
-	public static void main(String args[]) throws Exception
-	{
-		DatagramSocket serverSocket = new DatagramSocket(4444);
+class UDPServer implements Runnable
+{	
+	public static String putTogether(byte[] t, int l) {
+		String tmp = "";
+		
+		for(int i = l-1; i >= 0; i--) {
+			tmp += (char)t[i];
+		}
+		
+		return tmp;
+	}
+
+	public void run() {
+		DatagramSocket serverSocket = null;
+		try {
+			serverSocket = new DatagramSocket(4444);
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		byte[] receiveData = new byte[1024];
 		byte[] sendData = new byte[1024];
 		
@@ -29,19 +44,33 @@ class UDPServer
 		int newData = 0;
 		int oldData = 0;
 		
+		InetAddress phoneIPAddress = null;
+		InetAddress ardIPAddress = null;
+		
 		while(true)
 		{
-			InetAddress phoneIPAddress = InetAddress.getByName("10.2.29.150");//"192.168.0.2");
-			InetAddress ardIPAddress = InetAddress.getByName("192.168.0.2");
-			
-			//d = x + "";
-			
+			try {
+				phoneIPAddress = InetAddress.getByName("10.2.29.150");
+				ardIPAddress = InetAddress.getByName("192.168.0.2");
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}//"192.168.0.2");
+
+			d = x + "";
+			x += 1;
+			System.out.println(x);
 			DatagramPacket sendPacket = new DatagramPacket(d.getBytes(), d.getBytes().length, ardIPAddress, 4444);
 			delay += 1;
 			
 			System.out.println(oldData + " | " + newData  + " | " + (delay > 8 && newData != oldData));
 			if(delay > 8) {
-			    serverSocket.send(sendPacket);
+			    try {
+					serverSocket.send(sendPacket);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				oldData = newData;
 				x += 1;
 				if(x >= 4) x = 0;
@@ -50,21 +79,16 @@ class UDPServer
 			}
 			
 			if(random.nextInt(1000) == 500) { 
-				serverSocket.receive(packet);
+				try {
+					serverSocket.receive(packet);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				d = putTogether(packet.getData(), 1).trim();
 				//newData = Integer.parseInt(putTogether(packet.getData(), 3));
 				//System.out.println(Integer.parseInt(putTogether(packet.getData(), 3)) + " | tillbaka");
 			}
 		}
-	}
-	
-	public static String putTogether(byte[] t, int l) {
-		String tmp = "";
-		
-		for(int i = l-1; i >= 0; i--) {
-			tmp += (char)t[i];
-		}
-		
-		return tmp;
 	}
 }
