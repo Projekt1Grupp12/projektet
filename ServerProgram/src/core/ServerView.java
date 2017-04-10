@@ -3,11 +3,16 @@ package core;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.text.DefaultCaret;
 
 public class ServerView extends JPanel {
 	ServerController controller;
@@ -19,7 +24,7 @@ public class ServerView extends JPanel {
 	private JTextField ardIpAdressField = new JTextField("192.168.0.12");
 	
 	private JLabel inputLabel = new JLabel("INPUT");
-	private JLabel outputLabel = new JLabel("INPUT");
+	private JLabel outputLabel = new JLabel("OUTPUT");
 	private JLabel[] phoneIpAdressLabel = new JLabel[]{new JLabel("PHONE IP 1: "), new JLabel("PHONE IP 2: ")}; 
 	private JLabel ardIpAdressLabel = new JLabel("ARDURINO IP: ");
 	
@@ -28,6 +33,10 @@ public class ServerView extends JPanel {
 	private JPanel inputPanel = new JPanel();
 	private JPanel outputPanel = new JPanel();
 	private JPanel ipAdressPanels = new JPanel();
+	private JPanel messagePanel = new JPanel();
+	
+	private JButton sendButton = new JButton("SEND");
+	private JTextField message = new JTextField();
 	
 	public ServerView(ServerController controller) {
 		this.controller = controller;
@@ -56,11 +65,36 @@ public class ServerView extends JPanel {
 		outputPanel.setLayout(new GridLayout(2, 0));
 		outputPanel.add(outputLabel);
 		outputPanel.add(currentOutput);
+		DefaultCaret caret = (DefaultCaret)currentOutput.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		currentOutput.setPreferredSize(new Dimension(250, 200));
 		
 		this.add(ipAdressPanels, BorderLayout.NORTH);
 		
 		this.add(inputPanel, BorderLayout.EAST);
 		this.add(outputPanel, BorderLayout.WEST);
+		
+		this.currentOutput.setText(controller.getSentHistory());
+		
+		ButtonListener b = new ButtonListener();
+		sendButton.addActionListener(b);
+		this.messagePanel.add(this.sendButton);
+		message.setPreferredSize(new Dimension(100, 30));
+		this.messagePanel.add(this.message);
+		
+		add(messagePanel, BorderLayout.CENTER);
+	}
+	
+	public class ButtonListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			if(e.getSource() == sendButton) {
+				try {
+					controller.getServer().send(((message.getText().charAt(0) == '0' && message.getText().charAt(1) == 'b') ? Integer.parseInt(message.getText().substring(2), 2) + "" : message.getText()), "192.168.0.2");
+					currentOutput.setText(controller.getSentHistory());
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		}
 	}
 }
