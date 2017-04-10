@@ -39,6 +39,7 @@ int testIntD1 = 0b101;
 int testIntD2 = 0b111;
 int test1;
 int test2;
+int arr[32];
 
 // An EthernetUDP instance to let us send and receive packets over UDP
 EthernetUDP Udp;
@@ -61,20 +62,20 @@ void setup() {
 
 }
 
-void turnOnLight(int numD1, int numD2){
-    if( (numD2) & (1<<0)){
+void turnOnLight(int numD1){
+    if( (numD1) & (1<<0)){
       digitalWrite(2, HIGH); 
     }
     else{
       digitalWrite(2, LOW); 
     }
-    if( (numD2) & (1<<1)){
+    if( (numD1) & (1<<1)){
       digitalWrite(3, HIGH); 
     }
     else{
       digitalWrite(3, LOW); 
     }
-    if( (numD2) & (1<<2)){
+    if( (numD1) & (1<<2)){
       digitalWrite(4, HIGH); 
     }
     else{
@@ -82,34 +83,43 @@ void turnOnLight(int numD1, int numD2){
     }
     
     
-    if( (numD1) & (1<<0)){
+    if( (numD1) & (1<<3)){
       digitalWrite(5, HIGH); 
     }
     else{
       digitalWrite(5, LOW); 
     }
-    if( (numD1) & (1<<1)){
+    if( (numD1) & (1<<4)){
       digitalWrite(6, HIGH); 
     }
     else{
       digitalWrite(6, LOW); 
     }
-    if( (numD1) & (1<<2)){
+    if( (numD1) & (1<<5)){
       digitalWrite(7, HIGH); 
     }
     else{
       digitalWrite(7, LOW); 
     }
 
- /*   Udp.beginPacket(l, localPort);
-    Udp.write(ReplyBuffer[0]);
-    Udp.endPacket();
- */   
+
+    
+    
+  }
+  void setArraytoStep(int[]){
     
   }
 
 
+  void animation(int[]){
+    for(int i = 0; i < 6; i++){
 
+      
+    }
+
+  
+    
+  }
 
 void loop() {
   // if there's data available, read a packet
@@ -123,15 +133,21 @@ void loop() {
   int d = 50;
   Serial.print("content start: ");
   Serial.println(packetBuffer);
+  Serial.println(packetBuffer[0]);
+   Serial.println(packetBuffer[1]);
  
 
   last = test;
-
-    
-  test1 = packetBuffer[0];
+    setArraytoStep(arr);
+    animation(arr);
+  test1 = atoi(packetBuffer);//packetBuffer[0];
   test2 = packetBuffer[1];
-  turnOnLight(test1,test2);  
-
+  turnOnLight(test1);  
+/*  
+    Udp.beginPacket(l, localPort);
+    Udp.write("ack");
+    Udp.endPacket();
+*/
  /* 
   if(test == '0') {
     digitalWrite(2, LOW); 
