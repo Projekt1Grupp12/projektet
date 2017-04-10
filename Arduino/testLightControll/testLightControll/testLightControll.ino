@@ -35,8 +35,10 @@ char test = '3';
 int count = 0;
 boolean sent = false;
 char last = '0';
-int testIntD1 = 0b001;
-int testIntD2 = 0b110;
+int testIntD1 = 0b101;
+int testIntD2 = 0b111;
+int test1;
+int test2;
 
 // An EthernetUDP instance to let us send and receive packets over UDP
 EthernetUDP Udp;
@@ -60,19 +62,19 @@ void setup() {
 }
 
 void turnOnLight(int numD1, int numD2){
-    if( (numD1) & (1<<0)){
+    if( (numD2) & (1<<0)){
       digitalWrite(2, HIGH); 
     }
     else{
       digitalWrite(2, LOW); 
     }
-    if( (numD1) & (1<<1)){
+    if( (numD2) & (1<<1)){
       digitalWrite(3, HIGH); 
     }
     else{
       digitalWrite(3, LOW); 
     }
-    if( (numD1) & (1<<2)){
+    if( (numD2) & (1<<2)){
       digitalWrite(4, HIGH); 
     }
     else{
@@ -80,25 +82,34 @@ void turnOnLight(int numD1, int numD2){
     }
     
     
-    if( (numD2) & (1<<0)){
+    if( (numD1) & (1<<0)){
       digitalWrite(5, HIGH); 
     }
     else{
       digitalWrite(5, LOW); 
     }
-    if( (numD2) & (1<<1)){
+    if( (numD1) & (1<<1)){
       digitalWrite(6, HIGH); 
     }
     else{
       digitalWrite(6, LOW); 
     }
-    if( (numD2) & (1<<2)){
+    if( (numD1) & (1<<2)){
       digitalWrite(7, HIGH); 
     }
     else{
       digitalWrite(7, LOW); 
-    }  
+    }
+
+ /*   Udp.beginPacket(l, localPort);
+    Udp.write(ReplyBuffer[0]);
+    Udp.endPacket();
+ */   
+    
   }
+
+
+
 
 void loop() {
   // if there's data available, read a packet
@@ -107,18 +118,19 @@ void loop() {
  
 
    Udp.read(packetBuffer, UDP_TX_PACKET_MAX_SIZE);
-   Serial.println("Contents:");
-   Serial.println(packetBuffer);
+//   Serial.println("Contents:");
+//   Serial.println(packetBuffer);
   int d = 50;
   Serial.print("content start: ");
-  Serial.println(packetBuffer[0]);
+  Serial.println(packetBuffer);
  
 
   last = test;
 
-  
-  test = packetBuffer[0];
-  turnOnLight(testIntD1,testIntD2);
+    
+  test1 = packetBuffer[0];
+  test2 = packetBuffer[1];
+  turnOnLight(test1,test2);  
 
  /* 
   if(test == '0') {
@@ -177,10 +189,7 @@ void loop() {
    //}
   //}
   
-  //Serial.println("counter: ");
- // Serial.println(count);
-  //Serial.println("Contents:");
-  //Serial.println(packetBuffer);
+
   delay(d);
 }
 
