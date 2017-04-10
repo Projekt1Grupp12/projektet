@@ -42,6 +42,8 @@ import java.net.URL;
  * HTML. It uses a Fragment that encapsulates the network operations on an AsyncTask.
  *
  * This sample uses a TextView to display output.
+ *
+ * FragmentActivity is used whenever fragments are used in an activity.
  */
 public class MainActivity extends FragmentActivity implements DownloadCallback {
 
@@ -58,24 +60,27 @@ public class MainActivity extends FragmentActivity implements DownloadCallback {
     // downloads with consecutive button clicks.
     private boolean mDownloading = false;
 
-    @Override
+    //A method is called when activity is to be created. It has a main window with TextView, EditText and NetworkFragment.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sample_main);
+        //Finding elements using id.
         mDataText = (TextView) findViewById(R.id.data_text);
         mTextIP = (EditText) findViewById(R.id.pingIP_Address);
         mNetworkFragment = NetworkFragment.getInstance(getSupportFragmentManager(), "https://www.google.com");
+        //Log.d writes to console if creation is succesfull.
         Log.d("CREATE", "onCreate() is being executed");
 
     }
 
-    @Override
+    //Creates menu in main window and shows it.
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
-    @Override
+    //This method is called whenever an item in options menu is selected.
+    //It reacts to the action by doing what is written.
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.d("BUTTON", "onOptionsItemSelected() is being executed");
         GetMethodDemo gmd = new GetMethodDemo();
@@ -100,7 +105,7 @@ public class MainActivity extends FragmentActivity implements DownloadCallback {
 
                 String host = String.valueOf(mTextIP.getText());
                 Log.d("mTextIP.getText()", host);
-
+                //Executes the task with the specified parameters.
                 gmd.execute("http://"+host);
                 //startPing(host);
                 return true;
@@ -108,7 +113,10 @@ public class MainActivity extends FragmentActivity implements DownloadCallback {
         return false;
     }
 
-
+    //Method uses startDownload() method from NetworkFragment class.
+    //It uses url from NetworkFragment.getInstance(getSupportFragmentManager(), "https://www.google.com");
+    //The result is stored in Result class of inner class DowloadTask in NetworkFragment class.
+    //NetworkFragment>Dowloadtask>Result
     private void startDownload() {
         if (!mDownloading && mNetworkFragment != null) {
             // Execute the async download.
@@ -116,7 +124,7 @@ public class MainActivity extends FragmentActivity implements DownloadCallback {
             mDownloading = true;
         }
     }
-
+    //This metod pings the specified webserver.
     private void startPing(String Url){
         if(!mDownloading && mNetworkFragment != null){
             mNetworkFragment.startPing(Url);
@@ -124,7 +132,7 @@ public class MainActivity extends FragmentActivity implements DownloadCallback {
         }
     }
 
-    @Override
+    //Upadtes the value of mDataText variable.
     public void updateFromDownload(String result) {
         if (result != null) {
             mDataText.setText(result);
@@ -133,7 +141,7 @@ public class MainActivity extends FragmentActivity implements DownloadCallback {
         }
     }
 
-    @Override
+    //This metod returns networkinformation.
     public NetworkInfo getActiveNetworkInfo() {
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -141,7 +149,7 @@ public class MainActivity extends FragmentActivity implements DownloadCallback {
         return networkInfo;
     }
 
-    @Override
+    //Stops the download.
     public void finishDownloading() {
         mDownloading = false;
         if (mNetworkFragment != null) {
