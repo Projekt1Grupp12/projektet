@@ -8,7 +8,7 @@ import javax.swing.JOptionPane;
 
 class UDPServer implements Runnable
 {	
-	boolean recsive;
+	boolean recsive = true;
 	
 	private DatagramSocket serverSocket = null;
 	
@@ -44,7 +44,7 @@ class UDPServer implements Runnable
 		DatagramPacket sendPacket = new DatagramPacket(message.getBytes(), message.getBytes().length, ipAddress, port);
 		serverSocket.send(sendPacket);
 		
-		sentHistory = message + " : " + (sentHistoryIndex++) + "\n" + sentHistory;
+		sentHistory = message + "  : " + (sentHistoryIndex++) + "\n" + sentHistory;
 	}
 	
 	public void sendToPhone(String message, int index) throws IOException {
@@ -62,16 +62,17 @@ class UDPServer implements Runnable
 
 	public void run() {
 		try {
-			serverSocket = new DatagramSocket(4444);
+			serverSocket = new DatagramSocket(port);
 		} catch (SocketException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		byte[] sendData = new byte[1024];
-		
+		//testProgram();
+	}
+	
+	public void testProgram() {
 		int delay = 0;
-		int resciveDelay = 0;
 		int x = 0;
 		
 		String d = "0";
@@ -95,11 +96,10 @@ class UDPServer implements Runnable
 
 			d = x + "";
 
-			DatagramPacket sendPacket = new DatagramPacket(d.getBytes(), d.getBytes().length, ardIPAddress, 4444);
 			delay += 1;
 			
 			//System.out.println(oldData + " | " + newData  + " | " + (delay > 8 && newData != oldData));
-			
+
 			if(delay > 8) {
 			    /*try {
 			    	send(d, "192.168.0.2");
@@ -109,13 +109,14 @@ class UDPServer implements Runnable
 				oldData = newData;
 				x += 1;
 				if(x >= 7) x = 0;
-				System.out.println(d + " | state");
+				//System.out.println(d + " | state");
 				delay = 0;
 			}
 			
 			if(random.nextInt(1000) == 500 && recsive) { 
 				try {
 					serverSocket.receive(packet);
+					System.out.println(putTogether(packet.getData(), 10) + " | tillbaka");
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -133,7 +134,7 @@ class UDPServer implements Runnable
 	public String putTogether(byte[] t, int l) {
 		String tmp = "";
 		
-		for(int i = l-1; i >= 0; i--) {
+		for(int i = 0; i < l; i++) {
 			tmp += (char)t[i];
 		}
 		
