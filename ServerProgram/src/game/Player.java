@@ -21,6 +21,10 @@ public class Player {
 		screen &= ~(1 << index);
 	}
 	
+	public void flushScreen() {
+		screen = 0;
+	}
+	
 	public int getScreen() {
 		return screen;
 	}

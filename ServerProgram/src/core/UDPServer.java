@@ -6,6 +6,9 @@ import java.util.Random;
 
 import javax.swing.JOptionPane;
 
+import game.Player;
+import game.PuzzelGame;
+
 public class UDPServer implements Runnable
 {	
 	boolean recsive = true;
@@ -59,7 +62,9 @@ public class UDPServer implements Runnable
 		from.receive(packet);
 		return receiveData;
 	}
-
+	
+	PuzzelGame game = new PuzzelGame(new Player[]{new Player(), new Player()}, this);
+	
 	public void run() {
 		try {
 			serverSocket = new DatagramSocket(port);
@@ -68,7 +73,15 @@ public class UDPServer implements Runnable
 			e.printStackTrace();
 		}
 		
-		testProgram();
+		while(true) {
+			try {
+				game.update();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		//testProgram();
 	}
 	
 	public void testProgram() {

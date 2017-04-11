@@ -11,8 +11,9 @@ public abstract class Game {
 	
 	private UDPServer server;
 	
-	public Game(Player[] player) {
-		
+	public Game(Player[] players, UDPServer server) {
+		this.players = players;
+		this.server = server;
 	}
 	
 	public int setupFullScreen() {
@@ -30,6 +31,10 @@ public abstract class Game {
 	public void flushFullScreen() throws IOException {
 		fullScreen = 0;
 		server.sendToArdurino("00");
+	}
+	
+	public void sendToArdurino(String message) throws IOException {
+		server.sendToArdurino(message);
 	}
 	
 	public abstract void sendBadFeedback(Player player);
