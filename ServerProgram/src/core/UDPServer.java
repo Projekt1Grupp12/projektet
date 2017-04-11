@@ -69,7 +69,6 @@ public class UDPServer implements Runnable
 		try {
 			serverSocket = new DatagramSocket(port);
 		} catch (SocketException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

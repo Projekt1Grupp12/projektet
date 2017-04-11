@@ -20,6 +20,8 @@ public abstract class Game {
 	    String tmp = "";
 	    
 	    for(int i = 0; i < players.length; i++) {
+	    	String pad = Integer.toBinaryString(players[i].getScreen());
+	    	pad = (pad.length() == 2) ? "0" + pad : "";
 	    	tmp += Integer.toBinaryString(players[i].getScreen());
 	    }
 	    
@@ -42,6 +44,8 @@ public abstract class Game {
 	public abstract void sendGoodFeedback(Player player);
 	
 	public abstract void update() throws IOException;
+	
+	public abstract boolean checkGoodInput();
 	
 	public boolean redPressed() {
 		return false;

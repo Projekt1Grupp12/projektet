@@ -17,7 +17,7 @@ public class PuzzelGame extends Game {
 	public PuzzelGame(Player[] players, UDPServer server) {
 		super(players, server);
 		
-		maxDelay = 128;
+		maxDelay = 128*2;
 	}
 
 	public void sendBadFeedback(Player player) {
@@ -26,6 +26,10 @@ public class PuzzelGame extends Game {
 
 	public void sendGoodFeedback(Player player) {
 		
+	}
+	
+	public boolean checkGoodInput() {
+		return false;
 	}
 	
 	public void changeLights() throws IOException {
@@ -40,11 +44,12 @@ public class PuzzelGame extends Game {
 		for(int i = 0; i < getPlayers().length; i++) {
 			getPlayers()[i].flushScreen();
 			for(int j = 0; j < amountToLightUp[i]; j++) {
-				getPlayers()[i].setScreenBit(random.nextInt(4));
+				getPlayers()[i].setScreenBit(random.nextInt(3));
 			}
 		}
 		
 		sendToArdurino(setupFullScreen() + "");
+		System.out.println(Integer.toBinaryString(setupFullScreen()));
 	}
 
 	public void update() throws IOException {
