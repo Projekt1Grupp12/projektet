@@ -1,21 +1,51 @@
 package game;
 
+import java.io.IOException;
+
+import core.UDPServer;
+
 public abstract class Game {
-	public Player[] players;
+	private Player[] players;
 	
-	public Game(Player[] player) {
-		
+	private int fullScreen;
+	
+	private UDPServer server;
+	
+	public Game(Player[] players, UDPServer server) {
+		this.players = players;
+		this.server = server;
+	}
+	
+	public int setupFullScreen() {
+	    String tmp = "";
+	    
+	    for(int i = 0; i < players.length; i++) {
+	    	String pad = Integer.toBinaryString(players[i].getScreen());
+	    	pad = (pad.length() == 2) ? "0" + pad : "";
+	    	tmp += Integer.toBinaryString(players[i].getScreen());
+	    }
+	    
+	    fullScreen = Integer.parseInt(tmp, 2);
+	    
+		return fullScreen;
+	}
+	
+	public void flushFullScreen() throws IOException {
+		fullScreen = 0;
+		server.sendToArdurino("00");
+	}
+	
+	public void sendToArdurino(String message) throws IOException {
+		server.sendToArdurino(message);
 	}
 	
 	public abstract void sendBadFeedback(Player player);
 	
 	public abstract void sendGoodFeedback(Player player);
 	
-	public abstract void update();
+	public abstract void update() throws IOException;
 	
-	public int getLitLights() {
-		return -1;
-	}
+	public abstract boolean checkGoodInput();
 	
 	public boolean redPressed() {
 		return false;
@@ -27,5 +57,9 @@ public abstract class Game {
 	
 	public boolean bluePressed() {
 		return false;
+	}
+	
+	public Player[] getPlayers() {
+		return players;
 	}
 }

@@ -6,7 +6,10 @@ import java.util.Random;
 
 import javax.swing.JOptionPane;
 
-class UDPServer implements Runnable
+import game.Player;
+import game.PuzzelGame;
+
+public class UDPServer implements Runnable
 {	
 	boolean recsive = true;
 	
@@ -55,17 +58,26 @@ class UDPServer implements Runnable
 		send(message, ardurinoIp);
 	}
 	
-	public byte[] getRecived() throws IOException {
-		serverSocket.receive(packet);
+	public byte[] getRecived(DatagramSocket from) throws IOException {
+		from.receive(packet);
 		return receiveData;
 	}
-
+	
+	PuzzelGame game = new PuzzelGame(new Player[]{new Player(), new Player()}, this);
+	
 	public void run() {
 		try {
 			serverSocket = new DatagramSocket(port);
 		} catch (SocketException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		
+		while(true) {
+			try {
+				game.update();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		//testProgram();
@@ -94,29 +106,30 @@ class UDPServer implements Runnable
 				e.printStackTrace();
 			}
 
-			d = x + "";
+			//d = x + "";
 
 			delay += 1;
 			
 			//System.out.println(oldData + " | " + newData  + " | " + (delay > 8 && newData != oldData));
-
-			if(delay > 8) {
-			    /*try {
+			//x = random.nextInt(64);
+			//d = x + "";
+			/*if(delay > 8) {
+			    try {
 			    	send(d, "192.168.0.2");
 				} catch (IOException e) {
 					e.printStackTrace();
-				}*/
+				}
 				oldData = newData;
 				x += 1;
 				if(x >= 7) x = 0;
 				//System.out.println(d + " | state");
 				delay = 0;
-			}
+			}*/
 			
 			if(random.nextInt(1000) == 500 && recsive) { 
 				try {
 					serverSocket.receive(packet);
-					System.out.println(putTogether(packet.getData(), 10) + " | tillbaka");
+					System.out.println(putTogether(packet.getData(), 6) + " | tillbaka");
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
