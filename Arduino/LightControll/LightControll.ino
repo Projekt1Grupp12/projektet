@@ -28,7 +28,9 @@ char packetBuffer[UDP_TX_PACKET_MAX_SIZE];  //buffer to hold incoming packet,
 char  ReplyBuffer[] = "acknowledged";       // a string to send back
 
 int packet;
-int delayCount = 50;
+int delayCount = 100;
+char messageToServer[6]; 
+int checkIfSent = -1;
 
 // An EthernetUDP instance to let us send and receive packets over UDP
 EthernetUDP Udp;
@@ -51,39 +53,51 @@ void setup() {
 void turnOnLight(int packet){
   if( (packet) & (1<<0)){
     digitalWrite(2, HIGH); 
+    messageToServer[5] = '1';
   }
   else{
-    digitalWrite(2, LOW); 
+    digitalWrite(2, LOW);
+    messageToServer[5] = '0'; 
   }
   if( (packet) & (1<<1)){
     digitalWrite(3, HIGH); 
+    messageToServer[4] = '1';
   }
   else{
     digitalWrite(3, LOW); 
+    messageToServer[4] = '0';
   }
   if( (packet) & (1<<2)){
     digitalWrite(4, HIGH); 
+    messageToServer[3] = '1';
   }
   else{
     digitalWrite(4, LOW); 
+    messageToServer[3] = '0';
   }   
   if( (packet) & (1<<3)){
     digitalWrite(5, HIGH); 
+    messageToServer[2] = '1';
   }
   else{
-    digitalWrite(5, LOW); 
+    digitalWrite(5, LOW);
+    messageToServer[2] = '0'; 
   }
   if( (packet) & (1<<4)){
-    digitalWrite(6, HIGH); 
+    digitalWrite(6, HIGH);
+    messageToServer[1] = '1'; 
   }
   else{
     digitalWrite(6, LOW); 
+    messageToServer[1] = '0';
   }
   if( (packet) & (1<<5)){
     digitalWrite(7, HIGH); 
+    messageToServer[0] = '1';
   }
   else{
     digitalWrite(7, LOW); 
+    messageToServer[0] = '0';
   }
 }
 
@@ -91,13 +105,24 @@ void loop() {
   // if there's data available, read a packet
  int packetSize = Udp.parsePacket();
    Udp.read(packetBuffer, UDP_TX_PACKET_MAX_SIZE);
- 
-  Serial.print("PacketBuffer: ");
-  Serial.println(packetBuffer);
 
   packet = atoi(packetBuffer);
-  turnOnLight(packet);  
+  //Serial.println(packet);
+  turnOnLight(packet);
 
+  //kollar om den skickat ett svar till servern, om den gjort det ska den inte göra det igen om inte packet den fåtts innehåll ändrats.
+  if(checkIfSent != packet){
+    Udp.beginPacket(serverIp, localPort);
+    Udp.write(messageToServer);
+    Udp.endPacket();
+    Serial.println(messageToServer);
+    Serial.print("PacketBuffer: ");
+    Serial.println(packetBuffer);
+    checkIfSent = packet;
+  }
+
+  
+  
   delay(delayCount);
 }
 
