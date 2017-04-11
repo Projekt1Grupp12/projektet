@@ -21,11 +21,16 @@ public abstract class Game {
 	    
 	    for(int i = 0; i < players.length; i++) {
 	    	String pad = Integer.toBinaryString(players[i].getScreen());
-	    	pad = (pad.length() == 2) ? "0" + pad : "";
-	    	tmp += Integer.toBinaryString(players[i].getScreen());
+	    	pad = (pad.length() == 1) ? "00" + pad : pad;
+	    	pad = (pad.length() == 2) ? "0" + pad : pad;
+	    	
+	    	tmp += pad;
 	    }
 	    
-	    fullScreen = Integer.parseInt(tmp, 2);
+	    if(!tmp.equals("")) 
+	    	fullScreen = Integer.parseInt(tmp, 2);
+	    else
+	    	return 0;
 	    
 		return fullScreen;
 	}

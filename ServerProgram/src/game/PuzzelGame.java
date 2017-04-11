@@ -34,11 +34,11 @@ public class PuzzelGame extends Game {
 	
 	public void changeLights() throws IOException {
 		flushFullScreen();
-		
+
 		int[] amountToLightUp = new int[getPlayers().length];
 		
 		for(int i = 0; i < amountToLightUp.length; i++) {
-			amountToLightUp[i] = random.nextInt(3)+1;
+			amountToLightUp[i] = random.nextInt(2)+1;
 		}
 		
 		for(int i = 0; i < getPlayers().length; i++) {
