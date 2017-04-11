@@ -89,8 +89,8 @@ public class ServerView extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			if(e.getSource() == sendButton) {
 				try {
-					controller.getServer().sendToPhone(((message.getText().charAt(0) == '0' && message.getText().charAt(1) == 'b') ? Integer.parseInt(message.getText().substring(2), 2) + "" : message.getText()), 0);
-					controller.getServer().sendToArdurino(((message.getText().charAt(0) == '0' && message.getText().charAt(1) == 'b') ? Integer.parseInt(message.getText().substring(2), 2) + "" : message.getText()));
+					controller.getServer().sendToPhone(((message.getText().length() != 1 && message.getText().charAt(0) == '0' && message.getText().charAt(1) == 'b') ? Integer.parseInt(message.getText().substring(2), 2) + "" : message.getText()), 0);
+					controller.getServer().sendToArdurino(((message.getText().length() != 1 && message.getText().charAt(0) == '0' && message.getText().charAt(1) == 'b') ? Integer.parseInt(message.getText().substring(2), 2) + "" : message.getText()));
 					currentOutput.setText(controller.getSentHistory());
 				} catch (IOException e1) {
 					e1.printStackTrace();
