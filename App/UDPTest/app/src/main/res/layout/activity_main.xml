@@ -48,26 +48,25 @@
                 android:layout_height="match_parent">
 
                 <Button
+                    android:id="@+id/send_UDP_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/send_UDP_button"
                     android:layout_centerHorizontal="true"
-                    android:text="@string/action_send_UDP"
                     android:onClick="refreshStatus"
+                    android:text="@string/action_send_UDP"
 
                     />
             </android.support.design.widget.TextInputLayout>
 
 
             <Button
+                android:id="@+id/button_begin_graph"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="receive message"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:id="@+id/button_begin_graph"
                 android:onClick="sendMessage"
-                />
+                android:text="receive message" />
 
 
             <Button
@@ -79,24 +78,60 @@
                 android:onClick="refreshStatus"
                 android:text="Refresh status" />
 
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btn_Green"
+                        style="@style/Widget.AppCompat.Button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@android:color/holo_green_dark"
+                        android:onClick="onClick" />
+
+                    <Button
+                        android:id="@+id/btn_Yellow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@android:color/holo_orange_light"
+                        android:onClick="onClick" />
+
+                    <Button
+                        android:id="@+id/btn_Red"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@android:color/holo_red_dark"
+                        android:onClick="onClick"
+                        android:text=" " />
+                </LinearLayout>
+            </ScrollView>
+
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_alignParentBottom="true"
-                android:text="Status: Unconnected"
-                android:textSize="12dp"
                 android:id="@+id/status"
-                />
-            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:layout_above="@id/status"
-                android:text="no message"
-                android:textSize="12dp"
+                android:text="Status: Unconnected"
+                android:textSize="12dp" />
+
+            <TextView
                 android:id="@+id/message"
-                />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/status"
+                android:layout_centerHorizontal="true"
+                android:text="no message"
+                android:textSize="12dp" />
         </LinearLayout>
     </ScrollView>
 
