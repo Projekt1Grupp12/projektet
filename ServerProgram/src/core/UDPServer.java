@@ -3,6 +3,7 @@ package core;
 import java.io.*;
 import java.net.*;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JOptionPane;
 
@@ -46,8 +47,14 @@ public class UDPServer implements Runnable
 		InetAddress ipAddress = InetAddress.getByName(ip);
 		DatagramPacket sendPacket = new DatagramPacket(message.getBytes(), message.getBytes().length, ipAddress, port);
 		serverSocket.send(sendPacket);
-		
+
 		sentHistory = message + "  : " + (sentHistoryIndex++) + "\n" + sentHistory;
+		
+		try {
+			TimeUnit.MILLISECONDS.sleep(10);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void sendToPhone(String message, int index) throws IOException {
@@ -71,7 +78,7 @@ public class UDPServer implements Runnable
 		} catch (SocketException e) {
 			e.printStackTrace();
 		}
-
+		
 		while(true) {
 			try {
 				game.update();

@@ -25,11 +25,18 @@ public class PuzzelGame extends Game {
 	}
 
 	public void sendGoodFeedback(Player player) {
-		
+		player.addScore();
 	}
 	
-	public boolean checkGoodInput() {
-		return false;
+	public boolean checkGoodInput(Player player) {
+		for(int i = 0; i < player.lightsOn().length; i++) {
+			if(player.lightsOn()[i] && colorsPressed(player)[i] && !player.getColorsPressed()[i]) {
+				player.setAmountPressed(player.getAmountPressed()+1);
+				player.setColorsPressed(true, i);
+			}
+		}
+		
+		return player.getAmountPressed() == player.amountLightsOn();
 	}
 	
 	public void changeLights() throws IOException {

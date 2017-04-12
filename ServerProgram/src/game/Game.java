@@ -50,17 +50,21 @@ public abstract class Game {
 	
 	public abstract void update() throws IOException;
 	
-	public abstract boolean checkGoodInput();
+	public abstract boolean checkGoodInput(Player player);
 	
-	public boolean redPressed() {
+	public boolean[] colorsPressed(Player player) {
+		return new boolean[]{redPressed(player), greenPressed(player), redPressed(player)};
+	}
+	
+	public boolean redPressed(Player player) {
 		return false;
 	}
 	
-	public boolean greenPressed() {
+	public boolean greenPressed(Player player) {
 		return false;
 	}
 	
-	public boolean bluePressed() {
+	public boolean bluePressed(Player player) {
 		return false;
 	}
 	
