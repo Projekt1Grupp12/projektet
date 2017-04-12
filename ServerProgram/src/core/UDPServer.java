@@ -71,7 +71,7 @@ public class UDPServer implements Runnable
 		} catch (SocketException e) {
 			e.printStackTrace();
 		}
-		
+
 		while(true) {
 			try {
 				game.update();
@@ -79,7 +79,6 @@ public class UDPServer implements Runnable
 				e.printStackTrace();
 			}
 		}
-		
 		//testProgram();
 	}
 	
@@ -106,14 +105,14 @@ public class UDPServer implements Runnable
 				e.printStackTrace();
 			}
 
-			//d = x + "";
+			d = x + "";
 
 			delay += 1;
 			
 			//System.out.println(oldData + " | " + newData  + " | " + (delay > 8 && newData != oldData));
 			//x = random.nextInt(64);
 			//d = x + "";
-			/*if(delay > 8) {
+			if(delay > 8) {
 			    try {
 			    	send(d, "192.168.0.2");
 				} catch (IOException e) {
@@ -124,14 +123,14 @@ public class UDPServer implements Runnable
 				if(x >= 7) x = 0;
 				//System.out.println(d + " | state");
 				delay = 0;
-			}*/
+			}
 			
 			if(random.nextInt(1000) == 500 && recsive) { 
 				try {
-					serverSocket.receive(packet);
+					//serverSocket.receive(packet);
+					this.getRecived(serverSocket);
 					System.out.println(putTogether(packet.getData(), 6) + " | tillbaka");
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				//newData = Integer.parseInt(putTogether(packet.getData(), 3));
