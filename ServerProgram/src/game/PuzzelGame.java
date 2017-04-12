@@ -58,6 +58,22 @@ public class PuzzelGame extends Game {
 		sendToArdurino(setupFullScreen() + "");
 		System.out.println(Integer.toBinaryString(setupFullScreen()));
 	}
+	
+	public void changeLights(int index) throws IOException {
+		flushFullScreen();
+
+		int amountToLightUp = 0;
+
+		amountToLightUp = random.nextInt(2)+1;
+		
+		getPlayers()[index].flushScreen();
+		for(int i = 0; i < amountToLightUp; i++) {
+			getPlayers()[index].setScreenBit(random.nextInt(3));
+		}
+		
+		sendToArdurino(setupFullScreen() + "");
+		System.out.println(Integer.toBinaryString(setupFullScreen()));
+	}
 
 	public void update() throws IOException {
 		levelCount += 1;
@@ -74,6 +90,10 @@ public class PuzzelGame extends Game {
 			changeLights();
 			delay = 0;
 		}
+		
+		for(int i = 0; i < getPlayers().length; i++)
+			if(checkGoodInput(getPlayers()[i]))
+				sendGoodFeedback(getPlayers()[i]);
 		
 		try {
 			TimeUnit.MILLISECONDS.sleep(5);
