@@ -11,9 +11,12 @@ public abstract class Game {
 	
 	private UDPServer server;
 	
+	private String input;
+	
 	public Game(Player[] players, UDPServer server) {
 		this.players = players;
 		this.server = server;
+		input = "";
 	}
 	
 	public int setupFullScreen() {
@@ -48,7 +51,7 @@ public abstract class Game {
 	
 	public abstract void sendGoodFeedback(Player player);
 	
-	public abstract void update() throws IOException;
+	public abstract void update(String input) throws IOException;
 	
 	public abstract boolean checkGoodInput(Player player);
 	
@@ -57,18 +60,26 @@ public abstract class Game {
 	}
 	
 	public boolean redPressed(Player player) {
-		return false;
+		return input.equals("3"+player.getId());
 	}
 	
 	public boolean greenPressed(Player player) {
-		return false;
+		return input.equals("1"+player.getId());
 	}
 	
-	public boolean bluePressed(Player player) {
-		return false;
+	public boolean yellowPressed(Player player) {
+		return input.equals("2"+player.getId());
 	}
 	
 	public Player[] getPlayers() {
 		return players;
+	}
+	
+	public void setInput(String input) {
+		this.input = input;
+	}
+	
+	public String getInput() {
+		return input;
 	}
 }

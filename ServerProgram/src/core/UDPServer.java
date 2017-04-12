@@ -27,6 +27,8 @@ public class UDPServer implements Runnable
 	
 	DatagramPacket packet;
 	
+	Random random = new Random();
+	
 	public UDPServer(int port, String[] phoneIps, String ardurinoIp) {
 		this.port = port;
 		
@@ -79,14 +81,18 @@ public class UDPServer implements Runnable
 			e.printStackTrace();
 		}
 		
-		while(true) {
-			try {
-				game.update();
-			} catch (IOException e) {
-				e.printStackTrace();
+		PuzzelGame game = new PuzzelGame(new Player[]{new Player(), new Player()}, this);
+		
+		try {
+			while(true) {
+				if(random.nextInt(10000) == 300) serverSocket.receive(packet);
+				game.update(putTogether(packet.getData(), 2));
 			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		//testProgram();
+		
+		testProgram();
 	}
 	
 	public void testProgram() {
@@ -95,7 +101,7 @@ public class UDPServer implements Runnable
 		
 		String d = "0";
 		
-		Random random = new Random();
+		random = new Random();
 		
 		int newData = 0;
 		int oldData = 0;
@@ -134,8 +140,7 @@ public class UDPServer implements Runnable
 			
 			if(random.nextInt(1000) == 500 && recsive) { 
 				try {
-					//serverSocket.receive(packet);
-					this.getRecived(serverSocket);
+					serverSocket.receive(packet);
 					System.out.println(putTogether(packet.getData(), 6) + " | tillbaka");
 				} catch (IOException e) {
 					e.printStackTrace();

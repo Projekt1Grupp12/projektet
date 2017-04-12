@@ -7,10 +7,13 @@ public class Player {
 	private int screen;
 	private int amountPressed;
 	
+	private int id;
+	
 	private boolean[] colorsPressed;
 	
 	public Player() {
 		flushColorsPressed();
+		id = 0;
 	}
 	
 	public void addScore() {
@@ -70,5 +73,9 @@ public class Player {
 	
 	public boolean[] getColorsPressed() {
 		return colorsPressed;
+	}
+	
+	public int getId() {
+		return id;
 	}
 }

@@ -12,11 +12,12 @@ public class PuzzelGame extends Game {
 	private int levelCount;
 	private int level;
 	
+	private boolean hasStarted;
+	
 	Random random = new Random();
 	
 	public PuzzelGame(Player[] players, UDPServer server) {
 		super(players, server);
-		
 		maxDelay = 128*2;
 	}
 
@@ -75,7 +76,12 @@ public class PuzzelGame extends Game {
 		System.out.println(Integer.toBinaryString(setupFullScreen()));
 	}
 
-	public void update() throws IOException {
+	public void update(String input) throws IOException {
+		if(!hasStarted) {
+			changeLights();
+			hasStarted = !hasStarted;
+		}
+		
 		levelCount += 1;
 		
 		if(levelCount >= level*32) {
@@ -87,13 +93,15 @@ public class PuzzelGame extends Game {
 		delay += 1;
 		
 		if(delay == maxDelay) {
-			changeLights();
+			//changeLights();
 			delay = 0;
 		}
 		
 		for(int i = 0; i < getPlayers().length; i++)
-			if(checkGoodInput(getPlayers()[i]))
+			if(checkGoodInput(getPlayers()[i])) {
+				changeLights(i);
 				sendGoodFeedback(getPlayers()[i]);
+			}
 		
 		try {
 			TimeUnit.MILLISECONDS.sleep(5);
