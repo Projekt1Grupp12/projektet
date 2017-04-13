@@ -1,62 +1,24 @@
 
-# Created by https://www.gitignore.io/api/eclipse
+*.jar
 
-### Eclipse ###
+*.class
 
-.metadata
-bin/
-tmp/
-*.tmp
-*.bak
-*.swp
-*~.nib
-local.properties
-.settings/
-.loadpath
-.recommenders
+*.ini
 
-# Eclipse Core
-.project
+\.metadata/\.plugins/org\.eclipse\.ui\.workbench/
 
-# External tool builders
-.externalToolBuilders/
+\.metadata/\.plugins/org\.eclipse\.oomph\.setup/
 
-# Locally stored "Eclipse launch configurations"
-*.launch
+\.metadata/\.plugins/org\.eclipse\.ui\.intro/
 
-# PyDev specific (Python IDE for Eclipse)
-*.pydevproject
+\.metadata/\.plugins/org\.eclipse\.m2e\.logback\.configuration/
 
-# CDT-specific (C/C++ Development Tooling)
-.cproject
+\.metadata/\.plugins/org\.eclipse\.jdt\.ui/
 
-# JDT-specific (Eclipse Java Development Tools)
-.classpath
+\.metadata/\.plugins/org\.eclipse\.jdt\.core/
 
-# Java annotation processor (APT)
-.factorypath
+*.json
 
-# PDT-specific (PHP Development Tools)
-.buildpath
+\.metadata/\.plugins/org\.eclipse\.epp\.logging\.aeri\.ide/org\.eclipse\.epp\.logging\.aeri\.ide\.server/remote-history/
 
-# sbteclipse plugin
-.target
-
-# Tern plugin
-.tern-project
-
-# TeXlipse plugin
-.texlipse
-
-# STS (Spring Tool Suite)
-.springBeans
-
-# Code Recommenders
-.recommenders/
-
-# Scala IDE specific (Scala & Java development for Eclipse)
-.cache-main
-.scala_dependencies
-.worksheet
-
-# End of https://www.gitignore.io/api/eclipse
+\.metadata/
