@@ -31,6 +31,8 @@ int delayCount = 100;
 char messageToServer[6]; 
 int checkIfSent = -1;
 
+bool hasPressed = false;
+
 // An EthernetUDP instance to let us send and receive packets over UDP
 EthernetUDP Udp;
 IPAddress serverIp(192, 168, 0, 12);
@@ -102,11 +104,10 @@ void turnOnLight(int packet){
 
 void loop() {
   // if there's data available, read a packet
- int packetSize = Udp.parsePacket();
-   Udp.read(packetBuffer, UDP_TX_PACKET_MAX_SIZE);
-
+  int packetSize = Udp.parsePacket();
+  Udp.read(packetBuffer, UDP_TX_PACKET_MAX_SIZE);
+  int sensorValue = analogRead(A0);
   packet = atoi(packetBuffer);
-  //Serial.println(packet);
   turnOnLight(packet);
 
   //kollar om innehållet i paketet har ändrats, om den har det så skicka tillbaka ett medelande till servern om inte gör inget.
@@ -121,7 +122,25 @@ void loop() {
     Serial.println(messageToServer);
     checkIfSent = packet;
   }
+  
+  if(sensorValue >= 1000){
+    sensorValue = 1;
+  }
+  else{
+    sensorValue = 0;
+  }
+  if(sensorValue == 1 && !hasPressed){
+    Udp.beginPacket(serverIp, localPort);
+    Udp.write("-2");
+    Udp.endPacket();
+    hasPressed = true;
+    Serial.println(analogRead(A0)); 
+  }
 
+  if(sensorValue == 0 && hasPressed) {
+    hasPressed = false;
+  }
+  
   delay(delayCount);
 }
 
