@@ -1,13 +1,26 @@
+
+*.jar
+
 *.class
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+*.ini
 
-# Package Files #
-*.jar
-*.war
-*.ear
+\.metadata/\.plugins/org\.eclipse\.ui\.workbench/
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-project/src/library/BorrowedView.java
+\.metadata/\.plugins/org\.eclipse\.oomph\.setup/
+
+\.metadata/\.plugins/org\.eclipse\.ui\.intro/
+
+\.metadata/\.plugins/org\.eclipse\.m2e\.logback\.configuration/
+
+\.metadata/\.plugins/org\.eclipse\.jdt\.ui/
+
+\.metadata/\.plugins/org\.eclipse\.jdt\.core/
+
+*.json
+
+\.metadata/\.plugins/org\.eclipse\.epp\.logging\.aeri\.ide/org\.eclipse\.epp\.logging\.aeri\.ide\.server/remote-history/
+
+\.metadata/
+
+ServerProgram/\.classpath
