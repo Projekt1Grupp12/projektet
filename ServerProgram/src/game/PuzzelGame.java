@@ -31,7 +31,7 @@ public class PuzzelGame extends Game {
 	int x = 0;
 	public boolean checkGoodInput(Player player) {
 		for(int i = 0; i < player.lightsOn().length; i++) {
-			if(player.lightsOn()[i] && colorsPressed(player)[i] && !player.getColorsPressed()[i] || x == 1) {
+			if(player.lightsOn()[i] && colorsPressed(player)[i] && !player.getColorsPressed()[i]) {
 				player.setAmountPressed(player.getAmountPressed()+1);
 				player.setColorsPressed(true, i);
 				player.clearScreenBit(i);

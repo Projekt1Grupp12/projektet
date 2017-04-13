@@ -83,7 +83,7 @@ public class UDPServer implements Runnable
 		
 		try {
 			while(true) {
-				if(false) serverSocket.receive(packet);
+				serverSocket.receive(packet);
 				try {
 					TimeUnit.MILLISECONDS.sleep(2);
 				} catch (InterruptedException e) {
