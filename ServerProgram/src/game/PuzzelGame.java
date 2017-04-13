@@ -28,12 +28,18 @@ public class PuzzelGame extends Game {
 	public void sendGoodFeedback(Player player) {
 		player.addScore();
 	}
-	
+	int x = 0;
 	public boolean checkGoodInput(Player player) {
 		for(int i = 0; i < player.lightsOn().length; i++) {
-			if(player.lightsOn()[i] && colorsPressed(player)[i] && !player.getColorsPressed()[i]) {
+			if(player.lightsOn()[i] && colorsPressed(player)[i] && !player.getColorsPressed()[i] || x == 1) {
 				player.setAmountPressed(player.getAmountPressed()+1);
 				player.setColorsPressed(true, i);
+				player.clearScreenBit(i);
+				try {
+					sendToArdurino(setupFullScreen() + "");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		
@@ -97,11 +103,12 @@ public class PuzzelGame extends Game {
 			delay = 0;
 		}
 		
-		for(int i = 0; i < getPlayers().length; i++)
+		for(int i = 0; i < getPlayers().length; i++) {
 			if(checkGoodInput(getPlayers()[i])) {
 				changeLights(i);
 				sendGoodFeedback(getPlayers()[i]);
 			}
+		}
 		
 		try {
 			TimeUnit.MILLISECONDS.sleep(5);

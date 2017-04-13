@@ -81,18 +81,24 @@ public class UDPServer implements Runnable
 			e.printStackTrace();
 		}
 		
-		PuzzelGame game = new PuzzelGame(new Player[]{new Player(), new Player()}, this);
-		
 		try {
 			while(true) {
-				if(random.nextInt(10000) == 300) serverSocket.receive(packet);
+				if(false) serverSocket.receive(packet);
+				try {
+					TimeUnit.MILLISECONDS.sleep(2);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				System.out.println(putTogether(packet.getData(), 2) + " | tillbaka");
 				game.update(putTogether(packet.getData(), 2));
+				receiveData = new byte[1024];
+				packet = new DatagramPacket(receiveData, receiveData.length);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
-		testProgram();
+		//testProgram();
 	}
 	
 	public void testProgram() {
