@@ -60,7 +60,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //A method is called when activity is to be created. It has a main window with TextView, EditText.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("A", "");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //populateAutoComplete();
@@ -92,87 +91,47 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //findViewById() returns view by ID and adds ClickListener to the view
         findViewById(R.id.send_UDP_button).setOnClickListener(this); // calling onClick() method
-        findViewById(R.id.button_begin_graph).setOnClickListener(this); // calling onClick() method
-        findViewById(R.id.button_refresh_status).setOnClickListener(this); // calling onClick() method
-
     }
     
     //Method inherited from View.OnClickListener and overriden.
     //Called when a view has been clicked.
     @Override
     public void onClick(View view) {
-        Log.d("IP-address", String.valueOf(ipAddress));
         //Send data
         switch (view.getId()) {
                 //If send_UDP button is pressed, call send_UDP_button method.
             case R.id.send_UDP_button:
-                Log.d("runUdpServer", "Running server");
                 statusText = "0";
+                if(!isEmpty(mIPView)) {
+                    ipAddress = String.valueOf(mIPView.getText());
+                    statusText = ipAddress;
+                }
                 runUdpServer();
                 break;
-                //If begin_graph button is pressed, read text from mIPView and place it in ipAdress.
-            case R.id.button_begin_graph:
-                ipAddress = String.valueOf(mIPView.getText());
-                //Adding values to array named "message"
-                message[0] = 'H';
-                message[1] = 'e';
-                message[2] = 'l';
-                message[3] = 'l';
-                message[4] = 'o';
-                message[5] = '?';
-                Log.d("DATAGRAM_PACKET",    "Constructs a DatagramPacket for receiving packets of length length.");
-                //Creates DatagramPacket with specified data array and size.
-                DatagramPacket p = new DatagramPacket(message, message.length);
-                DatagramSocket s = null;
-                
-                //Constructs a datagram socket and binds it to the specified port on the local host machine.
-                //Receives a datagram packet from specified socket.
-                try {
-                    Log.d("DATAGRAM_SOCKET", "Constructs a datagram socket and binds it to the specified port on the local host machine.");
-                    s = new DatagramSocket(server_port);
-                    Log.d("RECEIVE", "Receives a datagram packet from this socket.");
-                    s.receive(p);
-                } catch (SocketException e) {
-                    e.printStackTrace();
-                    Log.d("SocketException", "----------------");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Log.d("IOException", "----------------");
-                }
-                
-                //Creates new String that contains characters from a subarray(message) of the character array argument.
-                //The offset argument(0) is the index of the first character of the subarray 
-                //and the count argument(p.getLength()) specifies the length of the subarray.
-                text = new String(message, 0, p.getLength());
-                Log.d("Udp tutorial", "message:" + text);
-                //Close DatagramSocket
-                s.close();
-                break;
-                //If refresh_status button is pressed, update status
-            case R.id.button_refresh_status:
-                Log.d("BUTTON REFRESH", "button_refresh_status");
-                refreshStatus(mIPView);
-                break;
             case R.id.btn_Green://1
-                Log.d("BUTTON GREEN", "btn_Green");
                 statusText = "1";
                 runUdpServer();
                 break;
-            case R.id.btn_Red://3
-                Log.d("BUTTON RED", "btn_Red");
-                statusText = "3";
-                runUdpServer();
-                break;
             case R.id.btn_Yellow://2
-                Log.d("BUTTON YELLOW", "btn_Yellow");
                 statusText = "2";
                 runUdpServer();
                 break;
+            case R.id.btn_Red://3
+                statusText = "3";
+                runUdpServer();
+                break;
             default:
-                Log.d("NO BUTTON", "and still onClick event ecevuted, something wrong...");
+                Log.d("NO CASES MATCH", "onCklick event executed, something is wrong...");
                 break;
         }
     }
+
+    private boolean isEmpty(EditText etText) {
+        if (etText.getText().toString().trim().length() > 0)
+            return false;
+        return true;
+    }
+
 
     /**
      * Get IP address from first non-localhost interface
@@ -187,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //For each interface in the list get an IP adress and place into list of InetAdress.
             for (NetworkInterface intf : interfaces) {
                 List<InetAddress> addrs = Collections.list(intf.getInetAddresses());
-                //For each  adress in the list.
+                //For each  address in the list.
                 for (InetAddress addr : addrs) {
                     //isLoopbackAddress() method returns true if the adress is the loopback address, false otherwise.
                     if (!addr.isLoopbackAddress()) {
@@ -199,7 +158,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         if (useIPv4) {
                             if (isIPv4)
                                 return sAddr;
-                   
                             //Else return string representation of IPv6 adress.
                         } else {
                             if (!isIPv4) {
@@ -228,29 +186,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //getConnectionInfo() return dynamic information about the current Wi-Fi connection.
         WifiInfo info = w.getConnectionInfo();
         mStatusView.setText(" ");
+
         //Add information to status variable.
-        status.append("\n\nWiFi Status: " + info.toString());
+       // status.append("\n\nWiFi Status: " + info.toString());
+
         //getIpAddress() method returns int representation of IP.
         x = info.getIpAddress();
-        Log.d("IP ADDRESS", String.valueOf(x));
+
         //getMacAddress() returns string representation of mac adress.
-        String str1 = info.getMacAddress();
-        Log.d("MAC ADDRESS", str1);
+        //String str1 = info.getMacAddress();
+
         //Add information to status variable.
-        status.append("\n\nmac address===" + str1 + "  ,ip===" + x);
-        Log.d("AFTER STATUS APPEND", "debug");
+       // status.append("\n\nmac address===" + str1 + "  ,ip===" + x);
+
         try {
-            Log.d("CC1", "debug");
             server_ip = InetAddress.getByName(ipAddress); // ip of THE OTHER DEVICE - NOT THE PHONE
-            Log.d("ipAddress", String.valueOf(ipAddress));
-            Log.d("server_ip", String.valueOf(server_ip));
 
         } catch (UnknownHostException e) {
             Log.d("UnknownHostException", "debug");
             status.append("Error at fetching inetAddress");
         }
 
-        Log.d("B1", "debug");
         //async_udp will execute whatever you put in doInBackground on a background thread with the given parameters.
         async_udp = new AsyncTask<Void, Void, Void>() {
 
@@ -258,57 +214,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             protected Void doInBackground(Void... params) {
 
                 byte b1[] = new byte[100];
-                b1 = str2.getBytes();
+                b1 = statusText.getBytes();
                 //Constructs a datagram packet for sending packet (b1) of length (b1.length) to
                 //the specified port number(server_port) on the specified host(server_ip). 
-                DatagramPacket p1 = new DatagramPacket(b1, b1.length, server_ip, server_port);
+                //Constructs a datagram packet for receiving packet (b1) of length (b1.length) from specified host
+                DatagramPacket p1 = new DatagramPacket(b1, b1.length);
 
-                Log.d("B2", "debug");
+
                 try {
-                    Log.d("A0", String.valueOf(server_port));
-                    Log.d("A0", String.valueOf(server_ip));
                     //Creates a DatagramSocket s.
                     DatagramSocket s = new DatagramSocket();
-                    //DatagramSocket s = new DatagramSocket(server_port);
-                    Log.d("A1", "debug1");
+
                     //Connects the socket(s) to a remote address(server_ip, server_port). When a socket is connected to a remote address, 
                     //packets may only be sent to or received from that address.
                     s.connect(server_ip, server_port);
 
-                    Log.d("A1", "debug2");
-                     //Constructs a datagram packet for sending packet (b1) of length (b1.length) to
-                     //the specified port number(server_port) on the specified host(InetAddress.getByName(ipAddress)). 
+                    //Constructs a datagram packet for sending packet (b1) of length (b1.length) to
+                    //the specified port number(server_port) on the specified host(InetAddress.getByName(ipAddress)).
                     DatagramPacket p0 = new DatagramPacket(b1, b1.length, InetAddress.getByName(ipAddress), server_port);
 
-                    Log.d("A1", "debug3");
-                    //Sends a specified datagram packet from the socket(s). 
+                    //Sends a specified datagram packet from the socket(s).
                     s.send(p0);
-                    //The above two line can be used to send a packet - the other code is only to recieve
-                    Log.d("A2", "s.connect(server_ip, server_port)");
-                    //DatagramPacket p1 = new DatagramPacket(b1,b1.length);
-                    Log.d("A3", "DatagramPacket p1 = new DatagramPacket(b1,b1.length)");
-                    Log.d("wifi IP", getIPAddress(true));
-                    //s.receive(p1);
-                    Log.d("A4", "s.receive(p1)");
+                    //Receives a specified datagram packet from the socket(s).
+                    Log.d("RECEIVE" , String.valueOf(p1.getData()[0]));
+                    Log.d("RECEIVE" , "pre");
+                    s.receive(p1);
+                    Log.d("RECEIVE" , "post");
+                    Log.d("RECEIVE" , String.valueOf(p1.getData()[0]));
                     //Close socket
                     s.close();
-                    Log.d("A5", "s.close()");
+
                     b1 = p1.getData();
 
-                    String str = new String(b1);
-
-                    server_port = p1.getPort();
-                    server_ip = p1.getAddress();
-
-
-                    //Creates a String that holds server_ip, server_port, message number and data
-                    String str_msg = "RECEIVED FROM CLIENT IP =" + server_ip + " port=" + server_port + " message no = " + b1[0] +
-                            " data=" + str.substring(1);  //first character is message number
-                    //WARNING: b1 bytes display as signed but are sent as signed characters!
-
-                    //status.setText(str_msg);
-                    statusText = str_msg;
-
+                    statusText = String.valueOf(b1[0]);
                 } catch (SocketException e) {
                     //status.append("Error creating socket");
                     statusText.concat(" Error creating socket");   //this doesnt work!
@@ -319,6 +257,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 return null;
             }
         };
+        status.append(statusText);
 
 
         if(Build.VERSION.SDK_INT >=11)
@@ -334,7 +273,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mStatusView.setText(statusText); //need to set out here, as above is in an async thread
 
         }
+
+    public String hostInfor(byte b1[]){
+        String str = new String(b1);
+        //Creates a String that holds server_ip, server_port, message number and data
+        String str_msg = "RECEIVED FROM CLIENT IP =" + server_ip + " port=" + server_port + " message no = " + b1[0] +
+                " data=" + str.substring(1);  //first character is message number
+        //WARNING: b1 bytes display as signed but are sent as signed characters!
+        return str_msg;
     }
+
+}
 
 
 
