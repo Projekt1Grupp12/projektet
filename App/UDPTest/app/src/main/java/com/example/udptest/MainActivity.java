@@ -43,10 +43,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //IP is a lower-level protocol on which protocols like UDP and TCP are built.
     InetAddress server_ip;
     private int server_port = 4444;
-    private String ipAddress = "10.2.19.28";
+    private String ipAddress = "10.2.28.40";
     private byte[] message = new byte[1500];
     String statusText = null;
-    String text;
+    private SendActivity send;
+    private ReceiveActivity receive;
+
 
     private EditText mIPView;
     private TextView status;
@@ -91,12 +93,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //findViewById() returns view by ID and adds ClickListener to the view
         findViewById(R.id.send_UDP_button).setOnClickListener(this); // calling onClick() method
+
+        send = new SendActivity(ipAddress, server_port);
+        statusText = "First contact established...";
+        send.execute(statusText);
+
+        receive = new ReceiveActivity(ipAddress, server_port);
+        receive.execute();
     }
     
     //Method inherited from View.OnClickListener and overriden.
     //Called when a view has been clicked.
     @Override
     public void onClick(View view) {
+        send = new SendActivity(ipAddress, server_port);
         //Send data
         switch (view.getId()) {
                 //If send_UDP button is pressed, call send_UDP_button method.
@@ -104,26 +114,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 statusText = "0";
                 if(!isEmpty(mIPView)) {
                     ipAddress = String.valueOf(mIPView.getText());
-                    statusText = ipAddress;
                 }
-                runUdpServer();
+                send.execute(statusText);
+                //runUdpServer();
                 break;
             case R.id.btn_Green://1
                 statusText = "1";
-                runUdpServer();
+                //runUdpServer();
+                send.execute(statusText);
                 break;
             case R.id.btn_Yellow://2
                 statusText = "2";
-                runUdpServer();
+                //runUdpServer();
+                send.execute(statusText);
                 break;
             case R.id.btn_Red://3
                 statusText = "3";
-                runUdpServer();
+                //runUdpServer();
+                send.execute(statusText);
                 break;
             default:
                 Log.d("NO CASES MATCH", "onCklick event executed, something is wrong...");
                 break;
         }
+        //Wait for response from server
+        receive = new ReceiveActivity(ipAddress, server_port);
+        receive.execute();
+        try {
+            Thread.sleep(5);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.gc();
     }
 
     private boolean isEmpty(EditText etText) {
@@ -132,6 +154,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return true;
     }
 
+    //Update status of the view
+    public void refreshStatus(View view)
+        {
+        mStatusView.setText(statusText);
+    }
 
     /**
      * Get IP address from first non-localhost interface
@@ -171,116 +198,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } catch (Exception ex) { } // for now eat exceptions
         //If adress is a loopback adress return empty string
         return "";
-    }
-
-
-    //Update status of the view
-    public void refreshStatus(View view)
-        {
-        mStatusView.setText(statusText);
-    }
-
-    public void runUdpServer()
-    {
-        int x;
-        //getConnectionInfo() return dynamic information about the current Wi-Fi connection.
-        WifiInfo info = w.getConnectionInfo();
-        mStatusView.setText(" ");
-
-        //Add information to status variable.
-       // status.append("\n\nWiFi Status: " + info.toString());
-
-        //getIpAddress() method returns int representation of IP.
-        x = info.getIpAddress();
-
-        //getMacAddress() returns string representation of mac adress.
-        //String str1 = info.getMacAddress();
-
-        //Add information to status variable.
-       // status.append("\n\nmac address===" + str1 + "  ,ip===" + x);
-
-        try {
-            server_ip = InetAddress.getByName(ipAddress); // ip of THE OTHER DEVICE - NOT THE PHONE
-
-        } catch (UnknownHostException e) {
-            Log.d("UnknownHostException", "debug");
-            status.append("Error at fetching inetAddress");
-        }
-
-        //async_udp will execute whatever you put in doInBackground on a background thread with the given parameters.
-        async_udp = new AsyncTask<Void, Void, Void>() {
-
-            @Override
-            protected Void doInBackground(Void... params) {
-
-                byte b1[] = new byte[100];
-                b1 = statusText.getBytes();
-                //Constructs a datagram packet for sending packet (b1) of length (b1.length) to
-                //the specified port number(server_port) on the specified host(server_ip). 
-                //Constructs a datagram packet for receiving packet (b1) of length (b1.length) from specified host
-                DatagramPacket p1 = new DatagramPacket(b1, b1.length);
-
-
-                try {
-                    //Creates a DatagramSocket s.
-                    DatagramSocket s = new DatagramSocket();
-
-                    //Connects the socket(s) to a remote address(server_ip, server_port). When a socket is connected to a remote address, 
-                    //packets may only be sent to or received from that address.
-                    s.connect(server_ip, server_port);
-
-                    //Constructs a datagram packet for sending packet (b1) of length (b1.length) to
-                    //the specified port number(server_port) on the specified host(InetAddress.getByName(ipAddress)).
-                    DatagramPacket p0 = new DatagramPacket(b1, b1.length, InetAddress.getByName(ipAddress), server_port);
-
-                    //Sends a specified datagram packet from the socket(s).
-                    s.send(p0);
-                    //Receives a specified datagram packet from the socket(s).
-                    Log.d("RECEIVE" , String.valueOf(p1.getData()[0]));
-                    Log.d("RECEIVE" , "pre");
-                    s.receive(p1);
-                    Log.d("RECEIVE" , "post");
-                    Log.d("RECEIVE" , String.valueOf(p1.getData()[0]));
-                    //Close socket
-                    s.close();
-
-                    b1 = p1.getData();
-
-                    statusText = String.valueOf(b1[0]);
-                } catch (SocketException e) {
-                    //status.append("Error creating socket");
-                    statusText.concat(" Error creating socket");   //this doesnt work!
-                } catch (IOException e) {
-                    //status.append("Error recieving packet");
-                    statusText.concat(" Error recieving packet");  //this doesnt work!
-                }
-                return null;
-            }
-        };
-        status.append(statusText);
-
-
-        if(Build.VERSION.SDK_INT >=11)
-
-            {
-                async_udp.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            }
-        else
-
-            {
-                async_udp.execute();
-            }
-        mStatusView.setText(statusText); //need to set out here, as above is in an async thread
-
-        }
-
-    public String hostInfor(byte b1[]){
-        String str = new String(b1);
-        //Creates a String that holds server_ip, server_port, message number and data
-        String str_msg = "RECEIVED FROM CLIENT IP =" + server_ip + " port=" + server_port + " message no = " + b1[0] +
-                " data=" + str.substring(1);  //first character is message number
-        //WARNING: b1 bytes display as signed but are sent as signed characters!
-        return str_msg;
     }
 
 }
