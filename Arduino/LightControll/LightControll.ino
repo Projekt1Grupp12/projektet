@@ -8,7 +8,6 @@ ström på dem portarna beroende på paketets nummer.
 
  */
 
-
 #include <SPI.h>         // needed for Arduino versions later than 0018
 #include <Ethernet.h>
 #include <EthernetUdp.h>         // UDP library from: bjoern@cs.stanford.edu 12/30/2008
@@ -110,19 +109,19 @@ void loop() {
   //Serial.println(packet);
   turnOnLight(packet);
 
-  //kollar om den skickat ett svar till servern, om den gjort det ska den inte göra det igen om inte packet den fåtts innehåll ändrats.
+  //kollar om innehållet i paketet har ändrats, om den har det så skicka tillbaka ett medelande till servern om inte gör inget.
   if(checkIfSent != packet){
-    Udp.beginPacket(serverIp, localPort);
+    
+ /*   Udp.beginPacket(serverIp, localPort);
     Udp.write(messageToServer);
-    Udp.endPacket();
-    Serial.println(messageToServer);
+    Udp.endPacket(); */
     Serial.print("PacketBuffer: ");
     Serial.println(packetBuffer);
+    Serial.println("To Server: ");
+    Serial.println(messageToServer);
     checkIfSent = packet;
   }
 
-  
-  
   delay(delayCount);
 }
 
