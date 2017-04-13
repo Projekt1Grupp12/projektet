@@ -12,9 +12,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.Timer;
 import javax.swing.text.DefaultCaret;
 
-public class ServerView extends JPanel {
+public class ServerView extends JPanel implements ActionListener {
 	ServerController controller;
 	
 	private JTextArea currentInput = new JTextArea();
@@ -75,6 +76,7 @@ public class ServerView extends JPanel {
 		this.add(outputPanel, BorderLayout.WEST);
 		
 		this.currentOutput.setText(controller.getSentHistory());
+		this.currentInput.setText(controller.getInputHistory());
 		
 		ButtonListener b = new ButtonListener();
 		sendButton.addActionListener(b);
@@ -83,7 +85,21 @@ public class ServerView extends JPanel {
 		this.messagePanel.add(this.message);
 		
 		add(messagePanel, BorderLayout.CENTER);
+		
+		timer.start(); //Start the timer
 	}
+	
+	Timer timer = new Timer(100, new MyListener()); //Tick every 1000ms, let MyListener listen to the ticks
+
+	private class MyListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) { //Timer ticked
+			currentOutput.setText(controller.getSentHistory());
+			currentInput.setText(controller.getInputHistory());
+			currentInput.repaint();
+			currentOutput.repaint();
+		}
+	}
+
 	
 	public class ButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
@@ -92,10 +108,17 @@ public class ServerView extends JPanel {
 					controller.getServer().sendToPhone(((message.getText().length() != 1 && message.getText().charAt(0) == '0' && message.getText().charAt(1) == 'b') ? Integer.parseInt(message.getText().substring(2), 2) + "" : message.getText()), 0);
 					controller.getServer().sendToArdurino(((message.getText().length() != 1 && message.getText().charAt(0) == '0' && message.getText().charAt(1) == 'b') ? Integer.parseInt(message.getText().substring(2), 2) + "" : message.getText()));
 					currentOutput.setText(controller.getSentHistory());
+					currentInput.setText(controller.getInputHistory());
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
 			}
 		}
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 }

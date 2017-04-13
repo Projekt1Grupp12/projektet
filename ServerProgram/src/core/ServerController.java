@@ -17,4 +17,8 @@ public class ServerController {
 	public String getSentHistory() {
 		return server.getSentHistory();
 	}
+	
+	public String getInputHistory() {
+		return server.getInputHistory();
+	}
 }

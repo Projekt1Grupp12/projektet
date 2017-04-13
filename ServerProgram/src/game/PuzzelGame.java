@@ -13,6 +13,7 @@ public class PuzzelGame extends Game {
 	private int level;
 	
 	private boolean hasStarted;
+	private boolean startButtonBlink = false;
 	
 	Random random = new Random();
 	
@@ -81,11 +82,16 @@ public class PuzzelGame extends Game {
 		sendToArdurino(setupFullScreen() + "");
 		System.out.println(Integer.toBinaryString(setupFullScreen()));
 	}
-
+	
 	public void update(String input) throws IOException {
 		if(!hasStarted) {
 			changeLights();
 			hasStarted = !hasStarted;
+		}
+		
+		if(input.equals("-2")) {
+			this.sendToArdurino((startButtonBlink) ? "63" : "00");
+			startButtonBlink = !startButtonBlink;
 		}
 		
 		levelCount += 1;

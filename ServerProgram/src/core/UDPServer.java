@@ -19,9 +19,11 @@ public class UDPServer implements Runnable
 	private String[] phoneIps;
 	private String ardurinoIp;
 	private String sentHistory;
+	private String inputHistory;
 	
 	private int port;
 	private int sentHistoryIndex;
+	private int inputHistoryIndex;
 	
 	byte[] receiveData;
 	
@@ -67,13 +69,13 @@ public class UDPServer implements Runnable
 		send(message, ardurinoIp);
 	}
 	
-	public byte[] getRecived(DatagramSocket from) throws IOException {
-		from.receive(packet);
-		return receiveData;
+	public void recive() throws IOException {
+		serverSocket.receive(packet);
+		inputHistory = putTogether(packet.getData(), 5) + "  : " + (inputHistoryIndex++) + "\n" + inputHistory;
 	}
 	
 	PuzzelGame game = new PuzzelGame(new Player[]{new Player(), new Player()}, this);
-	
+
 	public void run() {
 		try {
 			serverSocket = new DatagramSocket(port);
@@ -83,13 +85,12 @@ public class UDPServer implements Runnable
 		
 		try {
 			while(true) {
-				serverSocket.receive(packet);
 				try {
 					TimeUnit.MILLISECONDS.sleep(2);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				System.out.println(putTogether(packet.getData(), 2) + " | tillbaka");
+				recive();
 				game.update(putTogether(packet.getData(), 2));
 				receiveData = new byte[1024];
 				packet = new DatagramPacket(receiveData, receiveData.length);
@@ -159,6 +160,10 @@ public class UDPServer implements Runnable
 	
 	public String getSentHistory() {
 		return sentHistory;
+	}
+	
+	public String getInputHistory() {
+		return inputHistory;
 	}
 	
 	public String putTogether(byte[] t, int l) {
