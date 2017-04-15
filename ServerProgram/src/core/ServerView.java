@@ -36,11 +36,15 @@ public class ServerView extends JPanel implements ActionListener {
 	private JPanel ipAdressPanels = new JPanel();
 	private JPanel messagePanel = new JPanel();
 	
+	private ScreenSimulatorController screenSimulatorController = new ScreenSimulatorController();
+	private ScreenSimulatorView screenSimulatorView = new ScreenSimulatorView(screenSimulatorController);
+	
 	private JButton sendButton = new JButton("SEND");
 	private JTextField message = new JTextField();
 	
 	public ServerView(ServerController controller) {
 		this.controller = controller;
+		controller.setView(this);
 		
 		this.setLayout(new BorderLayout());
 		
@@ -85,16 +89,18 @@ public class ServerView extends JPanel implements ActionListener {
 		this.messagePanel.add(this.message);
 		
 		add(messagePanel, BorderLayout.CENTER);
+		add(screenSimulatorView, BorderLayout.SOUTH);
 		
-		timer.start(); //Start the timer
+		timer.start(); 
 	}
 	
-	Timer timer = new Timer(100, new MyListener()); //Tick every 1000ms, let MyListener listen to the ticks
+	Timer timer = new Timer(100, new MyListener()); 
 
 	private class MyListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) { //Timer ticked
+		public void actionPerformed(ActionEvent e) { 
 			currentOutput.setText(controller.getSentHistory());
 			currentInput.setText(controller.getInputHistory());
+			controller.updateSimulatorScreen();
 			currentInput.repaint();
 			currentOutput.repaint();
 		}
@@ -115,10 +121,12 @@ public class ServerView extends JPanel implements ActionListener {
 			}
 		}
 	}
-
-	@Override
+	
+	public ScreenSimulatorController getScreenSimulatorController() {
+		return screenSimulatorController;
+	}
+	
 	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
-		
+
 	}
 }

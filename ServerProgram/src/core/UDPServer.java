@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.swing.JOptionPane;
 
+import game.Game;
 import game.Player;
 import game.PuzzelGame;
 
@@ -26,6 +27,8 @@ public class UDPServer implements Runnable
 	private int inputHistoryIndex;
 	
 	byte[] receiveData;
+	
+	Game game = new PuzzelGame(new Player[]{new Player(), new Player()}, this);
 	
 	DatagramPacket packet;
 	
@@ -73,8 +76,6 @@ public class UDPServer implements Runnable
 		serverSocket.receive(packet);
 		inputHistory = putTogether(packet.getData(), 5) + "  : " + (inputHistoryIndex++) + "\n" + inputHistory;
 	}
-	
-	PuzzelGame game = new PuzzelGame(new Player[]{new Player(), new Player()}, this);
 
 	public void run() {
 		try {
@@ -156,6 +157,10 @@ public class UDPServer implements Runnable
 				//System.out.println(Integer.parseInt(putTogether(packet.getData(), 3)) + " | tillbaka");
 			}
 		}
+	}
+	
+	public Player[] getPlayers() {
+		return this.game.getPlayers();
 	}
 	
 	public String getSentHistory() {
