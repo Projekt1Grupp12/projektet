@@ -101,6 +101,7 @@ public class ServerView extends JPanel implements ActionListener {
 			currentOutput.setText(controller.getSentHistory());
 			currentInput.setText(controller.getInputHistory());
 			controller.updateSimulatorScreen();
+			screenSimulatorView.repaint();
 			currentInput.repaint();
 			currentOutput.repaint();
 		}
