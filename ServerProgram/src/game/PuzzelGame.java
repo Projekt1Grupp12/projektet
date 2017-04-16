@@ -34,7 +34,7 @@ public class PuzzelGame extends Game {
 		for(int i = 0; i < player.lightsOn().length; i++) {
 			String[] s = {"GREEN", "YELLOW", "RED"};
 			if(player.getId() == 0) System.out.println(colorsPressed(player)[i] + " | "  + player.lightsOn()[i]  + " - "+ s[i]);
-			if(player.lightsOn()[i] && colorsPressed(player)[i]) {
+			if(player.lightsOn()[i] && colorsPressed(player)[i] && !player.getColorsPressed()[i]) {
 				player.setAmountPressed(player.getAmountPressed()+1);
 				player.setColorsPressed(true, i);
 				//player.clearScreenBit(i);
@@ -116,6 +116,7 @@ public class PuzzelGame extends Game {
 		for(int i = 0; i < getPlayers().length; i++) {
 			if(checkGoodInput(getPlayers()[i])) {
 				getPlayers()[i].setAmountPressed(0);
+				getPlayers()[i].flushColorsPressed();
 				changeLights(i);
 				sendGoodFeedback(getPlayers()[i]);
 			}
