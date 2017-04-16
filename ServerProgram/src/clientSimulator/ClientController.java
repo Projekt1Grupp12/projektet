@@ -16,9 +16,9 @@ public class ClientController {
 	
 	private DatagramSocket serverSocket = null;
 	
-	public ClientController() {
+	public ClientController(int id) {
 		port = 4444;
-		id = 0;
+		this.id = id;
 	}
 	
 	public void send(String message) throws IOException {
@@ -37,16 +37,5 @@ public class ClientController {
 	
 	public int getId() {
 		return id;
-	}
-	
-	public static void main(String[] args) {
-		ClientView viewer = new ClientView(new ClientController());
-		JFrame frame = new JFrame("client");
-		//frame.setPreferredSize(new Dimension(320, 128));
-		frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-		frame.add(viewer);
-		frame.setResizable(true);
-		frame.pack();
-		frame.setVisible(true);
 	}
 }

@@ -1,11 +1,17 @@
 package core;
 
+import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import clientSimulator.ClientController;
+import clientSimulator.ClientView;
 
 public class ServerController {
 	private UDPServer server;
 	
 	private ServerView view;
+	
+	private int nextId;
 	
 	public ServerController() {
 		server = new UDPServer(4444, new String[]{"10.2.29.150", "0.0.0.0"}, "192.168.0.2");
@@ -21,6 +27,17 @@ public class ServerController {
 					view.getScreenSimulatorController().clearLight(j + (3*i));
 			}
 		}
+	}
+	
+	public void createClient() {
+		ClientView viewer = new ClientView(new ClientController(nextId), nextId);
+		JFrame frame = new JFrame("client");
+		frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+		frame.add(viewer);
+		frame.setResizable(true);
+		frame.pack();
+		frame.setVisible(true);
+		nextId = nextId + 1;
 	}
 	
 	public void setView(ServerView view) {

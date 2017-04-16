@@ -22,9 +22,10 @@ public class ClientView extends JPanel {
 	
 	private JPanel buttons = new JPanel();
 	
-	public ClientView(ClientController controller) {
-		this.controller = new ClientController();
+	public ClientView(ClientController controller, int id) {
+		this.controller = new ClientController(id);
 		setLayout(new GridLayout(2, 0));
+		System.out.println(controller.getId());
 		
 		ButtonListener listener = new ButtonListener();
 		

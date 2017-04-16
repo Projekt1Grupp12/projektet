@@ -15,7 +15,7 @@ import javax.swing.JTextField;
 import javax.swing.Timer;
 import javax.swing.text.DefaultCaret;
 
-public class ServerView extends JPanel implements ActionListener {
+public class ServerView extends JPanel {
 	ServerController controller;
 	
 	private JTextArea currentInput = new JTextArea();
@@ -23,6 +23,7 @@ public class ServerView extends JPanel implements ActionListener {
 	 
 	private JTextField[] phoneIpAdressField = new JTextField[]{new JTextField("10.2.29.150"), new JTextField("")};
 	private JTextField ardIpAdressField = new JTextField("192.168.0.12");
+	private JTextField message = new JTextField();
 	
 	private JLabel inputLabel = new JLabel("INPUT");
 	private JLabel outputLabel = new JLabel("OUTPUT");
@@ -40,7 +41,7 @@ public class ServerView extends JPanel implements ActionListener {
 	private ScreenSimulatorView screenSimulatorView = new ScreenSimulatorView(screenSimulatorController);
 	
 	private JButton sendButton = new JButton("SEND");
-	private JTextField message = new JTextField();
+	private JButton createClient = new JButton("CREATE CLIENT");
 	
 	public ServerView(ServerController controller) {
 		this.controller = controller;
@@ -87,6 +88,9 @@ public class ServerView extends JPanel implements ActionListener {
 		this.messagePanel.add(this.sendButton);
 		message.setPreferredSize(new Dimension(100, 30));
 		this.messagePanel.add(this.message);
+		createClient.addActionListener(b);
+		
+		messagePanel.add(createClient);
 		
 		add(messagePanel, BorderLayout.CENTER);
 		add(screenSimulatorView, BorderLayout.SOUTH);
@@ -110,6 +114,10 @@ public class ServerView extends JPanel implements ActionListener {
 	
 	public class ButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
+			if(e.getSource() == createClient) {
+				controller.createClient();
+			}
+			
 			if(e.getSource() == sendButton) {
 				try {
 					controller.getServer().sendToPhone(((message.getText().length() != 1 && message.getText().charAt(0) == '0' && message.getText().charAt(1) == 'b') ? Integer.parseInt(message.getText().substring(2), 2) + "" : message.getText()), 0);
@@ -125,9 +133,5 @@ public class ServerView extends JPanel implements ActionListener {
 	
 	public ScreenSimulatorController getScreenSimulatorController() {
 		return screenSimulatorController;
-	}
-	
-	public void actionPerformed(ActionEvent arg0) {
-
 	}
 }
