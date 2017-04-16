@@ -32,10 +32,12 @@ public class PuzzelGame extends Game {
 	
 	public boolean checkGoodInput(Player player) {
 		for(int i = 0; i < player.lightsOn().length; i++) {
-			if(player.lightsOn()[i] && colorsPressed(player)[i] && !player.getColorsPressed()[i]) {
+			String[] s = {"GREEN", "YELLOW", "RED"};
+			if(player.getId() == 0) System.out.println(colorsPressed(player)[i] + " | "  + player.lightsOn()[i]  + " - "+ s[i]);
+			if(player.lightsOn()[i] && colorsPressed(player)[i]) {
 				player.setAmountPressed(player.getAmountPressed()+1);
 				player.setColorsPressed(true, i);
-				player.clearScreenBit(i);
+				//player.clearScreenBit(i);
 				try {
 					sendToArdurino(setupFullScreen() + "");
 				} catch (IOException e) {
@@ -113,6 +115,7 @@ public class PuzzelGame extends Game {
 		
 		for(int i = 0; i < getPlayers().length; i++) {
 			if(checkGoodInput(getPlayers()[i])) {
+				getPlayers()[i].setAmountPressed(0);
 				changeLights(i);
 				sendGoodFeedback(getPlayers()[i]);
 			}

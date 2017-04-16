@@ -56,7 +56,7 @@ public abstract class Game {
 	public abstract boolean checkGoodInput(Player player);
 	
 	public boolean[] colorsPressed(Player player) {
-		return new boolean[]{redPressed(player), greenPressed(player), redPressed(player)};
+		return new boolean[]{greenPressed(player), yellowPressed(player), redPressed(player)};
 	}
 	
 	public boolean redPressed(Player player) {
