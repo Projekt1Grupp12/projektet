@@ -32,7 +32,7 @@ public class ServerController {
 	public void createClient() {
 		ClientView viewer = new ClientView(new ClientController(nextId), nextId);
 		JFrame frame = new JFrame("client");
-		frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+		frame.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
 		frame.add(viewer);
 		frame.setResizable(true);
 		frame.pack();
