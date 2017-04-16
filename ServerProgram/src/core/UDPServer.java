@@ -28,7 +28,7 @@ public class UDPServer implements Runnable
 	
 	byte[] receiveData;
 	
-	Game game = new PuzzelGame(new Player[]{new Player(), new Player()}, this);
+	Game game = new PuzzelGame(new Player[]{new Player(0), new Player(1)}, this);
 	
 	DatagramPacket packet;
 	
@@ -92,7 +92,9 @@ public class UDPServer implements Runnable
 					e.printStackTrace();
 				}
 				recive();
-				game.update(putTogether(packet.getData(), 2));
+				String input = putTogether(packet.getData(), 2);
+				System.out.println(input + " | input");
+				game.update(input);
 				receiveData = new byte[1024];
 				packet = new DatagramPacket(receiveData, receiveData.length);
 			}

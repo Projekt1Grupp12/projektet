@@ -29,7 +29,7 @@ public class PuzzelGame extends Game {
 	public void sendGoodFeedback(Player player) {
 		player.addScore();
 	}
-	int x = 0;
+	
 	public boolean checkGoodInput(Player player) {
 		for(int i = 0; i < player.lightsOn().length; i++) {
 			if(player.lightsOn()[i] && colorsPressed(player)[i] && !player.getColorsPressed()[i]) {
@@ -84,6 +84,8 @@ public class PuzzelGame extends Game {
 	}
 	
 	public void update(String input) throws IOException {
+		setInput(input);
+		
 		if(!hasStarted) {
 			changeLights();
 			hasStarted = !hasStarted;

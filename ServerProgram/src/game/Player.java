@@ -11,9 +11,9 @@ public class Player {
 	
 	private boolean[] colorsPressed;
 	
-	public Player() {
+	public Player(int id) {
 		flushColorsPressed();
-		id = 0;
+		this.id = id;
 	}
 	
 	public void addScore() {
