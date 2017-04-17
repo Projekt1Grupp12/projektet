@@ -13,6 +13,8 @@ public class ServerController {
 	
 	private int nextId;
 	
+	private boolean hasCreatedClient; 
+	
 	public ServerController() {
 		server = new UDPServer(4444, new String[]{"10.2.29.150", "0.0.0.0"}, "192.168.0.2");
 		new Thread(server).start();
@@ -37,6 +39,8 @@ public class ServerController {
 		frame.setResizable(true);
 		frame.pack();
 		frame.setVisible(true);
+		
+		if(!hasCreatedClient) hasCreatedClient = true;
 		nextId = nextId + 1;
 	}
 	

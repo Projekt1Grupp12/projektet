@@ -93,71 +93,12 @@ public class UDPServer implements Runnable
 				}
 				recive();
 				String input = putTogether(packet.getData(), 2);
-				System.out.println(input + " | input");
 				game.update(input);
 				receiveData = new byte[1024];
 				packet = new DatagramPacket(receiveData, receiveData.length);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-		
-		//testProgram();
-	}
-	
-	public void testProgram() {
-		int delay = 0;
-		int x = 0;
-		
-		String d = "0";
-		
-		random = new Random();
-		
-		int newData = 0;
-		int oldData = 0;
-		
-		InetAddress phoneIPAddress = null;
-		InetAddress ardIPAddress = null;
-		
-		while(true)
-		{
-			try {
-				phoneIPAddress = InetAddress.getByName("10.2.29.150");
-				ardIPAddress = InetAddress.getByName("192.168.0.2");
-			} catch (UnknownHostException e) {
-				e.printStackTrace();
-			}
-
-			d = x + "";
-
-			delay += 1;
-			
-			//System.out.println(oldData + " | " + newData  + " | " + (delay > 8 && newData != oldData));
-			//x = random.nextInt(64);
-			//d = x + "";
-			if(delay > 8) {
-			    try {
-			    	send(d, "192.168.0.2");
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				oldData = newData;
-				x += 1;
-				if(x >= 7) x = 0;
-				//System.out.println(d + " | state");
-				delay = 0;
-			}
-			
-			if(random.nextInt(1000) == 500 && recsive) { 
-				try {
-					serverSocket.receive(packet);
-					System.out.println(putTogether(packet.getData(), 6) + " | tillbaka");
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				//newData = Integer.parseInt(putTogether(packet.getData(), 3));
-				//System.out.println(Integer.parseInt(putTogether(packet.getData(), 3)) + " | tillbaka");
-			}
 		}
 	}
 	
