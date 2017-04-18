@@ -94,6 +94,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //findViewById() returns view by ID and adds ClickListener to the view
         findViewById(R.id.send_UDP_button).setOnClickListener(this); // calling onClick() method
 
+
+        Log.d("Phone IP", getIPAddress(true));
         send = new SendActivity(ipAddress, server_port);
         statusText = "First contact established...";
         send.execute(statusText);

@@ -16,20 +16,25 @@ import javax.swing.Timer;
 import javax.swing.text.DefaultCaret;
 
 public class ServerView extends JPanel {
-	ServerController controller;
+	private ServerController controller;
+	private Timer timer = new Timer(100, new MyListener()); 
 	
+	//Input from clients and output from server 
 	private JTextArea currentInput = new JTextArea();
 	private JTextArea currentOutput = new JTextArea();
-	 
+	
+	//Address for the client and arduino, message that is sent to both phone and arduino
 	private JTextField[] phoneIpAdressField = new JTextField[]{new JTextField("10.2.29.150"), new JTextField("")};
 	private JTextField ardIpAdressField = new JTextField("192.168.0.12");
 	private JTextField message = new JTextField();
 	
+	//Labels
 	private JLabel inputLabel = new JLabel("INPUT");
 	private JLabel outputLabel = new JLabel("OUTPUT");
 	private JLabel[] phoneIpAdressLabel = new JLabel[]{new JLabel("PHONE IP 1: "), new JLabel("PHONE IP 2: ")}; 
 	private JLabel ardIpAdressLabel = new JLabel("ARDURINO IP: ");
 	
+	//Panels for the client phpne and arduino
 	private JPanel[] phoneIpAdressesPanel = new JPanel[2];
 	private JPanel ardIpAdressPanel = new JPanel();
 	private JPanel inputPanel = new JPanel();
@@ -43,6 +48,10 @@ public class ServerView extends JPanel {
 	private JButton sendButton = new JButton("SEND");
 	private JButton createClient = new JButton("CREATE CLIENT");
 	
+	/**
+	 * Constructor that creates the UI
+	 * @param controller
+	 */
 	public ServerView(ServerController controller) {
 		this.controller = controller;
 		controller.setView(this);
@@ -97,8 +106,6 @@ public class ServerView extends JPanel {
 		
 		timer.start(); 
 	}
-	
-	Timer timer = new Timer(100, new MyListener()); 
 
 	private class MyListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) { 
