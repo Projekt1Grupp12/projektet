@@ -16,7 +16,7 @@ public class ServerController {
 	private boolean hasCreatedClient; 
 	
 	public ServerController() {
-		server = new UDPServer(4444, new String[]{"10.2.29.150", "0.0.0.0"}, "192.168.0.2");
+		server = new UDPServer(4444, new String[]{"10.2.29.150", "10.2.29.150"}, "192.168.0.2");
 		new Thread(server).start();
 	}
 	
