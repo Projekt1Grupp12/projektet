@@ -53,7 +53,7 @@ public class PuzzelGame extends Game {
 			}
 		}
 		
-		return player.getAmountPressed() == player.amountLightsOn();
+		return player.getAmountPressed() == player.amountLightsOn() && player.amountLightsOn() != 0;
 	}
 	
 	public void changeLights() throws IOException {
@@ -111,7 +111,12 @@ public class PuzzelGame extends Game {
 		}
 		
 		for(int i = 0; i < getPlayers().length; i++) {
+			if(getPlayers()[i].amountLightsOn() == 0) {
+				changeLights();
+				break;
+			}
 			if(checkGoodInput(getPlayers()[i])) {
+				System.out.println("lol");
 				getPlayers()[i].setAmountPressed(0);
 				getPlayers()[i].flushColorsPressed();
 				changeLights(i);

@@ -66,8 +66,6 @@ public class UDPServer implements Runnable
 			serverSocket.receive(packet);
 			ips[0] = packet.getAddress().getHostName();
 			System.out.println(ips[0]);
-			receiveData = new byte[1024];
-			packet = new DatagramPacket(receiveData, receiveData.length);
 			serverSocket.receive(packet);
 			ips[1] = packet.getAddress().getHostName();
 			while(ips[0].equals(ips[1]) && playWithTwo) {

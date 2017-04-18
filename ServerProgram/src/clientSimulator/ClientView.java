@@ -15,16 +15,18 @@ public class ClientView extends JPanel {
 	ClientController controller;
 	
 	private JButton[] colorButtons = new JButton[3];
+	private JButton startButton = new JButton();
 	
 	private Color[] colors = new Color[]{Color.RED, Color.YELLOW, Color.GREEN};
 	
 	private JLabel feedback = new JLabel();
 	
 	private JPanel buttons = new JPanel();
+	private JPanel startButtonPanel = new JPanel();
 	
 	public ClientView(ClientController controller, int id) {
 		this.controller = new ClientController(id);
-		setLayout(new GridLayout(2, 0));
+		setLayout(new GridLayout(4, 0));
 		System.out.println(controller.getId());
 		
 		ButtonListener listener = new ButtonListener();
@@ -38,8 +40,18 @@ public class ClientView extends JPanel {
 			buttons.add(colorButtons[i]);
 		}
 		
+		startButton.setBackground(Color.RED);
+		startButton.addActionListener(listener);
+		
+		startButtonPanel.setLayout(new GridLayout(0, 3));
+		startButtonPanel.add(new JLabel());
+		startButtonPanel.add(startButton);
+		startButtonPanel.add(new JLabel());
+		
 		add(feedback);
 		add(buttons);
+		add(new JLabel());
+		add(startButtonPanel);
 	}
 	
 	public class ButtonListener implements ActionListener {
@@ -48,6 +60,14 @@ public class ClientView extends JPanel {
 				if(e.getSource() == colorButtons[i]) {
 					try {
 						controller.send((i+1) + "" + controller.getId());
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+				}
+				
+				if(e.getSource() == startButton) {
+					try {
+						controller.send("-2");
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}
