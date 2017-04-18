@@ -26,6 +26,8 @@ public class UDPServer implements Runnable
 	private int sentHistoryIndex;
 	private int inputHistoryIndex;
 	
+	private boolean hasStartedGame; 
+	
 	byte[] receiveData;
 	
 	Game game = new PuzzelGame(new Player[]{new Player(0), new Player(1)}, this);
@@ -93,7 +95,15 @@ public class UDPServer implements Runnable
 				}
 				recive();
 				String input = putTogether(packet.getData(), 2);
-				game.update(input);
+				if(!hasStartedGame) {
+					if(input.equals("-2")) {
+						hasStartedGame = true;
+						game.update(input);
+					}
+				}
+				else
+					game.update(input);
+					
 				receiveData = new byte[1024];
 				packet = new DatagramPacket(receiveData, receiveData.length);
 			}

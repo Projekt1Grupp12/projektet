@@ -22,26 +22,33 @@ public class PuzzelGame extends Game {
 		maxDelay = 128*2;
 	}
 
-	public void sendBadFeedback(Player player) {
-		
+	public void sendBadFeedback(Player player) throws IOException {
+		sendToPhone("BAD MOVE!", player.getId());
 	}
 
-	public void sendGoodFeedback(Player player) {
+	public void sendGoodFeedback(Player player) throws IOException {
 		player.addScore();
+		sendToPhone("GOOD MOVE!", player.getId());
 	}
 	
 	public boolean checkGoodInput(Player player) {
 		for(int i = 0; i < player.lightsOn().length; i++) {
-			String[] s = {"GREEN", "YELLOW", "RED"};
-			if(player.getId() == 0) System.out.println(colorsPressed(player)[i] + " | "  + player.lightsOn()[i]  + " - "+ s[i]);
 			if(player.lightsOn()[i] && colorsPressed(player)[i] && !player.getColorsPressed()[i]) {
 				player.setAmountPressed(player.getAmountPressed()+1);
 				player.setColorsPressed(true, i);
-				//player.clearScreenBit(i);
 				try {
 					sendToArdurino(setupFullScreen() + "");
+					sendGoodFeedback(player);
 				} catch (IOException e) {
 					e.printStackTrace();
+				}
+			} else {
+				if(!player.lightsOn()[i] && colorsPressed(player)[i] || colorsPressed(player)[i] && player.getColorsPressed()[i]) {
+					try {
+						sendBadFeedback(player);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}
@@ -87,16 +94,6 @@ public class PuzzelGame extends Game {
 	
 	public void update(String input) throws IOException {
 		setInput(input);
-		
-		if(!hasStarted) {
-			changeLights();
-			hasStarted = !hasStarted;
-		}
-		
-		if(input.equals("-2")) {
-			this.sendToArdurino((startButtonBlink) ? "63" : "00");
-			startButtonBlink = !startButtonBlink;
-		}
 		
 		levelCount += 1;
 		

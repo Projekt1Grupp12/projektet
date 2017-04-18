@@ -47,9 +47,13 @@ public abstract class Game {
 		server.sendToArdurino(message);
 	}
 	
-	public abstract void sendBadFeedback(Player player);
+	public void sendToPhone(String message, int index) throws IOException {
+		server.sendToPhone(message, index);
+	}
 	
-	public abstract void sendGoodFeedback(Player player);
+	public abstract void sendBadFeedback(Player player) throws IOException;
+	
+	public abstract void sendGoodFeedback(Player player) throws IOException;
 	
 	public abstract void update(String input) throws IOException;
 	
