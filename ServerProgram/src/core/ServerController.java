@@ -1,5 +1,11 @@
 package core;
 
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -16,12 +22,14 @@ public class ServerController {
 	
 	private boolean hasCreatedClient; 
 	
+	private boolean playWithTwo;
+	
 	/**
 	 * Constructor: creates a new instance of a UDPServer.
 	 * Starts a new thread running the UDPServer.
 	 */
 	public ServerController() {
-		server = new UDPServer(4444, new String[]{"10.2.29.150", "10.2.29.150"}, "192.168.0.2");
+		server = new UDPServer(4444);
 		new Thread(server).start();
 	}
 	

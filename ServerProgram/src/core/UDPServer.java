@@ -36,20 +36,52 @@ public class UDPServer implements Runnable
 	
 	Random random = new Random();
 	
-	public UDPServer(int port, String[] phoneIps, String ardurinoIp) {
+	private boolean playWithTwo;
+	private boolean hasSetup; 
+	
+	public UDPServer(int port) {
 		this.port = port;
-		
-		this.phoneIps = new String[phoneIps.length];
-		for(int i = 0; i < phoneIps.length; i++)
-			this.phoneIps[i] = phoneIps[i];
-		
-		this.ardurinoIp = ardurinoIp;
 		
 		receiveData = new byte[1024];
 		
 		packet = new DatagramPacket(receiveData, receiveData.length);
 		
 		sentHistory = "";
+	}
+	
+	public void setup() {
+		phoneIps = getIps();
+		ardurinoIp = "192.168.0.2";
+		hasSetup = true;
+	}
+	
+	public String[] getIps() {
+		String[] ips = new String[2];
+		byte[] receiveData = new byte[1024];
+		
+		DatagramPacket packet = new DatagramPacket(receiveData, receiveData.length);
+		try {
+			DatagramSocket serverSocket = new DatagramSocket(4444);
+			
+			serverSocket.receive(packet);
+			ips[0] = packet.getAddress().getHostName();
+			System.out.println(ips[0]);
+			receiveData = new byte[1024];
+			packet = new DatagramPacket(receiveData, receiveData.length);
+			serverSocket.receive(packet);
+			ips[1] = packet.getAddress().getHostName();
+			while(ips[0].equals(ips[1]) && playWithTwo) {
+				serverSocket.receive(packet);
+				ips[1] = packet.getAddress().getHostName();
+			}
+			System.out.println(ips[1]);
+			
+			serverSocket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return ips;
 	}
 	
 	public void send(String message, String ip) throws IOException {
@@ -80,6 +112,10 @@ public class UDPServer implements Runnable
 	}
 
 	public void run() {
+		if(!hasSetup) {
+			setup();
+		}
+		
 		try {
 			serverSocket = new DatagramSocket(port);
 		} catch (SocketException e) {
