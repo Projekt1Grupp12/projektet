@@ -44,14 +44,4 @@ public class ClientController {
 	public int getId() {
 		return id;
 	}
-	
-	public static void main(String[] args) {
-		ClientView viewer = new ClientView(new ClientController(0), 0);
-		JFrame frame = new JFrame("client");
-		frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE);
-		frame.add(viewer);
-		frame.setResizable(true);
-		frame.pack();
-		frame.setVisible(true);
-	}
 }
