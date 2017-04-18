@@ -115,7 +115,6 @@ public class PuzzelGame extends Game {
 				getPlayers()[i].setAmountPressed(0);
 				getPlayers()[i].flushColorsPressed();
 				changeLights(i);
-				sendGoodFeedback(getPlayers()[i]);
 			}
 		}
 		

@@ -19,6 +19,12 @@ public class ClientController {
 	public ClientController(int id) {
 		port = 4444;
 		this.id = id;
+		try {
+			send("-2");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void send(String message) throws IOException {
