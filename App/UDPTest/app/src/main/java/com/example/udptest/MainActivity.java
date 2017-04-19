@@ -3,6 +3,7 @@ package com.example.udptest;
 import android.content.Context;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.net.wifi.p2p.WifiP2pManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
@@ -31,7 +32,7 @@ import java.util.List;
  */
 //AppCompatActivity is a base class for activities that use the support library action bar features.
 //View.OnClickListener is an interface definition for a callback to be invoked when a view is clicked.
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, AsyncResponse{
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -43,11 +44,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //IP is a lower-level protocol on which protocols like UDP and TCP are built.
     InetAddress server_ip;
     private int server_port = 4444;
-    private String ipAddress = "10.2.28.40";
+    private String ipAddress = "10.2.19.28";
     private byte[] message = new byte[1500];
     String statusText = null;
     private SendActivity send;
     private ReceiveActivity receive;
+    MobileInfo mInfo;
+
+    private boolean hasPlayerID = false;
+    private static int playerID;
+    private AsyncResponse asyncDelegate  = new AsyncResponse() {
+        @Override
+        public void postResult(String asyncresult) {
+            if(!hasPlayerID){
+                hasPlayerID = true;
+                playerID = Integer.parseInt(asyncresult);
+            }
+
+            Log.i("ASYNC_RESULT", asyncresult);
+        }
+    };
 
 
     private EditText mIPView;
@@ -58,29 +74,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //without having to manipulate threads and/or handlers.
     private AsyncTask<Void, Void, Void> async_udp;
     private boolean Server_Active = true;
-    
+
     //A method is called when activity is to be created. It has a main window with TextView, EditText.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //populateAutoComplete();
+
         //Initialise variables.
         status = (TextView) findViewById(R.id.status);
         mStatusView = (TextView) findViewById(R.id.message);
-        w = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
-        
-        //If WIFI is off, turn it on. Otherwise WIFI is on.
-        if (!w.isWifiEnabled()) {
-            status.setText("switching ON wifi ");
-            w.setWifiEnabled(true);
-        } else {
-            status.setText("WiFi is already ON ");
-
-        }
-        //Initialise variable.
         mIPView = (EditText) findViewById(R.id.ip);
-
         mIPView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -91,19 +95,47 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+        //If WIFI is off, turn it on. Otherwise WIFI is on.
+        w = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
+        turnOnWiFi(w);
+
         //findViewById() returns view by ID and adds ClickListener to the view
         findViewById(R.id.send_UDP_button).setOnClickListener(this); // calling onClick() method
 
-
-        Log.d("Phone IP", getIPAddress(true));
+        mInfo = new MobileInfo();
+        Log.d("Phone IP", mInfo.getIPAddress(true));
         send = new SendActivity(ipAddress, server_port);
         statusText = "First contact established...";
-        send.execute(statusText);
-
-        receive = new ReceiveActivity(ipAddress, server_port);
-        receive.execute();
+        send.execute("0");
+        //execute the async task
+        ReceiveActivity receive = new ReceiveActivity(ipAddress, server_port, asyncDelegate);
+        //Receives a 0 as first response from server.
+        //Assign the AsyncTask's delegate to your class's context (this links your asynctask and this class together)
+        //receive.delegate = this;
+        if(!hasPlayerID) {
+            receive.execute();
+        }
+        Log.i("onCreate", "FINISHED");
     }
-    
+
+    //this method has to be implement so that the results can be called to this class
+    public void postResult(String asyncresult){
+        //This method will get call as soon as your AsyncTask is complete. asyncresult will be your result.
+        Log.i("ASYNC_RESULT", asyncresult);
+    }
+
+
+
+    private void turnOnWiFi(WifiManager w){
+        if (!w.isWifiEnabled()) {
+            status.setText("switching ON wifi ");
+            w.setWifiEnabled(true);
+        } else {
+            status.setText("WiFi is already ON ");
+
+        }
+    }
+
     //Method inherited from View.OnClickListener and overriden.
     //Called when a view has been clicked.
     @Override
@@ -139,8 +171,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Log.d("NO CASES MATCH", "onCklick event executed, something is wrong...");
                 break;
         }
+
+
+
         //Wait for response from server
-        receive = new ReceiveActivity(ipAddress, server_port);
+        receive = new ReceiveActivity(ipAddress, server_port, asyncDelegate);
         receive.execute();
         try {
             Thread.sleep(5);
@@ -160,46 +195,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void refreshStatus(View view)
         {
         mStatusView.setText(statusText);
-    }
-
-    /**
-     * Get IP address from first non-localhost interface
-     *
-     * @param //ipv4 true=return ipv4, false=return ipv6
-     * @return address or empty string
-     */
-    public static String getIPAddress(boolean useIPv4) {
-        try {
-            //Creates a list of interfaces.
-            List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
-            //For each interface in the list get an IP adress and place into list of InetAdress.
-            for (NetworkInterface intf : interfaces) {
-                List<InetAddress> addrs = Collections.list(intf.getInetAddresses());
-                //For each  address in the list.
-                for (InetAddress addr : addrs) {
-                    //isLoopbackAddress() method returns true if the adress is the loopback address, false otherwise.
-                    if (!addr.isLoopbackAddress()) {
-                        //getHostAddress() returns string representation of IP adress.
-                        String sAddr = addr.getHostAddress();
-                        //boolean isIPv4 = InetAddressUtils.isIPv4Address(sAddr);
-                        boolean isIPv4 = sAddr.indexOf(':')<0;
-                        //If useIPv4 is true and isIPv4 is true, return string representation of IPv4 adress.
-                        if (useIPv4) {
-                            if (isIPv4)
-                                return sAddr;
-                            //Else return string representation of IPv6 adress.
-                        } else {
-                            if (!isIPv4) {
-                                int delim = sAddr.indexOf('%'); // drop ip6 zone suffix
-                                return delim < 0 ? sAddr.toUpperCase() : sAddr.substring(0, delim).toUpperCase();
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (Exception ex) { } // for now eat exceptions
-        //If adress is a loopback adress return empty string
-        return "";
     }
 
 }
