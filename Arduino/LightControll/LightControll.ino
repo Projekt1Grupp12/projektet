@@ -103,12 +103,16 @@ void turnOnLight(int packet){
     messageToServer[0] = '0';
   }
 }
-void motor(){
-  digitalWrite(8, HIGH); 
-  delay(delayCount);
-  digitalWrite(8, LOW); 
-}
+void motorOn(){
+  digitalWrite(8, HIGH);
+  delay(20);
 
+}
+void motorOff(){
+  digitalWrite(8, LOW);
+  delay(20); 
+}
+int x;
 void loop() {
   // if there's data available, read a packet
   int packetSize = Udp.parsePacket();
@@ -116,13 +120,21 @@ void loop() {
   int sensorValue = analogRead(A0);
   packet = atoi(packetBuffer);
   turnOnLight(packet);
-
+  
+  if(packet == -3){
+    motorOn();
+    x = 5;
+  }
+  
+  if(x > 0){
+    x--;
+  }
+  if(x <= 0){
+     motorOff();
+  }
   //kollar om innehållet i paketet har ändrats, om den har det så skicka tillbaka ett medelande till servern om inte gör inget.
   if(checkIfSent != packet){
-
- /*   Udp.beginPacket(serverIp, localPort);
-    Udp.write(messageToServer);
-    Udp.endPacket(); */
+    
     Serial.print("PacketBuffer: ");
     Serial.println(packetBuffer);
     Serial.println("To Server: ");
