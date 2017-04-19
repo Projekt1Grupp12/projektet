@@ -89,7 +89,7 @@ public class UDPServer implements Runnable
 		DatagramPacket sendPacket = new DatagramPacket(message.getBytes(), message.getBytes().length, ipAddress, port);
 		serverSocket.send(sendPacket);
 
-		sentHistory = message + "  : " + (sentHistoryIndex++) + "\n" + sentHistory;
+		sentHistory = message + "  : " + (sentHistoryIndex++) + " : " + ip + "\n" + sentHistory;
 		
 		try {
 			TimeUnit.MILLISECONDS.sleep(10);
@@ -103,7 +103,7 @@ public class UDPServer implements Runnable
 		DatagramPacket sendPacket = new DatagramPacket(message.getBytes(), message.getBytes().length, ipAddress, port+1+id);
 		serverSocket.send(sendPacket);
 
-		sentHistory = message + "  : " + (sentHistoryIndex++) + "\n" + sentHistory;
+		sentHistory = message + "  : " + (sentHistoryIndex++) + " : " + ipAddress.getHostName() + "\n" + sentHistory;
 		
 		try {
 			TimeUnit.MILLISECONDS.sleep(10);
