@@ -1,6 +1,7 @@
 package core;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -91,6 +92,9 @@ public class ServerView extends JPanel {
 		
 		this.currentOutput.setText(controller.getSentHistory());
 		this.currentInput.setText(controller.getInputHistory());
+		
+		this.currentInput.setEditable(false);
+		this.currentOutput.setEditable(false);
 		
 		ButtonListener b = new ButtonListener();
 		sendButton.addActionListener(b);

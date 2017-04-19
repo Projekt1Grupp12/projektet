@@ -29,6 +29,7 @@ public class PuzzelGame extends Game {
 	public void sendGoodFeedback(Player player) throws IOException {
 		player.addScore();
 		sendToPhone("GOOD MOVE! " +  player.getScore(), player.getId());
+		takeProgressStep();
 	}
 	
 	public boolean checkGoodInput(Player player) {
@@ -73,7 +74,7 @@ public class PuzzelGame extends Game {
 		}
 		
 		sendToArdurino(setupFullScreen() + "");
-		System.out.println(Integer.toBinaryString(setupFullScreen()));
+		//System.out.println(Integer.toBinaryString(setupFullScreen()));
 	}
 	
 	public void changeLights(int index) throws IOException {
@@ -90,7 +91,7 @@ public class PuzzelGame extends Game {
 		
 		String tmp = "0";
 		sendToArdurino(((setupFullScreen() < 10) ? tmp + setupFullScreen() : setupFullScreen()+"") + "");
-		System.out.println(Integer.toBinaryString(setupFullScreen()));
+		//System.out.println(Integer.toBinaryString(setupFullScreen()));
 	}
 	
 	public void update(String input) throws IOException {
@@ -117,7 +118,6 @@ public class PuzzelGame extends Game {
 				break;
 			}
 			if(checkGoodInput(getPlayers()[i])) {
-				System.out.println("lol");
 				getPlayers()[i].setAmountPressed(0);
 				getPlayers()[i].flushColorsPressed();
 				changeLights(i);

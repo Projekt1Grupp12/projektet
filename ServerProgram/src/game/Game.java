@@ -44,6 +44,17 @@ public abstract class Game {
 		server.sendToArdurino("00");
 	}
 	
+	public void takeProgressStep() throws IOException {
+		server.sendToArdurino("-3");
+		server.sendToArdurino("00");
+		for(int i = 0; i < players.length; i++) {
+			if(players[i].amountLightsOn() > 1) {
+				server.sendToArdurino(setupFullScreen() + "");
+				break;
+			}
+		}
+	}
+	
 	public void sendToArdurino(String message) throws IOException {
 		server.sendToArdurino(message);
 	}
