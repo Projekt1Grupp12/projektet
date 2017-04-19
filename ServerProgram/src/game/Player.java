@@ -75,6 +75,10 @@ public class Player {
 		return colorsPressed;
 	}
 	
+	public int getScore() {
+		return score;
+	}
+	
 	public int getId() {
 		return id;
 	}

@@ -131,6 +131,8 @@ public class ServerView extends JPanel {
 					controller.getServer().sendToArdurino(((message.getText().length() != 1 && message.getText().charAt(0) == '0' && message.getText().charAt(1) == 'b') ? Integer.parseInt(message.getText().substring(2), 2) + "" : message.getText()));
 					currentOutput.setText(controller.getSentHistory());
 					currentInput.setText(controller.getInputHistory());
+					controller.getServer().send(message.getText(), "10.2.29.150");
+					System.out.println(message.getText());
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}

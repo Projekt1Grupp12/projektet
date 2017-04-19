@@ -23,12 +23,12 @@ public class PuzzelGame extends Game {
 	}
 
 	public void sendBadFeedback(Player player) throws IOException {
-		sendToPhone("BAD MOVE!", player.getId());
+		sendToPhone("BAD MOVE! " +  player.getScore(), player.getId());
 	}
 
 	public void sendGoodFeedback(Player player) throws IOException {
 		player.addScore();
-		sendToPhone("GOOD MOVE!", player.getId());
+		sendToPhone("GOOD MOVE! " +  player.getScore(), player.getId());
 	}
 	
 	public boolean checkGoodInput(Player player) {
@@ -88,7 +88,8 @@ public class PuzzelGame extends Game {
 			getPlayers()[index].setScreenBit(random.nextInt(3));
 		}
 		
-		sendToArdurino(setupFullScreen() + "");
+		String tmp = "0";
+		sendToArdurino(((setupFullScreen() < 10) ? tmp + setupFullScreen() : setupFullScreen()+"") + "");
 		System.out.println(Integer.toBinaryString(setupFullScreen()));
 	}
 	

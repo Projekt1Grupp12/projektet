@@ -61,18 +61,20 @@ public class UDPServer implements Runnable
 		
 		DatagramPacket packet = new DatagramPacket(receiveData, receiveData.length);
 		try {
-			DatagramSocket serverSocket = new DatagramSocket(4444);
+			serverSocket = new DatagramSocket(4444);
 			
 			serverSocket.receive(packet);
 			ips[0] = packet.getAddress().getHostName();
-			System.out.println(ips[0]);
+			send("0", ips[0]);
+			System.out.println(ips[0] + " | ip 0");
 			serverSocket.receive(packet);
 			ips[1] = packet.getAddress().getHostName();
 			while(ips[0].equals(ips[1]) && playWithTwo) {
 				serverSocket.receive(packet);
 				ips[1] = packet.getAddress().getHostName();
 			}
-			System.out.println(ips[1]);
+			this.send("1", ips[1]);
+			System.out.println(ips[1] + " | ip 1");
 			
 			serverSocket.close();
 		} catch (IOException e) {

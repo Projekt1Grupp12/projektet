@@ -48,6 +48,8 @@ public class ClientView extends JPanel {
 		startButtonPanel.add(startButton);
 		startButtonPanel.add(new JLabel());
 		
+		feedback.setPreferredSize(new Dimension(120, 32));
+		
 		add(feedback);
 		add(buttons);
 		add(new JLabel());
