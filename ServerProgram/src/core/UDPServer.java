@@ -96,6 +96,20 @@ public class UDPServer implements Runnable
 		}
 	}
 	
+	public void sendToClientSimulator(String message, int id) throws IOException {
+		InetAddress ipAddress = InetAddress.getByName("localhost");
+		DatagramPacket sendPacket = new DatagramPacket(message.getBytes(), message.getBytes().length, ipAddress, port+1+id);
+		serverSocket.send(sendPacket);
+
+		sentHistory = message + "  : " + (sentHistoryIndex++) + "\n" + sentHistory;
+		
+		try {
+			TimeUnit.MILLISECONDS.sleep(10);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void sendToPhone(String message, int index) throws IOException {
 		send(message, phoneIps[index]);
 	}
@@ -158,7 +172,7 @@ public class UDPServer implements Runnable
 		return inputHistory;
 	}
 	
-	public String putTogether(byte[] t, int l) {
+	public static String putTogether(byte[] t, int l) {
 		String tmp = "";
 		
 		for(int i = 0; i < l; i++) {

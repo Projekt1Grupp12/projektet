@@ -25,9 +25,9 @@ public class ClientView extends JPanel {
 	private JPanel startButtonPanel = new JPanel();
 	
 	public ClientView(ClientController controller, int id) {
-		this.controller = new ClientController(id);
+		this.controller = controller;
+		controller.setView(this);
 		setLayout(new GridLayout(4, 0));
-		System.out.println(controller.getId());
 		
 		ButtonListener listener = new ButtonListener();
 		
@@ -52,6 +52,10 @@ public class ClientView extends JPanel {
 		add(buttons);
 		add(new JLabel());
 		add(startButtonPanel);
+	}
+	
+	public void setFeedbackText(String text) {
+		this.feedback.setText(text);
 	}
 	
 	public class ButtonListener implements ActionListener {

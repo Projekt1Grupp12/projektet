@@ -10,24 +10,41 @@ import java.util.concurrent.TimeUnit;
 
 import javax.swing.JFrame;
 
-public class ClientController {
+import core.UDPServer;
+
+public class ClientController implements Runnable {
 	private int id;
 	private int port; 
 	
-	private DatagramSocket serverSocket = null;
+	private ClientView view;
 	
+	DatagramSocket serverSocketListen = null;
+
 	public ClientController(int id) {
 		port = 4444;
 		this.id = id;
+		
 		try {
 			send("0");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		try {
+			System.out.println("port: " + (port+1+id));
+			serverSocketListen = new DatagramSocket(port+1+id);
+		} catch (SocketException e) {
+			e.printStackTrace();
+		}
+		new Thread(this).start();
+	}
+	
+	public void setView(ClientView view) {
+		this.view = view;
 	}
 	
 	public void send(String message) throws IOException {
-		serverSocket = new DatagramSocket(port+1);
+		DatagramSocket serverSocket = new DatagramSocket();
 		InetAddress ipAddress = InetAddress.getByName("localhost");
 		DatagramPacket sendPacket = new DatagramPacket(message.getBytes(), message.getBytes().length, ipAddress, port);
 		serverSocket.send(sendPacket);
@@ -42,5 +59,20 @@ public class ClientController {
 	
 	public int getId() {
 		return id;
+	}
+
+	@Override
+	public void run() {
+		byte[] receiveData = new byte[1024];
+		DatagramPacket packet = new DatagramPacket(receiveData, receiveData.length);
+		
+		while(true) {	
+			try {
+				serverSocketListen.receive(packet);
+				view.setFeedbackText(UDPServer.putTogether(packet.getData(), "XXXX MOVES!".length()));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

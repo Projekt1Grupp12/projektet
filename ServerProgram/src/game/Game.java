@@ -2,6 +2,7 @@ package game;
 
 import java.io.IOException;
 
+import core.ServerController;
 import core.UDPServer;
 
 public abstract class Game {
@@ -48,7 +49,8 @@ public abstract class Game {
 	}
 	
 	public void sendToPhone(String message, int index) throws IOException {
-		server.sendToPhone(message, index);
+		if(!ServerController.hasCreatedClient) server.sendToPhone(message, index);
+		else server.sendToClientSimulator(message, index);
 	}
 	
 	public abstract void sendBadFeedback(Player player) throws IOException;

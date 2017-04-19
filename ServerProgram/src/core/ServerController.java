@@ -20,7 +20,7 @@ public class ServerController {
 	
 	private int nextId;
 	
-	private boolean hasCreatedClient; 
+	public static boolean hasCreatedClient; 
 	
 	private boolean playWithTwo;
 	
@@ -52,7 +52,6 @@ public class ServerController {
 		frame.setResizable(true);
 		frame.pack();
 		frame.setVisible(true);
-		
 		if(!hasCreatedClient) hasCreatedClient = true;
 		nextId = nextId + 1;
 	}
