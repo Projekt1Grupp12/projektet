@@ -49,6 +49,8 @@ void setup() {
   pinMode(5, OUTPUT);
   pinMode(6, OUTPUT);
   pinMode(7, OUTPUT);
+  pinMode(8, OUTPUT);
+  pinMode(9, OUTPUT);
 }
 //sätter dem olika pinnarn 
 void turnOnLight(int packet){
@@ -101,6 +103,11 @@ void turnOnLight(int packet){
     messageToServer[0] = '0';
   }
 }
+void motor(){
+  digitalWrite(8, HIGH); 
+  delay(delayCount);
+  digitalWrite(8, LOW); 
+}
 
 void loop() {
   // if there's data available, read a packet
@@ -112,7 +119,7 @@ void loop() {
 
   //kollar om innehållet i paketet har ändrats, om den har det så skicka tillbaka ett medelande till servern om inte gör inget.
   if(checkIfSent != packet){
-    
+
  /*   Udp.beginPacket(serverIp, localPort);
     Udp.write(messageToServer);
     Udp.endPacket(); */
@@ -123,7 +130,7 @@ void loop() {
     checkIfSent = packet;
   }
   
-  if(sensorValue >= 1000){
+  if(sensorValue >= 1023){
     sensorValue = 1;
   }
   else{
