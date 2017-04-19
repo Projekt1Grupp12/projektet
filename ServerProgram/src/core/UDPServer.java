@@ -65,11 +65,15 @@ public class UDPServer implements Runnable
 			
 			serverSocket.receive(packet);
 			ips[0] = packet.getAddress().getHostName();
+			while(putTogether(packet.getData(), 2).equals("-2")) {
+				serverSocket.receive(packet);
+				ips[0] = packet.getAddress().getHostName();
+			}
 			send("0", ips[0]);
 			System.out.println(ips[0] + " | ip 0");
 			serverSocket.receive(packet);
 			ips[1] = packet.getAddress().getHostName();
-			while(ips[0].equals(ips[1]) && playWithTwo) {
+			while(ips[0].equals(ips[1]) && playWithTwo || putTogether(packet.getData(), 2).equals("-2")) {
 				serverSocket.receive(packet);
 				ips[1] = packet.getAddress().getHostName();
 			}
