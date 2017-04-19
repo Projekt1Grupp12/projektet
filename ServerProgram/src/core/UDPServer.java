@@ -122,7 +122,8 @@ public class UDPServer implements Runnable
 	
 	public void recive() throws IOException {
 		serverSocket.receive(packet);
-		inputHistory = putTogether(packet.getData(), 5) + "  : " + (inputHistoryIndex++) + "\n" + inputHistory;
+		if(putTogether(packet.getData(), 4).equals("anna")) sendToPhone("123456", 0);
+		inputHistory = putTogether(packet.getData(), 5) + "  : " + (inputHistoryIndex++) + " : " + packet.getAddress().getHostName() + "\n" + inputHistory;
 	}
 
 	public void run() {
