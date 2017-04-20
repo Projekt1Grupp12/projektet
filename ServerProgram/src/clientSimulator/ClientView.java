@@ -17,7 +17,7 @@ public class ClientView extends JPanel {
 	private JButton[] colorButtons = new JButton[3];
 	private JButton startButton = new JButton();
 	
-	private Color[] colors = new Color[]{Color.RED, Color.YELLOW, Color.GREEN};
+	private Color[] colors = new Color[]{Color.GREEN, Color.YELLOW, Color.RED};
 	
 	private JLabel feedback = new JLabel();
 	
