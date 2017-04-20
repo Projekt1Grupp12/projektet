@@ -77,15 +77,15 @@ public abstract class Game {
 	}
 	
 	public boolean redPressed(Player player) {
-		return input.equals("3"+player.getId());
+		return input.equals("3;"+player.getId());
 	}
 	
 	public boolean greenPressed(Player player) {
-		return input.equals("1"+player.getId());
+		return input.equals("1;"+player.getId());
 	}
 	
 	public boolean yellowPressed(Player player) {
-		return input.equals("2"+player.getId());
+		return input.equals("2;"+player.getId());
 	}
 	
 	public Player[] getPlayers() {

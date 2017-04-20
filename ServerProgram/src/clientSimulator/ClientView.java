@@ -65,7 +65,7 @@ public class ClientView extends JPanel {
 			for(int i = 0; i < colorButtons.length; i++) {
 				if(e.getSource() == colorButtons[i]) {
 					try {
-						controller.send((i+1) + "" + controller.getId());
+						controller.send((i+1) + ";" + controller.getId());
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}

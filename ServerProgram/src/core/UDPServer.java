@@ -126,7 +126,8 @@ public class UDPServer implements Runnable
 	
 	public void recive() throws IOException {
 		serverSocket.receive(packet);
-		send("-1", packet.getAddress().getHostAddress());
+		for(int i = 0; i < 2; i++)
+			if(!hasStartedGame) sendToPhone("-1", i);
 		inputHistory = putTogether(packet.getData(), 5) + "  : " + (inputHistoryIndex++) + " : " + packet.getAddress().getHostName() + "\n" + inputHistory;
 	}
 
@@ -149,7 +150,7 @@ public class UDPServer implements Runnable
 					e.printStackTrace();
 				}
 				recive();
-				String input = putTogether(packet.getData(), 2);
+				String input = putTogether(packet.getData(), hasStartedGame ? 3 : 2);
 				if(!hasStartedGame) {
 					if(input.equals("-2")) {
 						hasStartedGame = true;
