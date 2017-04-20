@@ -36,7 +36,7 @@ public class UDPServer implements Runnable
 	
 	Random random = new Random();
 	
-	private boolean playWithTwo;
+	private boolean playWithTwo = true;
 	private boolean hasSetup; 
 	
 	public UDPServer(int port) {
@@ -126,7 +126,7 @@ public class UDPServer implements Runnable
 	
 	public void recive() throws IOException {
 		serverSocket.receive(packet);
-		if(putTogether(packet.getData(), 4).equals("anna")) sendToPhone("123456", 0);
+		send("-1", packet.getAddress().getHostAddress());
 		inputHistory = putTogether(packet.getData(), 5) + "  : " + (inputHistoryIndex++) + " : " + packet.getAddress().getHostName() + "\n" + inputHistory;
 	}
 
