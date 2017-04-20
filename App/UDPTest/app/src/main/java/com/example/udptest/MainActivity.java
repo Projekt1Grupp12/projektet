@@ -129,30 +129,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String message = "";
         //Send data
         switch (view.getId()) {
-            //If send_UDP button is pressed, call send_UDP_button method.
-            case R.id.send_UDP_button:
-                message = "0";
-                if(!isEmpty(mIPView)) {
-                    ipAddress = String.valueOf(mIPView.getText());
-                }
-                send.execute(message);
-                break;
             case R.id.btn_Green://1
                 message = "1";
-                send.execute(message);
                 break;
             case R.id.btn_Yellow://2
                 message = "2";
-                send.execute(message);
                 break;
             case R.id.btn_Red://3
                 message = "3";
-                send.execute(message);
                 break;
             default:
                 Log.d("NO CASES MATCH", "onCklick event executed, something is wrong...");
                 break;
         }
+        send.execute(message);
         //Wait for response from server
         receive = new ReceiveActivity(ipAddress, server_port, asyncDelegate);
         receive.execute();
