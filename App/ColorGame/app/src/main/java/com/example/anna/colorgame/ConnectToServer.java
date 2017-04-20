@@ -53,9 +53,15 @@ public class ConnectToServer extends AsyncTask<String, String, String> {
             Log.d(TAG, "Waiting for response");
             clientSocket.receive(receivePacket);
             Log.d(TAG, "Reading DatagramPacket we got from server");
+            for(int i=0; i<receivePacket.getLength(); i++){
+                if(receiveData[i] !=0){
+                    Log.d(TAG, "Recieving response from server");
+                    messageFromServer +=(char) receiveData[i];
+                }
+            }
             // modifiedSentence = new String(receivePacket.getData(), 0, receivePacket.getLength());
             Log.d(TAG, "FROM SERVER:" + messageFromServer);
-            messageFromServer = putChar(receiveData, receiveData.length);
+
             clientSocket.close();
         } catch (IOException e) {
             Log.e(TAG, e.getMessage());
@@ -70,15 +76,4 @@ public class ConnectToServer extends AsyncTask<String, String, String> {
         gf.updateUI(result);
         Log.d(TAG, "After updateUI call");*/
     }
-
-    private String putChar(byte[] receiveData, int l){
-        String tmp = "";
-        for(int i=0; i<l; i++) {
-            if (receiveData[i] != 0) {
-                tmp += (char) receiveData[i];
-            }
-        }
-        return tmp;
-    }
-
 }
