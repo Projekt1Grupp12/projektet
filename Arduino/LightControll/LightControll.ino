@@ -30,7 +30,8 @@ int packet;
 int delayCount = 100;
 char messageToServer[6]; 
 int checkIfSent = -1;
-
+int motor1Clock;
+int motor2Clock;
 bool hasPressed = false;
 
 // An EthernetUDP instance to let us send and receive packets over UDP
@@ -103,16 +104,16 @@ void turnOnLight(int packet){
     messageToServer[0] = '0';
   }
 }
-void motorOn(){
-  digitalWrite(8, HIGH);
+void motorOn(int pin){
+  digitalWrite(pin, HIGH);
   delay(20);
 
 }
-void motorOff(){
-  digitalWrite(8, LOW);
+void motorOff(int pin){
+  digitalWrite(pin, LOW);
   delay(20); 
 }
-int x;
+
 void loop() {
   // if there's data available, read a packet
   int packetSize = Udp.parsePacket();
@@ -122,15 +123,25 @@ void loop() {
   turnOnLight(packet);
   
   if(packet == -3){
-    motorOn();
-    x = 5;
+    motorOn(8);
+    motor1Clock = 5;
   }
-  
-  if(x > 0){
-    x--;
+  else if(packet == -4){
+    motorOn(9);
+    motor2Clock = 5;
+    
   }
-  if(x <= 0){
-     motorOff();
+  if(motor1Clock > 0){
+    motor1Clock--;
+  }
+  if(motor1Clock <= 0){
+     motorOff(8);
+  }
+  if(motor2Clock > 0){
+    motor2Clock--;
+  }
+  if(motor2Clock <= 0){
+     motorOff(9);
   }
   //kollar om innehållet i paketet har ändrats, om den har det så skicka tillbaka ett medelande till servern om inte gör inget.
   if(checkIfSent != packet){
