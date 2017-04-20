@@ -1,19 +1,13 @@
 package com.example.udptest;
 
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.TextView;
 
 import java.io.IOException;
-import java.io.InterruptedIOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
-import java.net.URL;
 import java.net.UnknownHostException;
 
 /**
@@ -26,26 +20,26 @@ public class SendActivity extends AsyncTask<String, String, String>
     private String ipAddress;
     private int server_port;
     private InetAddress server_ip;
-    private boolean initialized;
-    private DatagramPacket p0, p1;
-    protected byte b1[] = new byte[100];
 
+    protected byte buffer[] = new byte[100];
+    private DatagramPacket packet;
     private DatagramSocket s;
 
-
-
-
+    /**
+     * Constructor that takes the server IP-address and portnumber
+     * as arguments. The input arguments are used to establish a
+     * connection between the client and the server
+     * @param  ipAddress
+     * @param server_port
+     */
     public SendActivity(String ipAddress, int server_port) {
         this.ipAddress = ipAddress;
         this.server_port = server_port;
-        this.initialized = false;
     }
 
     @Override
     protected void onPreExecute() {
-        Log.i("SendActivity", "inside asyncTask onPreExecute");
         try {
-            Log.i("DebugA", "this.server_ip = InetAddress.getByName(ipAddress)");
             this.server_ip = InetAddress.getByName(ipAddress);
         } catch (UnknownHostException e) {
             e.printStackTrace();
@@ -55,11 +49,12 @@ public class SendActivity extends AsyncTask<String, String, String>
     @Override
     protected String doInBackground(String... params) {
             String textSent = null;
-            b1 = params[0].getBytes();
+            //Text message to be sent is stored in the variable buffer
+            buffer = params[0].getBytes();
 
             //Constructs a datagram packet for sending packet (b1) of length (b1.length) to
             //the specified port number(server_port) on the specified host(server_ip).
-            this.p0 = new DatagramPacket(b1, b1.length, server_ip, server_port);
+            this.packet = new DatagramPacket(buffer, buffer.length, server_ip, server_port);
                 try {
                     //Initializes a DatagramSocket s.
                     this.s = new DatagramSocket();
@@ -69,7 +64,7 @@ public class SendActivity extends AsyncTask<String, String, String>
                     this.s.connect(server_ip, server_port);
 
                     //Sends a specified datagram packet from the socket(s).
-                    this.s.send(this.p0);
+                    this.s.send(this.packet);
 
                     //Close socket
                     this.s.close();
@@ -80,15 +75,7 @@ public class SendActivity extends AsyncTask<String, String, String>
                     //status.append("Error recieving packet");
                     textSent.concat(" Error recieving packet");  //this doesnt work!
                 }
-        textSent = String.valueOf(b1[0]);
+        textSent = String.valueOf(buffer[0]);
         return textSent;
-    }
-
-    @Override
-    protected void onPostExecute(String s) {
-        super.onPostExecute(s);
-        String str = s + " " ;
-        Log.i("SendActivity", "onPostExecute " + str);
-
     }
 }

@@ -29,7 +29,7 @@ public class PuzzelGame extends Game {
 	public void sendGoodFeedback(Player player) throws IOException {
 		player.addScore();
 		sendToPhone("GOOD MOVE! " +  player.getScore(), player.getId());
-		takeProgressStep();
+		takeProgressStep(player.getId());
 	}
 	
 	public boolean checkGoodInput(Player player) {

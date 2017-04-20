@@ -36,7 +36,7 @@ public class UDPServer implements Runnable
 	
 	Random random = new Random();
 	
-	private boolean playWithTwo;
+	private boolean playWithTwo = true;
 	private boolean hasSetup; 
 	
 	public UDPServer(int port) {
@@ -65,11 +65,15 @@ public class UDPServer implements Runnable
 			
 			serverSocket.receive(packet);
 			ips[0] = packet.getAddress().getHostName();
+			while(putTogether(packet.getData(), 2).equals("-2")) {
+				serverSocket.receive(packet);
+				ips[0] = packet.getAddress().getHostName();
+			}
 			send("0", ips[0]);
 			System.out.println(ips[0] + " | ip 0");
 			serverSocket.receive(packet);
 			ips[1] = packet.getAddress().getHostName();
-			while(ips[0].equals(ips[1]) && playWithTwo) {
+			while(ips[0].equals(ips[1]) && playWithTwo || putTogether(packet.getData(), 2).equals("-2")) {
 				serverSocket.receive(packet);
 				ips[1] = packet.getAddress().getHostName();
 			}
@@ -89,7 +93,7 @@ public class UDPServer implements Runnable
 		DatagramPacket sendPacket = new DatagramPacket(message.getBytes(), message.getBytes().length, ipAddress, port);
 		serverSocket.send(sendPacket);
 
-		sentHistory = message + "  : " + (sentHistoryIndex++) + "\n" + sentHistory;
+		sentHistory = message + "  : " + (sentHistoryIndex++) + " : " + ip + "\n" + sentHistory;
 		
 		try {
 			TimeUnit.MILLISECONDS.sleep(10);
@@ -103,7 +107,7 @@ public class UDPServer implements Runnable
 		DatagramPacket sendPacket = new DatagramPacket(message.getBytes(), message.getBytes().length, ipAddress, port+1+id);
 		serverSocket.send(sendPacket);
 
-		sentHistory = message + "  : " + (sentHistoryIndex++) + "\n" + sentHistory;
+		sentHistory = message + "  : " + (sentHistoryIndex++) + " : " + ipAddress.getHostName() + "\n" + sentHistory;
 		
 		try {
 			TimeUnit.MILLISECONDS.sleep(10);
@@ -122,7 +126,8 @@ public class UDPServer implements Runnable
 	
 	public void recive() throws IOException {
 		serverSocket.receive(packet);
-		inputHistory = putTogether(packet.getData(), 5) + "  : " + (inputHistoryIndex++) + "\n" + inputHistory;
+		send("-1", packet.getAddress().getHostAddress());
+		inputHistory = putTogether(packet.getData(), 5) + "  : " + (inputHistoryIndex++) + " : " + packet.getAddress().getHostName() + "\n" + inputHistory;
 	}
 
 	public void run() {
