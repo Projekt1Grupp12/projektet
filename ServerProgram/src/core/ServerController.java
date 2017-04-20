@@ -24,11 +24,11 @@ public class ServerController {
 	
 	private ServerView view;
 	
-	private int nextId;
+	private int nextId = 0;
 	
 	public static boolean hasCreatedClient; 
 	
-	private boolean playWithTwo;
+	private boolean playWithTwo = true;
 	
 	/**
 	 * Constructor: creates a new instance of a UDPServer.

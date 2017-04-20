@@ -85,7 +85,7 @@ public class ServerView extends JPanel {
 		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		currentOutput.setPreferredSize(new Dimension(250, 200));
 		
-		this.add(ipAdressPanels, BorderLayout.NORTH);
+		//this.add(ipAdressPanels, BorderLayout.NORTH);
 		
 		this.add(inputPanel, BorderLayout.EAST);
 		this.add(outputPanel, BorderLayout.WEST);

@@ -36,7 +36,7 @@ public class UDPServer implements Runnable
 	
 	Random random = new Random();
 	
-	private boolean playWithTwo = false;
+	private boolean playWithTwo = true;
 	private boolean hasSetup; 
 	
 	public UDPServer(int port) {
