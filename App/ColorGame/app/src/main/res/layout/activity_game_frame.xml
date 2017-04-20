@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.anna.colorgame.GameFrame">
+
+    <Button
+        android:id="@+id/redButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:background="@android:color/holo_red_dark"
+        android:onClick="onClick"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/yellowButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:background="@android:color/holo_orange_light"
+        android:onClick="onClick"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/redButton" />
+
+    <Button
+        android:id="@+id/greenButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:background="@android:color/holo_green_dark"
+        android:onClick="onClick"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/yellowButton" />
+
+    <TextView
+        android:id="@+id/textViewIP"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:text="@string/ip_name_userid"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/greenButton" />
+
+    <TextView
+        android:id="@+id/textViewMove"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:text="@string/textview_game"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewIP" />
+
+    <TextView
+        android:id="@+id/textViewPoints"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="31dp"
+        android:text="@string/points"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewMove"
+        app:layout_constraintHorizontal_bias="0.0"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp" />
+</android.support.constraint.ConstraintLayout>
