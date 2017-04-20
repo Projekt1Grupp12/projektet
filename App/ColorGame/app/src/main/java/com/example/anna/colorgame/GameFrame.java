@@ -75,10 +75,13 @@ public class GameFrame extends AppCompatActivity implements View.OnClickListener
 
     public void startAsyncTask(String color, String data){
         //If this button is pushed, send content in str to AsyncTask.doInBackground
+
         ConnectToServer runner = new ConnectToServer(ip, userID, delegate);
+        System.gc();
         Log.d(TAG, "Task created. " + color);
         //we want to send name to server
         Log.d(TAG, "Execute task. " + color);
+
         runner.execute(data);
     }
 
