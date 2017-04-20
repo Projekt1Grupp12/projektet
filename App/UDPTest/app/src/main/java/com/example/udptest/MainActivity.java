@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //WIFIManager class provides the primary API for managing all aspects of Wi-Fi connectivity
     WifiManager w;
 
-    private String ipAddress = "10.2.19.28"; //Server IP-address
+    private String ipAddress = "10.2.28.40"; //Server IP-address
     private int server_port = 4444; //Server portnumber
 
     String message = null;
@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private boolean hasPlayerID = false;
     private static int playerID;
+
     private AsyncResponse asyncDelegate  = new AsyncResponse() {
         @Override
         public void postResult(String asyncresult) {

@@ -61,10 +61,10 @@ public class MainFrame extends AppCompatActivity {
     public void updateIPName() {
         EditText editIPText = (EditText) findViewById(R.id.editIPText);
         EditText editNameText = (EditText) findViewById(R.id.editNameText);
-        //this.ip = "10.2.28.40";
-        this.ip = editIPText.getText().toString();
-       // this.name = "anna";
-        this.name = editNameText.getText().toString();
+        this.ip = "10.2.19.28";
+        //this.ip = editIPText.getText().toString();
+       this.name = "george";
+       // this.name = editNameText.getText().toString();
     }
 
     /*
