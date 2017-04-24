@@ -24,7 +24,7 @@ public class ServerController {
 	
 	private ServerView view;
 	
-	private int nextId = 1;
+	private int nextId = 0;
 	
 	public static boolean hasCreatedClient; 
 	

@@ -78,8 +78,10 @@ public class PuzzelGame extends Game {
 	}
 	
 	public void changeLights(int index) throws IOException {
-		flushFullScreen();
-
+		//flushFullScreen();
+		
+		sendToArdurino((index == 0) ? "0" + getPlayers()[1].getScore() : getPlayers()[0].getScore() + "0");
+		
 		int amountToLightUp = 0;
 
 		amountToLightUp = random.nextInt(2)+1;
