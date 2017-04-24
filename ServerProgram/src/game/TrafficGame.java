@@ -1,6 +1,7 @@
 package game;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import core.UDPServer;
 
@@ -11,10 +12,15 @@ public class TrafficGame extends Game {
 	
 	private boolean fromRed;
 	
+	private int delay;
+	private int maxDelay;
+	
 	public TrafficGame(Player[] players, UDPServer server) {
 		super(players, server);
 		currentLigt = Lights.RED;
 		fromRed = true;
+		
+		maxDelay = 128;
 	}
 	
 	public void stepLight(int index) {
@@ -46,6 +52,23 @@ public class TrafficGame extends Game {
 
 	public void update(String input) throws IOException {
 		setInput(input);
+		
+		delay += 1;
+		
+		if(delay >= maxDelay) {
+			for(int i = 0; i < 2; i++)
+				stepLight(i);
+			sendToArdurino(setupFullScreen() + "");
+			delay = 0;
+		}
+		
+		System.out.println(delay);
+		
+		try {
+			TimeUnit.MILLISECONDS.sleep(5);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public boolean checkGoodInput(Player player) {
