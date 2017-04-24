@@ -132,6 +132,16 @@ public class UDPServer implements Runnable
 			if(!hasStartedGame) sendToPhone("-1", i);
 		inputHistory = putTogether(packet.getData(), 5) + "  : " + (inputHistoryIndex++) + " : " + packet.getAddress().getHostName() + "\n" + inputHistory;
 	}
+	
+	public void resetGame(Game g) {
+		game = g;
+		hasStartedGame = false;
+		try {
+			sendToArdurino("00");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	public void run() {
 		if(!hasSetup) {

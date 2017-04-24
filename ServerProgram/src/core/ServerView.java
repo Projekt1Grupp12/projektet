@@ -16,6 +16,9 @@ import javax.swing.JTextField;
 import javax.swing.Timer;
 import javax.swing.text.DefaultCaret;
 
+import game.Player;
+import game.PuzzelGame;
+
 public class ServerView extends JPanel {
 	private ServerController controller;
 	private Timer timer = new Timer(100, new MyListener()); 
@@ -48,6 +51,7 @@ public class ServerView extends JPanel {
 	
 	private JButton sendButton = new JButton("SEND");
 	private JButton createClient = new JButton("CREATE CLIENT");
+	private JButton resetGame = new JButton("RESET");
 	
 	/**
 	 * Constructor that creates the UI
@@ -102,6 +106,8 @@ public class ServerView extends JPanel {
 		message.setPreferredSize(new Dimension(100, 30));
 		this.messagePanel.add(this.message);
 		createClient.addActionListener(b);
+		this.messagePanel.add(resetGame);
+		resetGame.addActionListener(b);
 		
 		messagePanel.add(createClient);
 		
@@ -140,6 +146,10 @@ public class ServerView extends JPanel {
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
+			}
+			
+			if(e.getSource() == resetGame) {
+				controller.getServer().resetGame(new PuzzelGame(new Player[]{new Player(0), new Player(1)}, controller.getServer()));
 			}
 		}
 	}
