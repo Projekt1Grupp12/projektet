@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 import game.Game;
 import game.Player;
 import game.PuzzelGame;
+import game.TrafficGame;
 
 public class UDPServer implements Runnable
 {	
@@ -32,7 +33,7 @@ public class UDPServer implements Runnable
 	
 	byte[] receiveData;
 	
-	Game game = new PuzzelGame(new Player[]{new Player(0), new Player(1)}, this);
+	Game game = new TrafficGame(new Player[]{new Player(0), new Player(1)}, this);//new PuzzelGame(new Player[]{new Player(0), new Player(1)}, this);
 	
 	DatagramPacket packet;
 	
@@ -171,7 +172,7 @@ public class UDPServer implements Runnable
 				}
 				else
 					game.update(input);
-					
+				
 				receiveData = new byte[RECIVE_BUFFER_SIZE];
 				packet = new DatagramPacket(receiveData, receiveData.length);
 			}

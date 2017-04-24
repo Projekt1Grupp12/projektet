@@ -6,40 +6,48 @@ import java.util.concurrent.TimeUnit;
 import core.UDPServer;
 
 public class TrafficGame extends Game {
-	enum Lights {GREEN, YELLOW, RED};
+	final int RED = 0, YELLOW = 1, GREEN = 2;
 	
-	Lights currentLigt;
-	
-	private boolean fromRed;
+	private int lightState = 0;
 	
 	private int delay;
 	private int maxDelay;
 	
+	private boolean fromRed = true;
+	
 	public TrafficGame(Player[] players, UDPServer server) {
 		super(players, server);
-		currentLigt = Lights.RED;
-		fromRed = true;
+		maxDelay = 64;
 		
-		maxDelay = 128;
+		for(int i = 0; i < getPlayers().length; i++) {
+			getPlayers()[i].setScreenBit(0);
+		}
 	}
 	
-	public void stepLight(int index) {
-		if(currentLigt.equals(Lights.RED)) {
-			currentLigt = Lights.YELLOW;
-			getPlayers()[index].setScreenBit(0);
-			getPlayers()[index].setScreenBit(1);
+	public void stepLight() {
+		lightState += fromRed ? 1 : -1;
+		
+		for(int i = 0; i < getPlayers().length; i++) {
+			getPlayers()[i].flushScreen();
+			
+			if(lightState == RED) {
+				getPlayers()[i].setScreenBit(0);
+				fromRed = true;
+			}
+			
+			if(lightState == YELLOW) {
+				getPlayers()[i].setScreenBit(1);
+				if(fromRed) {
+					getPlayers()[i].setScreenBit(0);
+				}
+			}
+			
+			if(lightState == GREEN) {
+				getPlayers()[i].setScreenBit(2);
+				fromRed = false;
+			}
 		}
 		
-		if(currentLigt.equals(Lights.YELLOW)) {
-			currentLigt = fromRed ? Lights.GREEN : Lights.RED;
-			getPlayers()[index].setScreenBit((fromRed) ? 2 : 0);
-			fromRed = !fromRed;
-		}
-		
-		if(currentLigt.equals(Lights.GREEN)) {
-			currentLigt = Lights.YELLOW;
-			getPlayers()[index].setScreenBit(1);
-		}
 	}
 
 	public void sendBadFeedback(Player player) throws IOException {
@@ -52,17 +60,16 @@ public class TrafficGame extends Game {
 
 	public void update(String input) throws IOException {
 		setInput(input);
-		
 		delay += 1;
 		
+		for(int i = 0; i < getPlayers().length; i++)
+			sendToPhone("Standing Still!", i);
+		
 		if(delay >= maxDelay) {
-			for(int i = 0; i < 2; i++)
-				stepLight(i);
+			stepLight();
 			sendToArdurino(setupFullScreen() + "");
 			delay = 0;
 		}
-		
-		System.out.println(delay);
 		
 		try {
 			TimeUnit.MILLISECONDS.sleep(5);
