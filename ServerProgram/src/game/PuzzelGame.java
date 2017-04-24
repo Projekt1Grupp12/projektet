@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+import core.BetterRandom;
 import core.UDPServer;
 
 public class PuzzelGame extends Game {
@@ -69,12 +70,11 @@ public class PuzzelGame extends Game {
 		for(int i = 0; i < getPlayers().length; i++) {
 			getPlayers()[i].flushScreen();
 			for(int j = 0; j < amountToLightUp[i]; j++) {
-				getPlayers()[i].setScreenBit(random.nextInt(3));
+				getPlayers()[i].setScreenBit(BetterRandom.random(0, 3));
 			}
 		}
 		
 		sendToArdurino(setupFullScreen() + "");
-		//System.out.println(Integer.toBinaryString(setupFullScreen()));
 	}
 	
 	public void changeLights(int index) throws IOException {
@@ -86,12 +86,11 @@ public class PuzzelGame extends Game {
 		
 		getPlayers()[index].flushScreen();
 		for(int i = 0; i < amountToLightUp; i++) {
-			getPlayers()[index].setScreenBit(random.nextInt(3));
+			getPlayers()[index].setScreenBit(BetterRandom.random(0, 3));
 		}
 		
 		String tmp = "0";
 		sendToArdurino(((setupFullScreen() < 10) ? tmp + setupFullScreen() : setupFullScreen()+"") + "");
-		//System.out.println(Integer.toBinaryString(setupFullScreen()));
 	}
 	
 	public void update(String input) throws IOException {

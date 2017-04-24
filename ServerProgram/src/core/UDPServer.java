@@ -206,7 +206,6 @@ public class UDPServer implements Runnable
 		}
 		
 		for(int i = 0; i < revTmp.length(); i++) {
-			System.out.println((int)revTmp.charAt(i));
 			if(revTmp.charAt(i) != (int)0) {
 				index = i;
 				break;
