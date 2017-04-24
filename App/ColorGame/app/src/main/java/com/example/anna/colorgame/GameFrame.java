@@ -1,30 +1,30 @@
 package com.example.anna.colorgame;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-
+/*
+Class is an activity that represents GUI of the game.
+It has three buttons with different colors and a three TextView.
+TextView shows different information to the user.(Move, points)
+ */
 public class GameFrame extends AppCompatActivity implements View.OnClickListener {
-    private static final int PORT = 4444;
     private static final String TAG = "debug";
     private static final String RED = "3";
     private static final String YELLOW = "2";
     private static final String GREEN = "1";
-    private static final String COMMA = ";";
+    private static final String SEMICOLON = ";";
     private String data = "";
     private String ip = "";
-    //private String name = "";
     private String userID = "";
     private AsyncResponse delegate = new AsyncResponse() {
+        /*
+        Method that has result from AsyncTask as parameter.
+        It is used to update TextView in this activity.
+         */
         @Override
         public void postResult(String result) {
            TextView textViewMove = (TextView) findViewById(R.id.textViewMove);
@@ -38,53 +38,21 @@ public class GameFrame extends AppCompatActivity implements View.OnClickListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_frame);
-
         //Get the intent that started this activity and extract the string
         Intent intent = getIntent();
         ip = intent.getStringExtra("ip");
         String name = intent.getStringExtra("name");
         userID = intent.getStringExtra("userid");
-        String toShow= "ip: " + ip + "name: " + name + "userID: " + userID;
-
+        String toShow= "IP: " + ip + " Name: " + name + " UserID: " + userID;
         //Capture the layout's TextView and set the string as its text
         TextView textViewIP = (TextView) findViewById(R.id.textViewIP);
         textViewIP.setText(toShow);
     }
-/*
-    public void redButtonCLicked(View view){//RED button
-        data = RED + COMMA + userID;
-
-        //If this button is pushed, send content in str to AsyncTask.doInBackground
-        startAsyncTask("RED", data);
-    }
-
-    public void yellowButtonClicked(View view){//YELLOW button
-        data = YELLOW + COMMA + userID;
-
-        //If this button is pushed, send content in str to AsyncTask.doInBackground
-        startAsyncTask("YELLOW", data);
-    }
-
-    public void greenButtonClicked(View view){//GREEN button
-        data = GREEN + COMMA + userID;
-
-        //If this button is pushed, send content in str to AsyncTask.doInBackground
-        startAsyncTask("GREEN", data);
-    }
-    */
-
-    public void startAsyncTask(String color, String data){
-        //If this button is pushed, send content in str to AsyncTask.doInBackground
-
-        ConnectToServer runner = new ConnectToServer(ip, userID, delegate);
-        System.gc();
-        Log.d(TAG, "Task created. " + color);
-        //we want to send name to server
-        Log.d(TAG, "Execute task. " + color);
-
-        runner.execute(data);
-    }
-
+    /*
+    This method is called when one of the buttons is clicked in the GUI.
+    Which button is pushed is stored in data variable.
+    Then the semicolon and userID is added to data string and sent to startAsyncTask method.
+     */
     @Override
     public void onClick(View view) {
         switch(view.getId()){
@@ -99,15 +67,18 @@ public class GameFrame extends AppCompatActivity implements View.OnClickListener
                 break;
         }
         String temp = data;
-        data += COMMA + userID;
+        data += SEMICOLON + userID;
         startAsyncTask(temp, data);
     }
-    /*public void updateUI(String result){
-        Log.d(TAG, "Inside updateUI call 1");
-        TextView textViewMove = new TextView(setContentView(R.layout.activity_game_frame));
-        textViewMove = (TextView) findViewById(R.id.textViewMove);
-        Log.d(TAG, "Inside updateUI call 2");
-        textViewMove.setText(result);
-        Log.d(TAG, "Text updated");
-    }*/
+    /*
+    This method is used to create new instance of a ConnectToServer class and send data as
+    parameter to doInBackground method of that class.
+     */
+    public void startAsyncTask(String color, String data){
+        ConnectToServer runner = new ConnectToServer(ip, delegate);
+        System.gc();
+        Log.d(TAG, "Task created. " + color);
+        Log.d(TAG, "Execute task. " + color);
+        runner.execute(data);
+    }
 }

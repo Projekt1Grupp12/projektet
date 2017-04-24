@@ -5,9 +5,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-
+/*
+Class is an activity that shows main menu of the application.
+It has three TextView to show data.
+ */
 public class StartGameFrame extends AppCompatActivity {
-    private static final int PORT = 4444;
     private String ip = "";
     private String name = "";
     private String userID = "";
@@ -31,20 +33,15 @@ public class StartGameFrame extends AppCompatActivity {
         TextView textIDView = (TextView) findViewById(R.id.textIDView);
         textIDView.setText(userID);
     }
-
+    /*
+    This method is called when button is clicked.
+    It starts next activity and sends data to it using Intent class.
+    */
     public void startGameClicked(View view){//Button Start Game
         Intent intent = new Intent(this, GameFrame.class);
         intent.putExtra("ip", ip);
         intent.putExtra("name", name);
         intent.putExtra("userid", userID);
         startActivity(intent);
-    }
-
-    public void showStatistic(View view){//Button Statistic
-        /*
-        When button is clicked, client will send request to server.
-        And then recieve data from server to send to StatisticFrame
-         */
-
     }
 }
