@@ -13,7 +13,7 @@ public class PuzzelGame extends Game {
 	private int level;
 	
 	private boolean hasStarted;
-	private boolean startButtonBlink = false;
+	private boolean startButtonBlink = true;
 	
 	Random random = new Random();
 	
