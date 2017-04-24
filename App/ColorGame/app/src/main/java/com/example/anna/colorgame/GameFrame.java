@@ -1,11 +1,16 @@
 package com.example.anna.colorgame;
 
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
+import java.io.IOException;
+
 /*
 Class is an activity that represents GUI of the game.
 It has three buttons with different colors and a three TextView.
@@ -20,6 +25,10 @@ public class GameFrame extends AppCompatActivity implements View.OnClickListener
     private String data = "";
     private String ip = "";
     private String userID = "";
+
+    MediaPlayer mpGood;
+    MediaPlayer mpBad;
+
     private AsyncResponse delegate = new AsyncResponse() {
         /*
         Method that has result from AsyncTask as parameter.
@@ -27,12 +36,42 @@ public class GameFrame extends AppCompatActivity implements View.OnClickListener
          */
         @Override
         public void postResult(String result) {
-           TextView textViewMove = (TextView) findViewById(R.id.textViewMove);
+
+            TextView textViewMove = (TextView) findViewById(R.id.textViewMove);
             Log.d(TAG, "Inside updateUI call 2");
             textViewMove.setText(result);
             Log.d(TAG, "Text updated");
+            if(mpGood.isPlaying() || mpBad.isPlaying())
+            {
+                mpGood.stop();
+                mpBad.stop();
+            }
+            try {
+                AssetFileDescriptor afd;
+                if (result.contains("GOOD")) {
+                    afd = getAssets().openFd("goodmove.mp3");
+                    mpGood.reset();
+                    mpGood.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(),afd.getLength());
+                    mpGood.prepare();
+                    mpGood.start();
+                } else if (result.contains("BAD")) {
+                    afd = getAssets().openFd("badmove.mp3");
+                    mpBad.reset();
+                    mpBad.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(),afd.getLength());
+                    mpBad.prepare();
+                    mpBad.start();
+                }
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
+
     };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
