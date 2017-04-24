@@ -51,7 +51,7 @@ void setup() {
   pinMode(6, OUTPUT);
   pinMode(7, OUTPUT);
   pinMode(8, OUTPUT);
-  pinMode(9, OUTPUT);
+ // pinMode(9, OUTPUT);
 }
 //sätter dem olika pinnarn 
 void turnOnLight(int packet){
@@ -118,17 +118,18 @@ void loop() {
   // if there's data available, read a packet
   int packetSize = Udp.parsePacket();
   Udp.read(packetBuffer, UDP_TX_PACKET_MAX_SIZE);
-  int sensorValue = analogRead(A0);
+  int sensorValue = analogRead(A1);
   packet = atoi(packetBuffer);
-  turnOnLight(packet);
-  
+  if(packet >= 0)
+    turnOnLight(packet);
+ // Serial.println(sensorValue);
   if(packet == -3){
     motorOn(8);
-    motor1Clock = 5;
+    motor1Clock = 2;
   }
   else if(packet == -4){
     motorOn(9);
-    motor2Clock = 5;
+    motor2Clock = 2;
     
   }
   if(motor1Clock > 0){
@@ -163,8 +164,8 @@ void loop() {
     Udp.beginPacket(serverIp, localPort);
     Udp.write("-2");
     Udp.endPacket();
+    Serial.println("haj ");
     hasPressed = true;
-    Serial.println(analogRead(A0)); 
   }
 
   if(sensorValue == 0 && hasPressed) {
