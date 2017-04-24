@@ -197,9 +197,7 @@ public class UDPServer implements Runnable
 		
 		int index = 0;
 		
-		for(int i = 0; i < t.length; i++) {
-			tmp += (char)t[i];
-		}
+		tmp = putTogether(t, t.length);
 		
 		String revTmp = "";
 		
