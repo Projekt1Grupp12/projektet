@@ -5,6 +5,7 @@ import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -77,6 +78,7 @@ public class GameFrame extends AppCompatActivity implements View.OnClickListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_frame);
+
         //Get the intent that started this activity and extract the string
         Intent intent = getIntent();
         ip = intent.getStringExtra("ip");
@@ -86,6 +88,8 @@ public class GameFrame extends AppCompatActivity implements View.OnClickListener
         //Capture the layout's TextView and set the string as its text
         TextView textViewIP = (TextView) findViewById(R.id.textViewIP);
         textViewIP.setText(toShow);
+        mpGood = MediaPlayer.create(GameFrame.this, R.raw.goodmove);
+        mpBad = MediaPlayer.create(GameFrame.this, R.raw.badmove);
     }
     /*
     This method is called when one of the buttons is clicked in the GUI.

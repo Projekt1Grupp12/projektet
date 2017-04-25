@@ -6,6 +6,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.AdapterView.OnItemSelectedListener;
+
+import java.lang.reflect.Array;
+
 /*
 Class is an activity that shows a Login window of application.
 It has two EditText and a Button.
@@ -15,6 +22,7 @@ public class MainFrame extends AppCompatActivity {
     private String ip = "";
     private String name = "";
     private String userID = "";
+    private String[] ipAdresses = {"Choose IP from the list.", "10.2.19.242", "10.2.19.28"};
     private AsyncResponse delegate = new AsyncResponse() {
         /*
         Method that has result from AsyncTask as parameter.
@@ -33,6 +41,42 @@ public class MainFrame extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_frame);
+
+        //Here is drop-down list
+        final Spinner dynamicSpinner = (Spinner) findViewById(R.id.spinner);
+        //ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, ipAdresses);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.my_spinner, ipAdresses);
+        adapter.setDropDownViewResource(R.layout.my_spinner_dropdown);
+        dynamicSpinner.setAdapter(adapter);
+        dynamicSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Log.d(TAG, "selection" + parent.getItemAtPosition(position));
+                switch (position) {
+                    case 0:
+                        //EditText editText0 = (EditText) findViewById(R.id.editIPText);
+                        // editText0.setText(ipAdresses[0]);
+                        // Whatever you want to happen when the first item gets selected
+                        break;
+                    case 1:
+                        EditText editText1 = (EditText) findViewById(R.id.editIPText);
+                        editText1.setText(ipAdresses[1]);
+                        dynamicSpinner.setSelection(0);
+                        // Whatever you want to happen when the first item gets selected
+                        break;
+                    case 2:
+                        EditText editText2 = (EditText) findViewById(R.id.editIPText);
+                        editText2.setText(ipAdresses[2]);
+                        dynamicSpinner.setSelection(0);
+                        // Whatever you want to happen when the second item gets selected
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
     }
     /*
     This method is called when the button is clicked.

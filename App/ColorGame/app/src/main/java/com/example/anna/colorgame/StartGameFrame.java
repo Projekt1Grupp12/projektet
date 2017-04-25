@@ -3,6 +3,7 @@ package com.example.anna.colorgame;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 /*
@@ -10,14 +11,32 @@ Class is an activity that shows main menu of the application.
 It has three TextView to show data.
  */
 public class StartGameFrame extends AppCompatActivity {
-    private String ip = "";
-    private String name = "";
-    private String userID = "";
+    private static final String TAG = "debug";
+    private static String ip = "";
+    private static String name = "";
+    private static String userID = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_game_frame);
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.d(TAG, "onDestroy");
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onRestart() {
+        Log.d(TAG, "onRestart");
+        super.onRestart();
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
 
         //Get the intent that started this activity and extract the string
         Intent intent = getIntent();

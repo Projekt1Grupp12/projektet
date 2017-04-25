@@ -13,4 +13,5 @@
     <string name="textviewid">TextView</string>
     <string name="ip_name_userid">ip.name.userID</string>
     <string name="points">points</string>
+    <string name="header">Title</string>
 </resources>
