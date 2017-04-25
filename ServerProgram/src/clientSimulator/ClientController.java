@@ -69,6 +69,7 @@ public class ClientController implements Runnable {
 		while(true) {	
 			try {
 				serverSocketListen.receive(packet);
+				send("0");
 				view.setFeedbackText(UDPServer.putTogether(packet.getData()/*, "XXXX MOVES! XXXX".length()*/));
 				receiveData = new byte[1024];
 				packet = new DatagramPacket(receiveData, receiveData.length);

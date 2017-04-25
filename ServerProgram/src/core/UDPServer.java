@@ -120,7 +120,8 @@ public class UDPServer implements Runnable
 	}
 	
 	public void sendToPhone(String message, int index) throws IOException {
-		send(message, phoneIps[index]);
+		if(!phoneIps[index].equals("127.0.0.1") && !phoneIps[index].equals("localhost"))
+			send(message, phoneIps[index]);
 	}
 	
 	public void sendToArdurino(String message) throws IOException {
