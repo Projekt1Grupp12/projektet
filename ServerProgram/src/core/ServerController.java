@@ -28,8 +28,6 @@ public class ServerController {
 	
 	public static boolean hasCreatedClient; 
 	
-	private boolean playWithTwo = true;
-	
 	/**
 	 * Constructor: creates a new instance of a UDPServer.
 	 * Starts a new thread running the UDPServer.

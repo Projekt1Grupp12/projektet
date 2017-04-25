@@ -17,8 +17,7 @@ public class ScreenSimulatorView extends JPanel {
 		this.controller = controller;
 		controller.setView(this);
 		
-		this.setLayout(new GridLayout(0, 6+2));
-		add(new JLabel());
+		this.setLayout(new GridLayout(0, 6));
 		for(int i = 0; i < lights.length; i++) {
 			lights[i] = new JButton(" ");
 			lights[i].setPreferredSize(new Dimension(32, 32));
@@ -26,7 +25,6 @@ public class ScreenSimulatorView extends JPanel {
 			lights[i].setEnabled(false);
 			add(lights[i]);
 		}
-		add(new JLabel());
 	}
 	
 	public JButton[] getLights() {

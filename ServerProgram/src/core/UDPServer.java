@@ -10,9 +10,12 @@ import javax.swing.JOptionPane;
 import game.Game;
 import game.Player;
 import game.PuzzelGame;
+import game.TrafficGame;
 
 public class UDPServer implements Runnable
 {	
+	final int RECIVE_BUFFER_SIZE = 128;
+	
 	boolean recsive = true;
 	
 	private DatagramSocket serverSocket = null;
@@ -30,19 +33,19 @@ public class UDPServer implements Runnable
 	
 	byte[] receiveData;
 	
-	Game game = new PuzzelGame(new Player[]{new Player(0), new Player(1)}, this);
+	Game game = new TrafficGame(new Player[]{new Player(0), new Player(1)}, this);//new PuzzelGame(new Player[]{new Player(0), new Player(1)}, this);
 	
 	DatagramPacket packet;
 	
 	Random random = new Random();
 	
-	private boolean playWithTwo = true;
+	private boolean playWithTwo = false;
 	private boolean hasSetup; 
 	
 	public UDPServer(int port) {
 		this.port = port;
 		
-		receiveData = new byte[1024];
+		receiveData = new byte[RECIVE_BUFFER_SIZE];
 		
 		packet = new DatagramPacket(receiveData, receiveData.length);
 		
@@ -57,7 +60,7 @@ public class UDPServer implements Runnable
 	
 	public String[] getIps() {
 		String[] ips = new String[2];
-		byte[] receiveData = new byte[1024];
+		byte[] receiveData = new byte[RECIVE_BUFFER_SIZE];
 		
 		DatagramPacket packet = new DatagramPacket(receiveData, receiveData.length);
 		try {
@@ -117,7 +120,8 @@ public class UDPServer implements Runnable
 	}
 	
 	public void sendToPhone(String message, int index) throws IOException {
-		send(message, phoneIps[index]);
+		if(!phoneIps[index].equals("127.0.0.1") && !phoneIps[index].equals("localhost"))
+			send(message, phoneIps[index]);
 	}
 	
 	public void sendToArdurino(String message) throws IOException {
@@ -129,6 +133,16 @@ public class UDPServer implements Runnable
 		for(int i = 0; i < 2; i++)
 			if(!hasStartedGame) sendToPhone("-1", i);
 		inputHistory = putTogether(packet.getData(), 5) + "  : " + (inputHistoryIndex++) + " : " + packet.getAddress().getHostName() + "\n" + inputHistory;
+	}
+	
+	public void resetGame(Game g) {
+		game = g;
+		hasStartedGame = false;
+		try {
+			sendToArdurino("00");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void run() {
@@ -159,8 +173,8 @@ public class UDPServer implements Runnable
 				}
 				else
 					game.update(input);
-					
-				receiveData = new byte[1024];
+				
+				receiveData = new byte[RECIVE_BUFFER_SIZE];
 				packet = new DatagramPacket(receiveData, receiveData.length);
 			}
 		} catch (IOException e) {
@@ -188,5 +202,40 @@ public class UDPServer implements Runnable
 		}
 		
 		return tmp;
+	}
+	
+	public static String putTogether(byte[] t) {
+		String tmp = "";
+		
+		int index = 0;
+		
+		tmp = putTogether(t, t.length);
+		
+		String revTmp = "";
+		
+		for(int i = tmp.length()-1; i >= 0; i--) {
+			revTmp += tmp.charAt(i);
+		}
+		
+		for(int i = 0; i < revTmp.length(); i++) {
+			if(revTmp.charAt(i) != (int)0) {
+				index = i;
+				break;
+			}
+		}
+		
+		tmp = "";
+		
+		for(int i = index; i < revTmp.length(); i++) {
+			tmp += revTmp.charAt(i);
+		}
+		
+		revTmp = "";
+		
+		for(int i = tmp.length()-1; i >= 0; i--) {
+			revTmp += tmp.charAt(i);
+		}
+		
+		return revTmp;
 	}
 }
