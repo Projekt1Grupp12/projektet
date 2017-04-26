@@ -1,6 +1,8 @@
 package com.example.anna.colorgame;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,40 +20,68 @@ public class StartGameFrame extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_game_frame);
-    }
-
-    @Override
-    protected void onDestroy() {
-        Log.d(TAG, "onDestroy");
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onRestart() {
-        Log.d(TAG, "onRestart");
-        super.onRestart();
-    }
-
-    @Override
-    protected void onResume(){
-        super.onResume();
 
         //Get the intent that started this activity and extract the string
         Intent intent = getIntent();
+
+        Log.i(TAG, "onCreate()");
+
         ip = intent.getStringExtra("ip");
         name = intent.getStringExtra("name");
         userID = intent.getStringExtra("userid");
 
+
         //Capture the layout's TextView and set the string as its text
         TextView textIPView = (TextView) findViewById(R.id.textViewMove);
         textIPView.setText(ip);
+
         TextView textNameView = (TextView) findViewById(R.id.textNameView);
         textNameView.setText(name);
+
         TextView textIDView = (TextView) findViewById(R.id.textIDView);
         textIDView.setText(userID);
+
+        saveInfo();
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i(TAG, "onStop()");
+        saveInfo();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.i(TAG, "onRestart()");
+        loadInfo();
+    }
+	
+	 //Save the users login info
+    public void saveInfo(){
+        SharedPreferences sharedPref = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("ip", ip);
+        editor.putString("name", name);
+        editor.putString("userid", userID);
+        editor.apply();
+        Log.i(TAG , "saveInfo");
+        Log.i(TAG +" ip", ip);
+    }
+
+    //Load the users login info
+    public void loadInfo(){
+        SharedPreferences sharedPref = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        Log.i(TAG , "loadInfo");
+        this.ip = sharedPref.getString("ip", "");
+        this.name = sharedPref.getString("name", "");
+        this.userID = sharedPref.getString("userid", "");
+    }
+	
     /*
     This method is called when button is clicked.
     It starts next activity and sends data to it using Intent class.
