@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketTimeoutException;
  /*
 This class extends AsyncTask and is used to send a request with data to server, and get a response
 with data from server.
@@ -14,7 +15,7 @@ Parameter in doInBackground method is data that will be sent to the server.
 
 public class ConnectToServer extends AsyncTask<String, String, String> {
     private static final int PORT = 4444;
-    private static final String TAG = "debug";
+    private static final String TAG = "ServerConnectDebug";
     private String ip = null;
     private AsyncResponse delegate = null;
 
@@ -30,9 +31,10 @@ public class ConnectToServer extends AsyncTask<String, String, String> {
     @Override
     protected String doInBackground(String... message) {
         String messageFromServer = "";
+        DatagramSocket clientSocket = null;
         try {
             Log.d(TAG, "Creating Socket and IPAdress");
-            DatagramSocket clientSocket = new DatagramSocket(PORT);
+            clientSocket = new DatagramSocket(PORT);
             InetAddress IPAddress = InetAddress.getByName(ip);
 
             Log.d(TAG, "Initialising byte arrays");
@@ -47,15 +49,21 @@ public class ConnectToServer extends AsyncTask<String, String, String> {
 
             Log.d(TAG, "Recieving response from server");
             DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+            Log.d(TAG, "clientSocket.setSoTimeout(3000)");
+            clientSocket.setSoTimeout(3000);
             Log.d(TAG, "Waiting for response");
             clientSocket.receive(receivePacket);
             Log.d(TAG, "Reading DatagramPacket we got from server");
             Log.d(TAG, "FROM SERVER:" + messageFromServer);
             messageFromServer = putChar(receiveData, receiveData.length);
-            clientSocket.close();
-        } catch (IOException e) {
+        } catch (SocketTimeoutException e) {
+            if(messageFromServer.isEmpty())
+                Log.d(TAG, "EMPTY MESSAGE");
+            Log.e(TAG, "SocketTimeoutException");
+        }catch (IOException e) {
             Log.e(TAG, e.getMessage());
         }
+        clientSocket.close();
         return messageFromServer;
     }
     /*
