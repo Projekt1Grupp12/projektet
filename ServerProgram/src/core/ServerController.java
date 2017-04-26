@@ -55,7 +55,7 @@ public class ServerController {
 		frame.add(viewer);
 		frame.setResizable(true);
 		frame.pack();
-		frame.setLocation(648+nextId*frame.getWidth(), 100);
+		frame.setLocation(view.getLocation().x+view.getWidth()+8+nextId*frame.getWidth(), 100);
 		frame.setVisible(true);
 		if(!hasCreatedClient) hasCreatedClient = true;
 		nextId = nextId + 1;

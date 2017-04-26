@@ -60,7 +60,7 @@ public class ServerView extends JPanel {
 	public ServerView(ServerController controller) {
 		this.controller = controller;
 		controller.setView(this);
-		
+	
 		this.setLayout(new BorderLayout());
 		
 		for(int i = 0; i < 2; i++) {
