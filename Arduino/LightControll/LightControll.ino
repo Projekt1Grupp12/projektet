@@ -122,16 +122,16 @@ void loop() {
   int sensorValue = analogRead(A1);
   packet = atoi(packetBuffer);
   int motorInt;
-  if(packet >= 0)
+  if(packet >= 0 && packetBuffer[0] != '\0')
     turnOnLight(packet);
  // Serial.println(sensorValue);    
   
   if(motor1Clock > 0) motorOn(8);
   if(motor2Clock > 0) motorOn(9);
-  if(packet == -30){
+  if(packet == -3){
     motor1Clock = 5;
   }
-  else if(packet == -40){
+  else if(packet == -4){
     motor2Clock = 5;
   }
   if(motor1Clock > 0){
@@ -173,7 +173,9 @@ void loop() {
   if(sensorValue == 0 && hasPressed) {
     hasPressed = false;
   }
-  
+  for(int i = 0; i < UDP_TX_PACKET_MAX_SIZE; i++) {
+    packetBuffer[i] = '\0';
+  }
   delay(delayCount);
 }
 
