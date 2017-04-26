@@ -14,4 +14,6 @@
     <string name="ip_name_userid">ip.name.userID</string>
     <string name="points">points</string>
     <string name="header">Title</string>
+    <string name="puzzle">Puzzle</string>
+    <string name="traffic">Traffic</string>
 </resources>

@@ -21,7 +21,7 @@ public class MainMenu extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-         super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.main_menu);
 
         //Get the intent that started this activity and extract the string
@@ -82,14 +82,34 @@ public class MainMenu extends AppCompatActivity {
     This method is called when button is clicked.
     It starts next activity and sends data to it using Intent class.
     */
-    public void startGameClicked(View view) {//Button Choose Game
+    public void showHighScore(View view) {//Button Choose Game
+        Log.d(TAG, "Inside startGameClicked");
         Intent intent = null;
         //There is two different ways to go depending on userID
         if (userID.equals("0")) {
+            Log.d(TAG, "Inside if satsen");
             intent = new Intent(this, ChooseGame.class);
         } else if (userID.equals("1")) {
             intent = new Intent(this, PuzzleGame.class);
         }
+        Log.d(TAG, "Outside if satsen");
+        intent.putExtra("ip", ip);
+        intent.putExtra("name", name);
+        intent.putExtra("userid", userID);
+        startActivity(intent);
+    }
+
+    public void chooseGame(View view){
+        Log.d(TAG, "Inside startGameClicked");
+        Intent intent = null;
+        //There is two different ways to go depending on userID
+        if (userID.equals("0")) {
+            Log.d(TAG, "Inside if satsen");
+            intent = new Intent(this, ChooseGame.class);
+        } else if (userID.equals("1")) {
+            intent = new Intent(this, PuzzleGame.class);
+        }
+        Log.d(TAG, "Outside if satsen");
         intent.putExtra("ip", ip);
         intent.putExtra("name", name);
         intent.putExtra("userid", userID);
