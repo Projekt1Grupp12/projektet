@@ -1,6 +1,8 @@
 package com.example.anna.colorgame;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,10 +34,20 @@ public class MainFrame extends AppCompatActivity {
         @Override
         public void postResult(String result) {
             Log.d(TAG, "RESULTAT FRÅN SERVER " + result);
-            userID = result;
-            sendMessageToNextActivity();
+            if(result.isEmpty()){
+                alertDialog.show();
+            }
+            else {
+                userID = result;
+                sendMessageToNextActivity();
+            }
         }
     };
+
+
+    private AlertDialog alertDialog;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +89,16 @@ public class MainFrame extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
+
+        alertDialog = new AlertDialog.Builder(MainFrame.this).create();
+        alertDialog.setTitle("Connection fialed");
+        alertDialog.setMessage("Connection to game server fialed");
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
     }
     /*
     This method is called when the button is clicked.
