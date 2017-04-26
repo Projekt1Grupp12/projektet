@@ -39,7 +39,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainMenu" />
         </activity>
-        <activity android:name=".ChooseGame"></activity>
+        <activity android:name=".ChooseGame" />
+        <activity android:name=".TrafficGame"></activity>
     </application>
 
 </manifest>
