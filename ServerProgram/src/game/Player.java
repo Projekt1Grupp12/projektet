@@ -5,6 +5,7 @@ public class Player {
 	
 	private int score;
 	private int screen;
+	private int maskScreen;
 	private int amountPressed;
 	
 	private int id;
@@ -14,6 +15,15 @@ public class Player {
 	public Player(int id) {
 		flushColorsPressed();
 		this.id = id;
+		flushMask();
+	}
+	
+	public void flushMask() {
+		maskScreen = 0b111;
+	}
+	
+	public void clearMaskBit(int index) {
+		maskScreen &= ~(1 << index);
 	}
 	
 	public void addScore() {
@@ -49,6 +59,10 @@ public class Player {
 			lights[i] = (screen & (1L << i)) != 0;
 		
 		return lights;
+	}
+	
+	public int getMaskScreen() {
+		return maskScreen;
 	}
 	
 	public int getScreen() {

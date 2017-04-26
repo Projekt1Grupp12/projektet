@@ -38,6 +38,7 @@ public class PuzzelGame extends Game {
 			if(player.lightsOn()[i] && colorsPressed(player)[i] && !player.getColorsPressed()[i]) {
 				player.setAmountPressed(player.getAmountPressed()+1);
 				player.setColorsPressed(true, i);
+				player.clearMaskBit(i);
 				try {
 					sendToArdurino(setupFullScreen() + "");
 					sendGoodFeedback(player);
@@ -79,7 +80,7 @@ public class PuzzelGame extends Game {
 	
 	public void changeLights(int index) throws IOException {
 		sendToArdurino((index == 0) ? "0" + getPlayers()[1].getScore() : getPlayers()[0].getScore() + "0");
-		
+		getPlayers()[index].flushMask();
 		int amountToLightUp = 0;
 
 		amountToLightUp = random.nextInt(2)+1;
