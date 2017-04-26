@@ -51,7 +51,8 @@ void setup() {
   pinMode(6, OUTPUT);
   pinMode(7, OUTPUT);
   pinMode(8, OUTPUT);
- // pinMode(9, OUTPUT);
+  pinMode(9, OUTPUT);
+
 }
 //sätter dem olika pinnarn 
 void turnOnLight(int packet){
@@ -120,17 +121,18 @@ void loop() {
   Udp.read(packetBuffer, UDP_TX_PACKET_MAX_SIZE);
   int sensorValue = analogRead(A1);
   packet = atoi(packetBuffer);
-  if(packet >= 0)
+  int motorInt;
+  if(packet >= 0 && packetBuffer[0] != '\0')
     turnOnLight(packet);
- // Serial.println(sensorValue);
+ // Serial.println(sensorValue);    
+  
+  if(motor1Clock > 0) motorOn(8);
+  if(motor2Clock > 0) motorOn(9);
   if(packet == -3){
-    motorOn(8);
-    motor1Clock = 2;
+    motor1Clock = 5;
   }
   else if(packet == -4){
-    motorOn(9);
-    motor2Clock = 2;
-    
+    motor2Clock = 5;
   }
   if(motor1Clock > 0){
     motor1Clock--;
@@ -171,7 +173,9 @@ void loop() {
   if(sensorValue == 0 && hasPressed) {
     hasPressed = false;
   }
-  
+  for(int i = 0; i < UDP_TX_PACKET_MAX_SIZE; i++) {
+    packetBuffer[i] = '\0';
+  }
   delay(delayCount);
 }
 

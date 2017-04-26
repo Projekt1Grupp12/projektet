@@ -26,7 +26,7 @@ public class TrafficGame extends Game {
 		super(players, server);
 		delay = -1;
 		maxDelay = 96;
-		
+		hasPressedYellow = new boolean[2];
 		for(int i = 0; i < getPlayers().length; i++) {
 			getPlayers()[i].setScreenBit(0);
 		}
@@ -37,6 +37,7 @@ public class TrafficGame extends Game {
 		
 		for(int i = 0; i < getPlayers().length; i++) {
 			getPlayers()[i].flushScreen();
+			hasPressedYellow[i] = false;
 			
 			if(lightState == RED) {
 				getPlayers()[i].setScreenBit(0);
@@ -73,12 +74,15 @@ public class TrafficGame extends Game {
 	}
 	
 	public boolean checkGoodInput(Player player) {
-		boolean condition = (redPressed(player) || yellowPressed(player) || greenPressed(player)) && lightState == GREEN;
+		boolean condition = (redPressed(player) || yellowPressed(player) || greenPressed(player));
 	
 		try {
-			if(condition)
+			if(condition && (lightState == GREEN || (lightState == YELLOW && !hasPressedYellow[player.getId()] && fromRed))) {
+				if(lightState == YELLOW)
+					hasPressedYellow[player.getId()] = true;
 				sendGoodFeedback(player);
-			else if((redPressed(player) || yellowPressed(player) || greenPressed(player)) && lightState != GREEN)
+			}
+			else if(condition && (lightState != GREEN || (lightState == YELLOW && hasPressedYellow[player.getId()]) || lightState == RED))
 				sendBadFeedback(player);
 			else {
 				if(updateMessageDelay >= 48) {

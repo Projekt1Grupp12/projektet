@@ -40,7 +40,7 @@ public class ServerController {
 	public void updateSimulatorScreen() {
 		for(int i = 0; i < server.getPlayers().length; i++) {
 			for(int j = 0; j < server.getPlayers()[i].lightsOn().length; j++) {
-				if(server.getPlayers()[i].lightsOn()[j])
+				if(server.getPlayers()[i].lightsOn()[j] && (server.getPlayers()[i].getMaskScreen() & (1L << j)) != 0)
 					view.getScreenSimulatorController().setLight(j + (3*i));
 				else 
 					view.getScreenSimulatorController().clearLight(j + (3*i));
@@ -55,6 +55,7 @@ public class ServerController {
 		frame.add(viewer);
 		frame.setResizable(true);
 		frame.pack();
+		frame.setLocation(view.getLocation().x+view.getWidth()+8+nextId*frame.getWidth(), 100);
 		frame.setVisible(true);
 		if(!hasCreatedClient) hasCreatedClient = true;
 		nextId = nextId + 1;

@@ -22,6 +22,7 @@ public abstract class Game {
 	
 	public int setupFullScreen() {
 	    String tmp = "";
+	    String maskTmp = "";
 	    
 	    for(int i = 0; i < players.length; i++) {
 	    	String pad = Integer.toBinaryString(players[i].getScreen());
@@ -31,8 +32,18 @@ public abstract class Game {
 	    	tmp += pad;
 	    }
 	    
+	    for(int i = 0; i < players.length; i++) {
+	    	String pad = Integer.toBinaryString(players[i].getMaskScreen());
+	    	pad = (pad.length() == 1) ? "00" + pad : pad;
+	    	pad = (pad.length() == 2) ? "0" + pad : pad;
+	    	
+	    	maskTmp += pad;
+	    }
+	    
+	    int r = Integer.parseInt(tmp, 2);
+
 	    if(!tmp.equals("")) 
-	    	fullScreen = Integer.parseInt(tmp, 2);
+	    	fullScreen = r&Integer.parseInt(maskTmp, 2);
 	    else
 	    	return 0;
 	    
@@ -42,7 +53,7 @@ public abstract class Game {
 	public void flushFullScreen() throws IOException {
 		fullScreen = 0;
 		server.sendToArdurino("00");
-	}
+	} 
 	
 	public void takeProgressStep(int index) throws IOException {
 		server.sendToArdurino((index == 0) ? "-3" : "-4");
