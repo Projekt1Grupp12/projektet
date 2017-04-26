@@ -5,7 +5,6 @@ import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -17,7 +16,7 @@ Class is an activity that represents GUI of the game.
 It has three buttons with different colors and a three TextView.
 TextView shows different information to the user.(Move, points)
  */
-public class GameFrame extends AppCompatActivity implements View.OnClickListener {
+public class PuzzleGame extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "debug";
     private static final String RED = "3";
     private static final String YELLOW = "2";
@@ -77,7 +76,7 @@ public class GameFrame extends AppCompatActivity implements View.OnClickListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game_frame);
+        setContentView(R.layout.puzzle_game);
 
         //Get the intent that started this activity and extract the string
         Intent intent = getIntent();
@@ -88,8 +87,8 @@ public class GameFrame extends AppCompatActivity implements View.OnClickListener
         //Capture the layout's TextView and set the string as its text
         TextView textViewIP = (TextView) findViewById(R.id.textViewIP);
         textViewIP.setText(toShow);
-        mpGood = MediaPlayer.create(GameFrame.this, R.raw.goodmove);
-        mpBad = MediaPlayer.create(GameFrame.this, R.raw.badmove);
+        mpGood = MediaPlayer.create(PuzzleGame.this, R.raw.goodmove);
+        mpBad = MediaPlayer.create(PuzzleGame.this, R.raw.badmove);
     }
     /*
     This method is called when one of the buttons is clicked in the GUI.

@@ -7,12 +7,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.Button;
+
 /*
 Class is an activity that shows main menu of the application.
 It has three TextView to show data.
  */
-public class StartGameFrame extends AppCompatActivity {
+public class MainMenu extends AppCompatActivity {
     private static final String TAG = "debug";
     private static String ip = "";
     private static String name = "";
@@ -21,27 +22,22 @@ public class StartGameFrame extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
          super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_start_game_frame);
+        setContentView(R.layout.main_menu);
 
         //Get the intent that started this activity and extract the string
         Intent intent = getIntent();
-
         Log.i(TAG, "onCreate()");
-
         ip = intent.getStringExtra("ip");
         name = intent.getStringExtra("name");
         userID = intent.getStringExtra("userid");
 
-
-        //Capture the layout's TextView and set the string as its text
-        TextView textIPView = (TextView) findViewById(R.id.textViewMove);
-        textIPView.setText(ip);
-
-        TextView textNameView = (TextView) findViewById(R.id.textNameView);
-        textNameView.setText(name);
-
-        TextView textIDView = (TextView) findViewById(R.id.textIDView);
-        textIDView.setText(userID);
+        //Text on the Button change depending on userID
+        Button chooseGameBtn = (Button) findViewById(R.id.choose_game_button);
+        if(userID.equals("0")){
+            chooseGameBtn.setText("Choose Game");
+        }else if(userID.equals("1")){
+            chooseGameBtn.setText("Join Game");
+        }
 
         saveInfo();
     }
@@ -86,8 +82,14 @@ public class StartGameFrame extends AppCompatActivity {
     This method is called when button is clicked.
     It starts next activity and sends data to it using Intent class.
     */
-    public void startGameClicked(View view){//Button Start Game
-        Intent intent = new Intent(this, GameFrame.class);
+    public void startGameClicked(View view) {//Button Choose Game
+        Intent intent = null;
+        //There is two different ways to go depending on userID
+        if (userID.equals("0")) {
+            intent = new Intent(this, ChooseGame.class);
+        } else if (userID.equals("1")) {
+            intent = new Intent(this, PuzzleGame.class);
+        }
         intent.putExtra("ip", ip);
         intent.putExtra("name", name);
         intent.putExtra("userid", userID);

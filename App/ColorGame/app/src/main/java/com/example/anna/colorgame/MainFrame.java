@@ -13,8 +13,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.AdapterView.OnItemSelectedListener;
 
-import java.lang.reflect.Array;
-
 /*
 Class is an activity that shows a Login window of application.
 It has two EditText and a Button.
@@ -129,7 +127,7 @@ public class MainFrame extends AppCompatActivity {
      */
     public void sendMessageToNextActivity() {
         Log.d(TAG, "Creating new intent");
-        Intent intent = new Intent(this, StartGameFrame.class);
+        Intent intent = new Intent(this, MainMenu.class);
         Log.d(TAG, "IP and NAME" + ip + " " + name + " " + userID);
         intent.putExtra("ip", ip);
         intent.putExtra("name", name);

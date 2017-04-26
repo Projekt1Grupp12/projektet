@@ -19,18 +19,18 @@
         </activity>
 
         <activity
-            android:name=".StartGameFrame"
+            android:name=".MainMenu"
             android:parentActivityName=".MainFrame">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainFrame" />
         </activity>
 
-        <activity android:name=".GameFrame"
-                 android:parentActivityName=".StartGameFrame">
+        <activity android:name=".PuzzleGame"
+                 android:parentActivityName=".MainMenu">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".StartGameFrame" />
+                android:value=".MainMenu" />
         </activity>
     </application>
 
