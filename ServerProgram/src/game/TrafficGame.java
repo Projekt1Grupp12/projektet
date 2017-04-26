@@ -30,6 +30,8 @@ public class TrafficGame extends Game {
 		for(int i = 0; i < getPlayers().length; i++) {
 			getPlayers()[i].setScreenBit(0);
 		}
+		
+		realTime = true;
 	}
 	
 	public void stepLight() {
@@ -63,15 +65,14 @@ public class TrafficGame extends Game {
 	}
 
 	public void sendBadFeedback(Player player) throws IOException {
-		message = "BAD MOVE! ";
-		sendToPhone(message +  player.getScore(), player.getId());
+		sendToPhone("BAD MOVE!" +  player.getScore(), player.getId());
 	}
 
 	public void sendGoodFeedback(Player player) throws IOException {
 		player.addScore();
-		message = "GOOD MOVE! ";
-		sendToPhone(message  +  player.getScore(), player.getId());
+		sendToPhone("GOOD MOVE!"  +  player.getScore(), player.getId());
 		takeProgressStep(player.getId());
+		setInput("");
 	}
 	
 	public boolean checkGoodInput(Player player) {
@@ -86,12 +87,7 @@ public class TrafficGame extends Game {
 			else if(condition && (lightState != GREEN || (lightState == YELLOW && hasPressedYellow[player.getId()]) || lightState == RED))
 				sendBadFeedback(player);
 			else {
-				if(updateMessageDelay >= 48) {
-					message = "STANDING STILL! ";
-					updateMessageDelay = 0;
-				}
-					
-				sendToPhone(message +  player.getScore(), player.getId());
+				
 			}
 				
 		} catch (IOException e) {
@@ -131,7 +127,7 @@ public class TrafficGame extends Game {
 		updateMessageDelay += 1;
 		
 		try {
-			TimeUnit.MILLISECONDS.sleep(5);
+			TimeUnit.MILLISECONDS.sleep(20);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -139,5 +135,14 @@ public class TrafficGame extends Game {
 
 	public String getName() {
 		return "Traffic Game";
+	}
+
+	public void run() {
+		try {
+			while(true)
+				update(getInput());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

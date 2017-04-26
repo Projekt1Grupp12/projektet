@@ -134,4 +134,8 @@ public class PuzzelGame extends Game {
 	public String getName() {
 		return "Puzzel Game";
 	}
+
+	public void run() {
+		
+	}
 }

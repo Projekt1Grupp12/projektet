@@ -5,7 +5,7 @@ import java.io.IOException;
 import core.ServerController;
 import core.UDPServer;
 
-public abstract class Game {
+public abstract class Game implements Runnable {
 	private Player[] players;
 	
 	private int fullScreen;
@@ -13,6 +13,8 @@ public abstract class Game {
 	private UDPServer server;
 	
 	private String input;
+	
+	public boolean realTime;
 	
 	public Game(Player[] players, UDPServer server) {
 		this.players = players;

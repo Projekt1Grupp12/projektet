@@ -146,6 +146,10 @@ public class UDPServer implements Runnable
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		if(g.realTime) {
+			new Thread(game).start();
+		}
 	}
 
 	public void run() {
@@ -168,6 +172,8 @@ public class UDPServer implements Runnable
 				}
 				recive();
 				String input = putTogether(packet.getData(), hasStartedGame ? 3 : 2);
+				System.out.println(input);
+				if(game.realTime) game.setInput(input);
 				if(!hasStartedGame) {
 					if(input.equals("-2")) {
 						hasStartedGame = true;
@@ -175,7 +181,7 @@ public class UDPServer implements Runnable
 					}
 				}
 				else
-					game.update(input);
+					if(!game.realTime) game.update(input);
 
 				receiveData = new byte[RECIVE_BUFFER_SIZE];
 				packet = new DatagramPacket(receiveData, receiveData.length);
