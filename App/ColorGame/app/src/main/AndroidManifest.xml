@@ -12,36 +12,34 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".MainFrame"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTop">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
-            android:name=".StartGameFrame"
+            android:name=".MainMenu"
+            android:launchMode="singleTop"
             android:parentActivityName=".MainFrame"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTop">
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainFrame" />
         </activity>
-
         <activity
-            android:name=".GameFrame"
-            android:parentActivityName=".StartGameFrame"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTop">
+            android:name=".PuzzleGame"
+            android:launchMode="singleTop"
+            android:parentActivityName=".MainMenu"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".StartGameFrame" />
+                android:value=".MainMenu" />
         </activity>
+        <activity android:name=".ChooseGame"></activity>
     </application>
 
 </manifest>
