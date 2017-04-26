@@ -71,6 +71,7 @@ public class TrafficGame extends Game {
 		player.addScore();
 		message = "GOOD MOVE! ";
 		sendToPhone(message  +  player.getScore(), player.getId());
+		takeProgressStep(player.getId());
 	}
 	
 	public boolean checkGoodInput(Player player) {
@@ -134,5 +135,9 @@ public class TrafficGame extends Game {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public String getName() {
+		return "Traffic Game";
 	}
 }

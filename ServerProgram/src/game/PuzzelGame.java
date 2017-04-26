@@ -130,4 +130,8 @@ public class PuzzelGame extends Game {
 			e.printStackTrace();
 		}
 	}
+
+	public String getName() {
+		return "Puzzel Game";
+	}
 }

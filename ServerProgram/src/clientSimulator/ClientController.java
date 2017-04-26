@@ -65,17 +65,15 @@ public class ClientController implements Runnable {
 	public void run() {
 		byte[] receiveData = new byte[1024];
 		DatagramPacket packet = new DatagramPacket(receiveData, receiveData.length);
-		
-		while(true) {	
-			try {
+		try {
+			while(true) {	
 				serverSocketListen.receive(packet);
-				send("0");
+				send("-");
 				view.setFeedbackText(UDPServer.putTogether(packet.getData()/*, "XXXX MOVES! XXXX".length()*/));
 				receiveData = new byte[1024];
 				packet = new DatagramPacket(receiveData, receiveData.length);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			} } catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 }

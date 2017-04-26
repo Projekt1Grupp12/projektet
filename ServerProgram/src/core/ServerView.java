@@ -6,9 +6,12 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.IOException;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -16,8 +19,10 @@ import javax.swing.JTextField;
 import javax.swing.Timer;
 import javax.swing.text.DefaultCaret;
 
+import game.Game;
 import game.Player;
 import game.PuzzelGame;
+import game.TrafficGame;
 
 public class ServerView extends JPanel {
 	private ServerController controller;
@@ -53,14 +58,19 @@ public class ServerView extends JPanel {
 	private JButton createClient = new JButton("CREATE CLIENT");
 	private JButton resetGame = new JButton("RESET");
 	
+	private JComboBox games = new JComboBox();
+	
 	/**
 	 * Constructor that creates the UI
 	 * @param controller
 	 */
 	public ServerView(ServerController controller) {
+		games.addItem(new PuzzelGame(new Player[]{new Player(0), new Player(1)}, controller.getServer()));
+		games.addItem(new TrafficGame(new Player[]{new Player(0), new Player(1)}, controller.getServer()));
+		
 		this.controller = controller;
 		controller.setView(this);
-	
+		
 		this.setLayout(new BorderLayout());
 		
 		for(int i = 0; i < 2; i++) {
@@ -110,6 +120,9 @@ public class ServerView extends JPanel {
 		resetGame.addActionListener(b);
 		
 		messagePanel.add(createClient);
+		messagePanel.add(games);
+		ItemChangeListener itemChangeListener = new ItemChangeListener();
+		games.addItemListener(itemChangeListener);
 		
 		add(messagePanel, BorderLayout.CENTER);
 		add(screenSimulatorView, BorderLayout.SOUTH);
@@ -128,6 +141,15 @@ public class ServerView extends JPanel {
 		}
 	}
 
+	class ItemChangeListener implements ItemListener {
+	    public void itemStateChanged(ItemEvent event) {
+	       if (event.getStateChange() == ItemEvent.SELECTED) {
+	    	   if(event.getSource() == games) {
+	    		   controller.getServer().resetGame((Game)event.getItem());
+	    	   }
+	       }
+	    }
+	}
 	
 	public class ButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {

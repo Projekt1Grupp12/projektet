@@ -109,4 +109,10 @@ public abstract class Game {
 	public String getInput() {
 		return input;
 	}
+	
+	public abstract String getName();
+	
+	public String toString() {
+		return getName();
+	}
 }

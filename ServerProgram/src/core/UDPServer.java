@@ -31,9 +31,11 @@ public class UDPServer implements Runnable
 	
 	private boolean hasStartedGame; 
 	
+	public boolean startNewThread;
+	
 	byte[] receiveData;
 	
-	Game game = new TrafficGame(new Player[]{new Player(0), new Player(1)}, this);//new PuzzelGame(new Player[]{new Player(0), new Player(1)}, this);
+	Game game = new PuzzelGame(new Player[]{new Player(0), new Player(1)}, this);
 	
 	DatagramPacket packet;
 	
@@ -65,7 +67,7 @@ public class UDPServer implements Runnable
 		DatagramPacket packet = new DatagramPacket(receiveData, receiveData.length);
 		try {
 			serverSocket = new DatagramSocket(4444);
-			
+
 			serverSocket.receive(packet);
 			ips[0] = packet.getAddress().getHostName();
 			while(putTogether(packet.getData(), 2).equals("-2")) {
@@ -130,8 +132,9 @@ public class UDPServer implements Runnable
 	
 	public void recive() throws IOException {
 		serverSocket.receive(packet);
-		for(int i = 0; i < 2; i++)
+		for(int i = 0; i < 2; i++) {
 			if(!hasStartedGame) sendToPhone("-1", i);
+		}
 		inputHistory = putTogether(packet.getData(), 5) + "  : " + (inputHistoryIndex++) + " : " + packet.getAddress().getHostName() + "\n" + inputHistory;
 	}
 	
@@ -173,7 +176,7 @@ public class UDPServer implements Runnable
 				}
 				else
 					game.update(input);
-				
+
 				receiveData = new byte[RECIVE_BUFFER_SIZE];
 				packet = new DatagramPacket(receiveData, receiveData.length);
 			}
