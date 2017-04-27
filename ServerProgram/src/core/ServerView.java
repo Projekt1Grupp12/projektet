@@ -11,6 +11,7 @@ import java.awt.event.ItemListener;
 import java.io.IOException;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -18,6 +19,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.Timer;
 import javax.swing.text.DefaultCaret;
+
+import com.sun.corba.se.spi.activation.Server;
 
 import game.Game;
 import game.Player;
@@ -59,6 +62,8 @@ public class ServerView extends JPanel {
 	private JButton resetGame = new JButton("RESET");
 	
 	private JComboBox games = new JComboBox();
+	
+	private JCheckBox twoPlayers = new JCheckBox("two players?");
 	
 	/**
 	 * Constructor that creates the UI
@@ -121,6 +126,8 @@ public class ServerView extends JPanel {
 		
 		messagePanel.add(createClient);
 		messagePanel.add(games);
+		messagePanel.add(twoPlayers);
+		twoPlayers.addActionListener(b);
 		ItemChangeListener itemChangeListener = new ItemChangeListener();
 		games.addItemListener(itemChangeListener);
 		
@@ -153,6 +160,10 @@ public class ServerView extends JPanel {
 	
 	public class ButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
+			if(e.getSource() == twoPlayers) {
+				controller.getServer().playWithTwo = twoPlayers.isSelected();
+			}
+			
 			if(e.getSource() == createClient) {
 				controller.createClient();
 			}

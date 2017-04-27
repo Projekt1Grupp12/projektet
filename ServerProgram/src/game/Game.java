@@ -16,10 +16,21 @@ public abstract class Game implements Runnable {
 	
 	public boolean realTime;
 	
+	public boolean closeGame;
+	
 	public Game(Player[] players, UDPServer server) {
 		this.players = players;
 		this.server = server;
 		input = "";
+		closeGame = false;
+	}
+	
+	public void reset() {
+		input = "";
+		for(int i = 0; i < players.length; i++) {
+			players[i] = new Player(players[i].getId());
+		}
+		closeGame = false;
 	}
 	
 	public int setupFullScreen() {

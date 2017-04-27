@@ -41,7 +41,7 @@ public class UDPServer implements Runnable
 	
 	Random random = new Random();
 	
-	private boolean playWithTwo = false;
+	public boolean playWithTwo = false;
 	private boolean hasSetup; 
 	
 	public UDPServer(int port) {
@@ -139,15 +139,17 @@ public class UDPServer implements Runnable
 	}
 	
 	public void resetGame(Game g) {
+		game.closeGame = true;
 		game = g;
-		hasStartedGame = false;
+		//hasStartedGame = false;
 		try {
 			sendToArdurino("00");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
-		if(g.realTime) {
+		game.reset();
+		if(game.realTime) {
 			new Thread(game).start();
 		}
 	}
@@ -201,6 +203,10 @@ public class UDPServer implements Runnable
 	
 	public String getInputHistory() {
 		return inputHistory;
+	}
+	
+	public void endGame() {
+		game.closeGame = true;
 	}
 	
 	public static String putTogether(byte[] t, int l) {

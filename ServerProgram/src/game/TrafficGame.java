@@ -127,7 +127,7 @@ public class TrafficGame extends Game {
 		updateMessageDelay += 1;
 		
 		try {
-			TimeUnit.MILLISECONDS.sleep(20);
+			TimeUnit.MILLISECONDS.sleep(30);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -139,7 +139,7 @@ public class TrafficGame extends Game {
 
 	public void run() {
 		try {
-			while(true)
+			while(!closeGame)
 				update(getInput());
 		} catch (IOException e) {
 			e.printStackTrace();
