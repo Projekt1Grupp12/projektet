@@ -108,7 +108,7 @@ public class UDPServer implements Runnable
 	}
 	
 	public void sendToClientSimulator(String message, int id) throws IOException {
-		InetAddress ipAddress = InetAddress.getByName("localhost");
+		InetAddress ipAddress = InetAddress.getByName(phoneIps[id]);
 		DatagramPacket sendPacket = new DatagramPacket(message.getBytes(), message.getBytes().length, ipAddress, port+1+id);
 		serverSocket.send(sendPacket);
 

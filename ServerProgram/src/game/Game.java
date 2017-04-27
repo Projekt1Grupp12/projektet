@@ -18,6 +18,8 @@ public abstract class Game implements Runnable {
 	
 	public boolean closeGame;
 	
+	public boolean gameOver;
+	
 	public Game(Player[] players, UDPServer server) {
 		this.players = players;
 		this.server = server;

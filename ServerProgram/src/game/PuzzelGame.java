@@ -119,13 +119,14 @@ public class PuzzelGame extends Game {
 				sendToPhone("WIN!", i);
 				if(i == 0) sendToPhone("LOSE!", 1);
 				else sendToPhone("LOSE!", 0);
+				gameOver = true;
 			}
 			
 			if(getPlayers()[i].amountLightsOn() == 0) {
 				changeLights();
 				break;
 			}
-			if(checkGoodInput(getPlayers()[i])) {
+			if(!gameOver && checkGoodInput(getPlayers()[i])) {
 				getPlayers()[i].setAmountPressed(0);
 				getPlayers()[i].flushColorsPressed();
 				changeLights(i);
@@ -133,7 +134,7 @@ public class PuzzelGame extends Game {
 		}
 		
 		try {
-			TimeUnit.MILLISECONDS.sleep(5);
+			TimeUnit.MILLISECONDS.sleep(10);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
