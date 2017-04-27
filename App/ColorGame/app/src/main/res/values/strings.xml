@@ -16,4 +16,7 @@
     <string name="header">Title</string>
     <string name="puzzle">Puzzle</string>
     <string name="traffic">Traffic</string>
+    <string name="choose_game">Choose Game</string>
+    <string name="puzzle_game">Puzzle Game</string>
+    <string name="traffic_game">Traffic Game</string>
 </resources>
