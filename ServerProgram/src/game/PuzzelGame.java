@@ -8,6 +8,8 @@ import core.BetterRandom;
 import core.UDPServer;
 
 public class PuzzelGame extends Game {
+	private int maxScore = 20;
+	
 	private int delay;
 	private int maxDelay;
 	private int levelCount;
@@ -113,6 +115,12 @@ public class PuzzelGame extends Game {
 		}
 		
 		for(int i = 0; i < getPlayers().length; i++) {
+			if(getPlayers()[i].getScore() >= maxScore) {
+				sendToPhone("WIN!", i);
+				if(i == 0) sendToPhone("LOSE!", 1);
+				else sendToPhone("LOSE!", 0);
+			}
+			
 			if(getPlayers()[i].amountLightsOn() == 0) {
 				changeLights();
 				break;

@@ -24,10 +24,12 @@ public class ClientView extends JPanel {
 	private JPanel buttons = new JPanel();
 	private JPanel startButtonPanel = new JPanel();
 	
+	private JLabel idText = new JLabel();
+	
 	public ClientView(ClientController controller, int id) {
 		this.controller = controller;
 		controller.setView(this);
-		setLayout(new GridLayout(4, 0));
+		setLayout(new GridLayout(5, 0));
 		
 		ButtonListener listener = new ButtonListener();
 		
@@ -49,11 +51,12 @@ public class ClientView extends JPanel {
 		startButtonPanel.add(new JLabel());
 		
 		feedback.setPreferredSize(new Dimension(120, 32));
-		
+		idText.setText("Player: " + controller.getId());
 		add(feedback);
 		add(buttons);
 		add(new JLabel());
 		add(startButtonPanel);
+		add(idText);
 	}
 	
 	public void setFeedbackText(String text) {
@@ -69,6 +72,7 @@ public class ClientView extends JPanel {
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}
+					idText.setText("Player: " + controller.getId());
 				}
 				
 				if(e.getSource() == startButton) {
@@ -77,6 +81,7 @@ public class ClientView extends JPanel {
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}
+					idText.setText("Player: " + controller.getId());
 				}
 			}
 		}
