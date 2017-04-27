@@ -23,7 +23,7 @@ IPAddress ip(192, 168, 0, 2);
 unsigned int localPort = 4444;      // local port to listen on
 
 // buffers for receiving and sending data
-char packetBuffer[UDP_TX_PACKET_MAX_SIZE];  //buffer to hold incoming packet,
+char packetBuffer[16];  //buffer to hold incoming packet,
 char  ReplyBuffer[] = "acknowledged";       // a string to send back
 
 int packet;
@@ -56,6 +56,7 @@ void setup() {
 }
 //sätter dem olika pinnarn 
 void turnOnLight(int packet){
+  
   if( (packet) & (1<<0)){
     digitalWrite(2, HIGH); 
     messageToServer[5] = '1';
@@ -118,7 +119,7 @@ void motorOff(int pin){
 void loop() {
   // if there's data available, read a packet
   int packetSize = Udp.parsePacket();
-  Udp.read(packetBuffer, UDP_TX_PACKET_MAX_SIZE);
+  Udp.read(packetBuffer, 16);
   int sensorValue = analogRead(A1);
   packet = atoi(packetBuffer);
   int motorInt;
@@ -173,7 +174,7 @@ void loop() {
   if(sensorValue == 0 && hasPressed) {
     hasPressed = false;
   }
-  for(int i = 0; i < UDP_TX_PACKET_MAX_SIZE; i++) {
+  for(int i = 0; i < 16; i++) {
     packetBuffer[i] = '\0';
   }
   delay(delayCount);
