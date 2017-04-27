@@ -20,6 +20,7 @@ public class UDPServer implements Runnable
 	
 	private DatagramSocket serverSocket = null;
 	
+	private String[] collectedPlayerNames;
 	private String[] phoneIps;
 	private String ardurinoIp;
 	private String sentHistory;
@@ -52,6 +53,8 @@ public class UDPServer implements Runnable
 		packet = new DatagramPacket(receiveData, receiveData.length);
 		
 		sentHistory = "";
+		
+		collectedPlayerNames = new String[2];
 	}
 	
 	public void setup() {

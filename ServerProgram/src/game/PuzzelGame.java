@@ -81,7 +81,7 @@ public class PuzzelGame extends Game {
 	}
 	
 	public void changeLights(int index) throws IOException {
-		sendToArdurino((index == 0) ? "0" + getPlayers()[1].getScore() : getPlayers()[0].getScore() + "0");
+		sendToArdurino((index == 0) ? "0" + getPlayers()[1].getScreen() : getPlayers()[0].getScreen() + "0");
 		getPlayers()[index].flushMask();
 		int amountToLightUp = 0;
 
@@ -123,7 +123,7 @@ public class PuzzelGame extends Game {
 			}
 			
 			if(getPlayers()[i].amountLightsOn() == 0) {
-				changeLights();
+				changeLights(i);
 				break;
 			}
 			if(!gameOver && checkGoodInput(getPlayers()[i])) {

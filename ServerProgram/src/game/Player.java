@@ -12,6 +12,8 @@ public class Player {
 	
 	private boolean[] colorsPressed;
 	
+	private String name;
+	
 	public Player(int id) {
 		flushColorsPressed();
 		this.id = id;
