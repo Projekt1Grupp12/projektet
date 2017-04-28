@@ -36,6 +36,7 @@ public class DualGame extends Game {
 		
 		if(delay >= maxDelay) {
 			if(state >= 3) {
+				shot = false;
 				state = -1;
 				for(int i = 0; i < getPlayers().length; i++) {
 					getPlayers()[i].flushScreen();
@@ -43,7 +44,7 @@ public class DualGame extends Game {
 			}
 			
 			state += 1;
-			maxDelay += BetterRandom.random(8, 32);
+			maxDelay += BetterRandom.random(16, 48);
 			delay = 0;
 			
 			for(int i = 0; i < getPlayers().length; i++) {
@@ -82,6 +83,19 @@ public class DualGame extends Game {
 				e.printStackTrace();
 			}
 			return true;
+		}
+		
+		if((redPressed(player) || yellowPressed(player) || greenPressed(player)) && state != 2) {
+			try {
+				sendBadFeedback(player);
+				if(player.getId() == 0) {
+					sendGoodFeedback(getPlayers()[1]);
+				} else {
+					sendGoodFeedback(getPlayers()[0]);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		return false;
