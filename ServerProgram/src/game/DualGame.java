@@ -10,15 +10,18 @@ public class DualGame extends Game {
 	private int state;
 	private int delay;
 	private int maxDelay;
+	private int lightUp;
 	
 	private boolean shot;
+	
+	private boolean blink;
 
 	public DualGame(Player[] players, UDPServer server) {
 		super(players, server);
 		state = -1;
 		realTime = true;
 		
-		maxDelay = 64;
+		maxDelay = 128+96;
 	}
 	
 	public void sendBadFeedback(Player player) throws IOException {
@@ -41,15 +44,22 @@ public class DualGame extends Game {
 				for(int i = 0; i < getPlayers().length; i++) {
 					getPlayers()[i].flushScreen();
 				}
+				maxDelay = 128+96;
 			}
 			
 			state += 1;
-			maxDelay += BetterRandom.random(16, 48);
 			delay = 0;
 			
+			lightUp = BetterRandom.random(0, 3);
 			for(int i = 0; i < getPlayers().length; i++) {
-				getPlayers()[i].setScreenBit(state);
-				sendToArdurino(setupFullScreen() + "");
+				if(state == 2) {
+					getPlayers()[i].setScreenBit(lightUp); 
+					sendToArdurino(setupFullScreen() + "");
+				}
+				else {
+					sendToArdurino(blink ? "63" : "00");
+					blink = !blink;
+				}
 			}
 		}
 		
@@ -70,7 +80,7 @@ public class DualGame extends Game {
 	}
 
 	public boolean checkGoodInput(Player player) {
-		if(!shot && (redPressed(player) || yellowPressed(player) || greenPressed(player)) && state == 2) {
+		if(!shot && (player.lightsOn()[lightUp] && colorsPressed(player)[lightUp])  && state == 2) {
 			shot = true;
 			try {
 				sendGoodFeedback(player);
