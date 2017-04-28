@@ -19,7 +19,7 @@ It has two EditText and a Button.
 public class MainFrame extends AppCompatActivity {
     private static final String TAG = "debug";
     private Player player = new Player(null, null, null);
-    private AlertDialog alertDialog;
+    private AlertDialogClass alertDialog;
     private String[] ipAdresses = {"Choose IP from the list.", "10.2.19.242", "10.2.19.28"};
 
     private AsyncResponse delegate = new AsyncResponse() {
@@ -32,6 +32,10 @@ public class MainFrame extends AppCompatActivity {
         public void postResult(String result) {
             Log.d(TAG, "RESULTAT FRÅN SERVER " + result);
             if(result.isEmpty()){
+                alertDialog = new AlertDialogClass(MainFrame.this);
+                alertDialog.setTitle("Connection fialed");
+                alertDialog.setMessage("Connection to game server failed");
+                alertDialog.ButtonOK();
                 alertDialog.show();
             }
             else {
@@ -75,16 +79,6 @@ public class MainFrame extends AppCompatActivity {
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {}
         });
-        //Here is AlertDialog
-        alertDialog = new AlertDialog.Builder(MainFrame.this).create();
-        alertDialog.setTitle("Connection fialed");
-        alertDialog.setMessage("Connection to game server fialed");
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
     }
     /*
     This method is called when the button is clicked.
