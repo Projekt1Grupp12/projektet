@@ -33,6 +33,10 @@ public class MainFrame extends AppCompatActivity {
         public void postResult(String result) {
             Log.d(TAG, "RESULTAT FRÅN SERVER " + result);
             if(result.isEmpty()){
+                alertDialog = new AlertDialogClass(MainFrame.this);
+                alertDialog.setTitle("Connection fialed");
+                alertDialog.setMessage("Connection to server failed. Please try again.");
+                alertDialog.ButtonOK();
                 alertDialog.show();
             }
             else {
@@ -43,7 +47,7 @@ public class MainFrame extends AppCompatActivity {
     };
 
 
-    private AlertDialog alertDialog;
+    private AlertDialogClass alertDialog;
 
 
 
@@ -88,15 +92,7 @@ public class MainFrame extends AppCompatActivity {
             }
         });
 
-        alertDialog = new AlertDialog.Builder(MainFrame.this).create();
-        alertDialog.setTitle("Connection fialed");
-        alertDialog.setMessage("Connection to game server fialed");
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
+
     }
     /*
     This method is called when the button is clicked.
