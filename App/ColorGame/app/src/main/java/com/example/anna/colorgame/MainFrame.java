@@ -12,17 +12,16 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.AdapterView.OnItemSelectedListener;
-
 /*
 Class is an activity that shows a Login window of application.
 It has two EditText and a Button.
  */
 public class MainFrame extends AppCompatActivity {
     private static final String TAG = "debug";
-    private String ip = "";
-    private String name = "";
-    private String userID = "";
+    private Player player = new Player(null, null, null);
+    private AlertDialog alertDialog;
     private String[] ipAdresses = {"Choose IP from the list.", "10.2.19.242", "10.2.19.28"};
+
     private AsyncResponse delegate = new AsyncResponse() {
         /*
         Method that has result from AsyncTask as parameter.
@@ -33,23 +32,14 @@ public class MainFrame extends AppCompatActivity {
         public void postResult(String result) {
             Log.d(TAG, "RESULTAT FRÅN SERVER " + result);
             if(result.isEmpty()){
-                alertDialog = new AlertDialogClass(MainFrame.this);
-                alertDialog.setTitle("Connection fialed");
-                alertDialog.setMessage("Connection to server failed. Please try again.");
-                alertDialog.ButtonOK();
                 alertDialog.show();
             }
             else {
-                userID = result;
+                player.setUserID(result);
                 sendMessageToNextActivity();
             }
         }
     };
-
-
-    private AlertDialogClass alertDialog;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,31 +58,33 @@ public class MainFrame extends AppCompatActivity {
                 Log.d(TAG, "selection" + parent.getItemAtPosition(position));
                 switch (position) {
                     case 0:
-                        //EditText editText0 = (EditText) findViewById(R.id.editIPText);
-                        // editText0.setText(ipAdresses[0]);
                         // Whatever you want to happen when the first item gets selected
                         break;
                     case 1:
                         EditText editText1 = (EditText) findViewById(R.id.editIPText);
                         editText1.setText(ipAdresses[1]);
                         dynamicSpinner.setSelection(0);
-                        // Whatever you want to happen when the first item gets selected
                         break;
                     case 2:
                         EditText editText2 = (EditText) findViewById(R.id.editIPText);
                         editText2.setText(ipAdresses[2]);
                         dynamicSpinner.setSelection(0);
-                        // Whatever you want to happen when the second item gets selected
                         break;
                 }
             }
-
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-            }
+            public void onNothingSelected(AdapterView<?> adapterView) {}
         });
-
-
+        //Here is AlertDialog
+        alertDialog = new AlertDialog.Builder(MainFrame.this).create();
+        alertDialog.setTitle("Connection fialed");
+        alertDialog.setMessage("Connection to game server fialed");
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
     }
     /*
     This method is called when the button is clicked.
@@ -101,9 +93,9 @@ public class MainFrame extends AppCompatActivity {
      */
     public void sendMessage(View view) {//Button
         updateIPName();
-        ConnectToServer runner = new ConnectToServer(ip, delegate);
+        ConnectToServer runner = new ConnectToServer(player.getChoosenIP(), delegate);
         Log.d(TAG, "Task created");
-        String messageToServer = "" + name;//we want to send name to server
+        String messageToServer = "" + player.getName();//we want to send name to server
         Log.d(TAG, "Execute task");
         runner.execute(messageToServer);
     }
@@ -113,21 +105,16 @@ public class MainFrame extends AppCompatActivity {
     public void updateIPName() {
         EditText editIPText = (EditText) findViewById(R.id.editIPText);
         EditText editNameText = (EditText) findViewById(R.id.editNameText);
-        //this.ip = "10.2.19.28";
-        this.ip = editIPText.getText().toString();
-        //this.name = "george";
-        this.name = editNameText.getText().toString();
+        player.setChoosenIP(editIPText.getText().toString());
+        player.setName(editNameText.getText().toString());
     }
     /*
     This method sends data(IP, Name, userID) to next activity using Intent class.
      */
     public void sendMessageToNextActivity() {
-        Log.d(TAG, "Creating new intent");
+        Log.d(TAG, "Creating new intent and sending data");
         Intent intent = new Intent(this, MainMenu.class);
-        Log.d(TAG, "IP and NAME" + ip + " " + name + " " + userID);
-        intent.putExtra("ip", ip);
-        intent.putExtra("name", name);
-        intent. putExtra("userid", userID);
+        intent.putExtra("player", player);
         Log.d(TAG, "Starting new Activity");
         startActivity(intent);
     }
