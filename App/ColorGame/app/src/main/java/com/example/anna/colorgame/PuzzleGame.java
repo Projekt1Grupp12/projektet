@@ -8,9 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-
 import java.io.IOException;
-
 /*
 Class is an activity that represents GUI of the game.
 It has three buttons with different colors and a three TextView.
@@ -23,11 +21,9 @@ public class PuzzleGame extends AppCompatActivity implements View.OnClickListene
     private static final String GREEN = "1";
     private static final String SEMICOLON = ";";
     private String data = "";
-    private String ip = "";
-    private String userID = "";
-
-    MediaPlayer mpGood;
-    MediaPlayer mpBad;
+    private Player player;
+    private MediaPlayer mpGood;
+    private MediaPlayer mpBad;
 
     private AsyncResponse delegate = new AsyncResponse() {
         /*
@@ -36,13 +32,12 @@ public class PuzzleGame extends AppCompatActivity implements View.OnClickListene
          */
         @Override
         public void postResult(String result) {
-
             TextView textViewMove = (TextView) findViewById(R.id.textViewMove);
             Log.d(TAG, "Inside updateUI call 2");
             textViewMove.setText(result);
             Log.d(TAG, "Text updated");
-            if(mpGood.isPlaying() || mpBad.isPlaying())
-            {
+            //Music is played here.
+            if(mpGood.isPlaying() || mpBad.isPlaying()) {
                 mpGood.stop();
                 mpBad.stop();
             }
@@ -67,26 +62,21 @@ public class PuzzleGame extends AppCompatActivity implements View.OnClickListene
             catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
 
     };
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.puzzle_game);
-
         //Get the intent that started this activity and extract the string
         Intent intent = getIntent();
-        ip = intent.getStringExtra("ip");
-        String name = intent.getStringExtra("name");
-        userID = intent.getStringExtra("userid");
-        String toShow= "IP: " + ip + " Name: " + name + " UserID: " + userID;
-        //Capture the layout's TextView and set the string as its text
+        player = (Player) intent.getSerializableExtra("player");
+        String toShow= "IP: " + player.getChoosenIP() + " Name: " + player.getName() + " UserID: " + player.getUserID();
+        //Capture the layout's first TextView and set the string(IP, name, userID) as its text.
         TextView textViewIP = (TextView) findViewById(R.id.textViewIP);
         textViewIP.setText(toShow);
+        //Initiate audioclips
         mpGood = MediaPlayer.create(PuzzleGame.this, R.raw.goodmove);
         mpBad = MediaPlayer.create(PuzzleGame.this, R.raw.badmove);
     }
@@ -109,7 +99,7 @@ public class PuzzleGame extends AppCompatActivity implements View.OnClickListene
                 break;
         }
         String temp = data;
-        data += SEMICOLON + userID;
+        data += SEMICOLON + player.getUserID();
         startAsyncTask(temp, data);
     }
     /*
@@ -117,9 +107,9 @@ public class PuzzleGame extends AppCompatActivity implements View.OnClickListene
     parameter to doInBackground method of that class.
      */
     public void startAsyncTask(String color, String data){
-        ConnectToServer runner = new ConnectToServer(ip, delegate);
+        Log.d(TAG, "Create task. " + color);
+        ConnectToServer runner = new ConnectToServer(player.getChoosenIP(), delegate);
         System.gc();
-        Log.d(TAG, "Task created. " + color);
         Log.d(TAG, "Execute task. " + color);
         runner.execute(data);
     }
