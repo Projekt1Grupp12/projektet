@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-
 import java.io.IOException;
 
 /*
@@ -41,6 +40,8 @@ public class PuzzleGame extends AppCompatActivity implements View.OnClickListene
             Log.d(TAG, "Inside updateUI call 2");
             textViewMove.setText(result);
             Log.d(TAG, "Text updated");
+
+            //Music is played here.
             if(mpGood.isPlaying() || mpBad.isPlaying())
             {
                 mpGood.stop();
@@ -67,7 +68,6 @@ public class PuzzleGame extends AppCompatActivity implements View.OnClickListene
             catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
 
     };
@@ -84,9 +84,12 @@ public class PuzzleGame extends AppCompatActivity implements View.OnClickListene
         String name = intent.getStringExtra("name");
         userID = intent.getStringExtra("userid");
         String toShow= "IP: " + ip + " Name: " + name + " UserID: " + userID;
-        //Capture the layout's TextView and set the string as its text
+
+        //Capture the layout's first TextView and set the string(IP, name, userID) as its text.
         TextView textViewIP = (TextView) findViewById(R.id.textViewIP);
         textViewIP.setText(toShow);
+
+        //Initiate audioclips
         mpGood = MediaPlayer.create(PuzzleGame.this, R.raw.goodmove);
         mpBad = MediaPlayer.create(PuzzleGame.this, R.raw.badmove);
     }
@@ -118,7 +121,7 @@ public class PuzzleGame extends AppCompatActivity implements View.OnClickListene
      */
     public void startAsyncTask(String color, String data){
         ConnectToServer runner = new ConnectToServer(ip, delegate);
-        System.gc();
+        //System.gc();
         Log.d(TAG, "Task created. " + color);
         Log.d(TAG, "Execute task. " + color);
         runner.execute(data);

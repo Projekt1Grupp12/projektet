@@ -18,6 +18,21 @@ public class MainMenu extends AppCompatActivity {
     private static String ip = "";
     private static String name = "";
     private static String userID = "";
+    private Button chooseGameBtn;
+    private AsyncResponse delegate = new AsyncResponse() {
+        /*
+        Method that has result from AsyncTask as parameter.
+        It is used to get result from Asynctask and store it in userID variable.
+        And at last sendMessageToNextActivity method is called.
+         */
+        @Override
+        public void postResult(String result) {
+            Log.d(TAG, "RESULTAT FRÅN SERVER " + result);
+
+               chooseGameBtn.setEnabled(true);
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,12 +47,14 @@ public class MainMenu extends AppCompatActivity {
         userID = intent.getStringExtra("userid");
 
         //Text on the Button change depending on userID
-        Button chooseGameBtn = (Button) findViewById(R.id.choose_game_button);
+        chooseGameBtn = (Button) findViewById(R.id.choose_game_button);
         if(userID.equals("0")){
             chooseGameBtn.setText("Choose Game");
         }else if(userID.equals("1")){
             chooseGameBtn.setText("Join Game");
+            chooseGameBtn.setEnabled(false);
         }
+        startAsyncTask("join");
 
         saveInfo();
     }
@@ -55,7 +72,7 @@ public class MainMenu extends AppCompatActivity {
         Log.i(TAG, "onRestart()");
         loadInfo();
     }
-	
+
 	 //Save the users login info
     public void saveInfo(){
         SharedPreferences sharedPref = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
@@ -77,7 +94,7 @@ public class MainMenu extends AppCompatActivity {
         this.name = sharedPref.getString("name", "");
         this.userID = sharedPref.getString("userid", "");
     }
-	
+
     /*
     This method is called when button is clicked.
     It starts next activity and sends data to it using Intent class.
@@ -114,5 +131,12 @@ public class MainMenu extends AppCompatActivity {
         intent.putExtra("name", name);
         intent.putExtra("userid", userID);
         startActivity(intent);
+    }
+
+    public void startAsyncTask(String message) {//Button
+        ConnectToServer runner = new ConnectToServer(ip, delegate);
+        Log.d(TAG, "Task created");
+        Log.d(TAG, "Execute task");
+        runner.execute(message);
     }
 }

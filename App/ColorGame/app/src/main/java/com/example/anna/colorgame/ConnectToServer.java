@@ -49,8 +49,8 @@ public class ConnectToServer extends AsyncTask<String, String, String> {
 
             Log.d(TAG, "Recieving response from server");
             DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
-            Log.d(TAG, "clientSocket.setSoTimeout(3000)");
-            clientSocket.setSoTimeout(3000);
+            Log.d(TAG, "clientSocket.setSoTimeout(100000)");
+            clientSocket.setSoTimeout(100000);
             Log.d(TAG, "Waiting for response");
             clientSocket.receive(receivePacket);
             Log.d(TAG, "Reading DatagramPacket we got from server");
@@ -74,6 +74,7 @@ public class ConnectToServer extends AsyncTask<String, String, String> {
     @Override
     protected void onPostExecute(String result){
         delegate.postResult(result);
+        this.cancel(true);
     }
     /*
     This method is used to sort data received from server to sort away all of the "0".
