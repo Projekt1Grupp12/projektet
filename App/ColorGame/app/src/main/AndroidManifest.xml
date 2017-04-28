@@ -38,6 +38,7 @@
 
         <activity
             android:name=".ChooseGame"
+            android:launchMode="singleTop"
             android:parentActivityName=".MainMenu"
             android:screenOrientation="portrait">
             <intent-filter>

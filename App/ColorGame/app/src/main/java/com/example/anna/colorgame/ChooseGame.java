@@ -9,9 +9,7 @@ import android.view.View;
 
 public class ChooseGame extends AppCompatActivity {
     private static final String TAG = "debug";
-    private static String ip = "";
-    private static String name = "";
-    private static String userID = "";
+    private Player player;
     private ProgressDialog pd;
     private AsyncResponse delegate = new AsyncResponse() {
         /*
@@ -31,13 +29,10 @@ public class ChooseGame extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.choose_game);
-
+        Log.i(TAG, "onCreate()");
         //Get the intent that started this activity and extract the string
         Intent intent = getIntent();
-        Log.i(TAG, "onCreate()");
-        ip = intent.getStringExtra("ip");
-        name = intent.getStringExtra("name");
-        userID = intent.getStringExtra("userid");
+        player = (Player)intent.getSerializableExtra("player");
     }
     //This method is called when Puzzle button is clicked. It starts next Activity and sends data to it.
     public void startPuzzle(View view){
@@ -47,9 +42,7 @@ public class ChooseGame extends AppCompatActivity {
     //This method is called when Traffic button is clicked. It starts next Activity and sends data to it.
     public void startTraffic(View vierw){
         Intent intent = new Intent(this, TrafficGame.class);
-        intent.putExtra("ip", ip);
-        intent.putExtra("name", name);
-        intent.putExtra("userid", userID);
+        intent.putExtra("player", player);
         startActivity(intent);
     }
 
@@ -61,7 +54,7 @@ public class ChooseGame extends AppCompatActivity {
     }
 
     public void startAsyncTask(String message) {//Button
-        ConnectToServer runner = new ConnectToServer(ip, delegate);
+        ConnectToServer runner = new ConnectToServer(player.getChoosenIP(), delegate);
         Log.d(TAG, "Task created");
         Log.d(TAG, "Execute task");
         runner.execute(message);
@@ -69,9 +62,7 @@ public class ChooseGame extends AppCompatActivity {
 
     private void startActivity(){
         Intent intent = new Intent(this, PuzzleGame.class);
-        intent.putExtra("ip", ip);
-        intent.putExtra("name", name);
-        intent.putExtra("userid", userID);
+        intent.putExtra("player", player);
         startActivity(intent);
     }
 }
