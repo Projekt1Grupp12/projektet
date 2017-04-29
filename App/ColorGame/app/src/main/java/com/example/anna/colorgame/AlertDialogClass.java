@@ -45,6 +45,10 @@ public class AlertDialogClass extends AlertDialog{
         super.setButton(AlertDialog.BUTTON_NEGATIVE, "No", onClickListener);
     }
 
+    public String buttonPressed(){
+        return null;
+    }
+
 
     public OnClickListener onClickListener = new OnClickListener() {
         @Override
