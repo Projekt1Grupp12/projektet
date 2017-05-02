@@ -22,6 +22,7 @@ import javax.swing.text.DefaultCaret;
 
 import com.sun.corba.se.spi.activation.Server;
 
+import game.DeathmatchGame;
 import game.DualGame;
 import game.Game;
 import game.Player;
@@ -74,6 +75,7 @@ public class ServerView extends JPanel {
 		games.addItem(new PuzzelGame(new Player[]{new Player(0), new Player(1)}, controller.getServer()));
 		games.addItem(new TrafficGame(new Player[]{new Player(0), new Player(1)}, controller.getServer()));
 		games.addItem(new DualGame(new Player[]{new Player(0), new Player(1)}, controller.getServer()));
+		games.addItem(new DeathmatchGame(new Player[]{new Player(0), new Player(1)}, controller.getServer()));
 		
 		this.controller = controller;
 		controller.setView(this);
