@@ -130,10 +130,10 @@ void loop() {
   if(motor1Clock > 0) motorOn(8);
   if(motor2Clock > 0) motorOn(9);
   if(packet == -3){
-    motor1Clock = 5;
+    motor1Clock = 2;
   }
   else if(packet == -4){
-    motor2Clock = 5;
+    motor2Clock = 2;
   }
   if(motor1Clock > 0){
     motor1Clock--;
