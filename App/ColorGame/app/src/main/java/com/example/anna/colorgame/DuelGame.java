@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import java.io.IOException;
 
-public class TrafficGame extends AppCompatActivity implements View.OnClickListener{
+public class DuelGame extends AppCompatActivity implements View.OnClickListener{
     private static final String TAG = "debug";
     private static final String RED = "3";
     private static final String YELLOW = "2";
@@ -30,7 +30,7 @@ public class TrafficGame extends AppCompatActivity implements View.OnClickListen
         @Override
         public void postResult(String result) {
             TextView textViewMove = (TextView) findViewById(R.id.textViewMove);
-            Log.d(TAG, "Inside TrafficGame");
+            Log.d(TAG, "Inside DuelGame");
             textViewMove.setText(result);
             Log.d(TAG, "Text updated");
             //Music is played here.
@@ -65,10 +65,10 @@ public class TrafficGame extends AppCompatActivity implements View.OnClickListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.traffic_game);
+        setContentView(R.layout.duel_game);
 
         //Get the intent that started this activity and extract the string
-        Log.d(TAG, "TrafficGame, onCreate method. Creating an intent");
+        Log.d(TAG, "DuelGame, onCreate method. Creating an intent");
         Intent intent = getIntent();
         player = (Player) intent.getSerializableExtra("player");
         String toShow= "IP: " + player.getChoosenIP() + " Name: " + player.getName() + " UserID: " + player.getUserID();
@@ -78,22 +78,22 @@ public class TrafficGame extends AppCompatActivity implements View.OnClickListen
         textViewIP.setText(toShow);
 
         //Initiate audioclips
-        mpGood = MediaPlayer.create(TrafficGame.this, R.raw.goodmove);
-        mpBad = MediaPlayer.create(TrafficGame.this, R.raw.badmove);
+        mpGood = MediaPlayer.create(DuelGame.this, R.raw.goodmove);
+        mpBad = MediaPlayer.create(DuelGame.this, R.raw.badmove);
 
         //Handler and new thread
-        Log.d(TAG, "TrafficGame, onCreate method. Creating a thread");
+        Log.d(TAG, "DuelGame, onCreate method. Creating a thread");
         RecieveDataThread recieveDataThread = new RecieveDataThread(this, player);
         Thread thread = new Thread(recieveDataThread);
         thread.start();
     }
 
-    /*
+     /*
     This method is called when one of the buttons is clicked in the GUI.
     Which button is pushed is stored in data variable.
     Then the semicolon and userID is added to data string and sent to startAsyncTask method.
      */
-    @Override
+     @Override
     public void onClick(View view) {
         switch(view.getId()){
             case R.id.greenButton:
@@ -115,11 +115,11 @@ public class TrafficGame extends AppCompatActivity implements View.OnClickListen
    This method is used to create new instance of a ConnectToServer class and send data as
    parameter to doInBackground method of that class.
     */
-    private void startAsyncTask(String color, String data){
-        Log.d(TAG, "Create task.TrafficGame " + color);
+    public void startAsyncTask(String color, String data){
+        Log.d(TAG, "Create task.DuelGame " + color);
         ConnectToServer runner = new ConnectToServer(player.getChoosenIP(), delegate);
         System.gc();
-        Log.d(TAG, "Execute task.TrafficGame " + color);
+        Log.d(TAG, "Execute task.DuelGame " + color);
         runner.execute(data);
     }
 }
