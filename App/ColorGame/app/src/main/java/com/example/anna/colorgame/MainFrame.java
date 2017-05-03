@@ -36,7 +36,6 @@ public class MainFrame extends AppCompatActivity {
                 alertDialog.setTitle("Connection fialed");
                 alertDialog.setMessage("Connection to game server failed");
                 alertDialog.ButtonOK();
-                alertDialog.show();
             }
             else {
                 player.setUserID(result);
