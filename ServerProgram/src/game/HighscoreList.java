@@ -8,7 +8,7 @@ public class HighscoreList {
 	public HighscoreList() {
 		entries = new HighscoreEntry[AMOUNT_OF_HIGHSCORE];
 		for(int i = 0; i < entries.length; i++) {
-			entries[i] = new HighscoreEntry("", "9999999");
+			entries[i] = new HighscoreEntry("", "");
 		}
 	}
 	
@@ -18,7 +18,7 @@ public class HighscoreList {
 		int offset = 0;
 		
 		for(int i = 0; i < entries.length; i++) {
-			if((e.compare(entries[i]) == -1) && offset == 0) {
+			if(((entries[i].getScore().equals("") || e.compare(entries[i]) == -1))&& offset == 0) {
 				tmp[i] = new HighscoreEntry(e.getName(), e.getScore());
 				offset = 1;
 			} else {
