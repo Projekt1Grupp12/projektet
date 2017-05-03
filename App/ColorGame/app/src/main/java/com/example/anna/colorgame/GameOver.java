@@ -16,10 +16,8 @@ public class GameOver extends AppCompatActivity {
     private String message = null;
     private String playAgainTitle = "New game?";
     private String playAgain = "Do you want to play again?";
-
     //Player and the new intents
     private Player player;
-
     private AlertDialogClass alertDialog = null;
     private Context context = null;
 
@@ -29,7 +27,6 @@ public class GameOver extends AppCompatActivity {
         setResultMessage(result);
 
         playAgainMessage();
-
         displayMessage();
     }
 

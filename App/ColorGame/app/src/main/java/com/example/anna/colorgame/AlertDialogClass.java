@@ -86,6 +86,7 @@ public class AlertDialogClass{
                     setAnswer("NO");
                     break;
             }
+            builder.dismiss();
         }
     };
 

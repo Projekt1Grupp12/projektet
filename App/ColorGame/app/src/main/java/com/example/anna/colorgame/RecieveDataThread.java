@@ -66,6 +66,8 @@ public class RecieveDataThread implements Runnable {
                     Log.d(TAG, "Thread. Reading DatagramPacket we got from server");
                     String messageFromServer = putChar(receiveData, receiveData.length);
 
+
+
                     /*
                     Here must be a if-else for different messages in AlertDialog frame
                     depending on message from server.
@@ -74,40 +76,16 @@ public class RecieveDataThread implements Runnable {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Log.d(TAG, "runOnUiThread, run method");
-                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                builder.setMessage("You won!");
-                                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        //Start new AlertDialog
-                                        secondAlertDialog();
-
-                                        dialogInterface.dismiss();
-                                    }
-                                });
-                                builder.create();
-                                builder.show();
+                                Log.d(TAG, "runOnUiThread, run method WIN");
+                                GameOver gameOver = new GameOver(context, player, "WIN!");
                             }
                         });
                     }else if(messageFromServer.equals("LOSE!")){
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Log.d(TAG, "runOnUiThread, run method");
-                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                builder.setMessage("You lost!");
-                                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        //Start new AlertDialog
-                                        secondAlertDialog();
-
-                                        dialogInterface.dismiss();
-                                    }
-                                });
-                                builder.create();
-                                builder.show();
+                                Log.d(TAG, "runOnUiThread, run method LOSE");
+                                GameOver gameOver = new GameOver(context, player, "LOSE!");
                             }
                         });
                     }
@@ -138,38 +116,4 @@ public class RecieveDataThread implements Runnable {
         handler.post(runnable);
     }
 
-    private void secondAlertDialog(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setMessage("Do you want to play Again ?");
-
-        //YES button listener
-        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                //Start new activity ChooseGAme
-                Intent intent = new Intent(context, MainMenu.class);
-                intent.putExtra("player", player);
-                Log.d(TAG, "Starting new Activity");
-                context.startActivity(intent);
-
-                dialogInterface.dismiss();
-            }
-        });
-
-        //NO button listener
-        builder.setNeutralButton("NO", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                //Start new activity MainFrame
-                Intent intent = new Intent(context, MainFrame.class);
-                intent.putExtra("player", player);
-                Log.d(TAG, "Starting new Activity");
-                context.startActivity(intent);
-
-                dialogInterface.dismiss();
-            }
-        });
-        builder.create();
-        builder.show();
-    }
 }
