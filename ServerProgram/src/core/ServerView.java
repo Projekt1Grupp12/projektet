@@ -41,12 +41,14 @@ public class ServerView extends JPanel {
 	private JTextField[] phoneIpAdressField = new JTextField[]{new JTextField("10.2.29.150"), new JTextField("")};
 	private JTextField ardIpAdressField = new JTextField("192.168.0.12");
 	private JTextField message = new JTextField();
+	private JTextField nextIdField = new JTextField("0");
 	
 	//Labels
 	private JLabel inputLabel = new JLabel("INPUT");
 	private JLabel outputLabel = new JLabel("OUTPUT");
 	private JLabel[] phoneIpAdressLabel = new JLabel[]{new JLabel("PHONE IP 1: "), new JLabel("PHONE IP 2: ")}; 
 	private JLabel ardIpAdressLabel = new JLabel("ARDURINO IP: ");
+	private JLabel nextIdLabel = new JLabel("next ID: ");
 	
 	//Panels for the client phpne and arduino
 	private JPanel[] phoneIpAdressesPanel = new JPanel[2];
@@ -55,6 +57,7 @@ public class ServerView extends JPanel {
 	private JPanel outputPanel = new JPanel();
 	private JPanel ipAdressPanels = new JPanel();
 	private JPanel messagePanel = new JPanel();
+	private JPanel nextIdPanel = new JPanel();
 	
 	private ScreenSimulatorController screenSimulatorController = new ScreenSimulatorController();
 	private ScreenSimulatorView screenSimulatorView = new ScreenSimulatorView(screenSimulatorController);
@@ -135,6 +138,12 @@ public class ServerView extends JPanel {
 		ItemChangeListener itemChangeListener = new ItemChangeListener();
 		games.addItemListener(itemChangeListener);
 		
+		nextIdPanel.setLayout(new GridLayout(0, 2));
+		nextIdPanel.add(nextIdLabel);
+		nextIdPanel.add(nextIdField);
+		
+		messagePanel.add(nextIdPanel);
+		
 		add(messagePanel, BorderLayout.CENTER);
 		add(screenSimulatorView, BorderLayout.SOUTH);
 		
@@ -149,11 +158,13 @@ public class ServerView extends JPanel {
 			screenSimulatorView.repaint();
 			currentInput.repaint();
 			currentOutput.repaint();
+			
+			controller.setNextId(Integer.parseInt(nextIdField.getText()));
 		}
 	}
 
 	class ItemChangeListener implements ItemListener {
-	    public void itemStateChanged(ItemEvent event) {
+	    public void itemStateChanged(ItemEvent event) {	    	
 	       if (event.getStateChange() == ItemEvent.SELECTED) {
 	    	   if(event.getSource() == games) {
 	    		   controller.getServer().resetGame((Game)event.getItem());
@@ -170,6 +181,7 @@ public class ServerView extends JPanel {
 			
 			if(e.getSource() == createClient) {
 				controller.createClient();
+				nextIdField.setText(controller.getNextId() + "");
 			}
 			
 			if(e.getSource() == sendButton) {

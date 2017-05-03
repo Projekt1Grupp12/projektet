@@ -61,6 +61,14 @@ public class ServerController {
 		nextId = nextId + 1;
 	}
 	
+	public void setNextId(int nextId) {
+		this.nextId = nextId;
+	}
+	
+	public int getNextId() {
+		return nextId;
+	}
+	
 	public void setView(ServerView view) {
 		this.view = view;
 	}
