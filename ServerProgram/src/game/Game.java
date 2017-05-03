@@ -1,6 +1,9 @@
 package game;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import core.ServerController;
 import core.Timer;
@@ -24,7 +27,7 @@ public abstract class Game implements Runnable {
 	
 	private Timer timer;
 	
-	private HighscoreList highscoreList = new HighscoreList();
+	private HighscoreList highscoreList;
 	
 	public Game(Player[] players, UDPServer server) {
 		this.players = players;
@@ -33,6 +36,13 @@ public abstract class Game implements Runnable {
 		closeGame = false;
 		
 		timer = new Timer();
+		
+		try {
+			setupHighscoreFile();
+			highscoreList = new HighscoreList(getHighscoreFileName());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void reset() {
@@ -42,6 +52,11 @@ public abstract class Game implements Runnable {
 		}
 		closeGame = false;
 		gameOver = false;
+		try {
+			highscoreList.save(getHighscoreFileName());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public int setupFullScreen() {
@@ -154,6 +169,22 @@ public abstract class Game implements Runnable {
 			System.out.println(highscoreList.toString());
 		}
 		gameOver = true;
+	}
+	
+	public void setupHighscoreFile() throws IOException {
+		if(!new File(getHighscoreFileName()).exists()) {
+			 File file = new File(getHighscoreFileName());
+			 file.createNewFile();
+		}
+	}
+	
+	public String getHighscoreFileName() {
+		String tmp = "";
+		for(int i = 0; i < getName().length(); i++) {
+			if(getName().charAt(i) != '!') tmp += (getName().charAt(i) == ' ') ? '_' : getName().charAt(i);
+		}
+		
+		return tmp.toLowerCase() + ".txt";
 	}
 	
 	public abstract String getName();

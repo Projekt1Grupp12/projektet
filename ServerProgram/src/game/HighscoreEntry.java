@@ -29,6 +29,6 @@ public class HighscoreEntry {
 	}
 	
 	public String toString() {
-		return "{ " + getName() + " | " + getScore() + " }";
+		return getName() + "-" + getScore();
 	}
 }

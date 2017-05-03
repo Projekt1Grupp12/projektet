@@ -99,7 +99,6 @@ public class UDPServer implements Runnable
 	public void send(String message, String ip) throws IOException {
 		InetAddress ipAddress = InetAddress.getByName(ip);
 		DatagramPacket sendPacket = new DatagramPacket(message.getBytes(), message.getBytes().length, ipAddress, port+(message.equals("WIN!") || message.equals("LOSE!") ? 1 : 0));
-		System.out.println( port+(message.equals("WIN!") || message.equals("LOSE!") ? 1 : 0));
 		serverSocket.send(sendPacket);
 
 		sentHistory = message + "  : " + (sentHistoryIndex++) + " : " + ip + "\n" + sentHistory;

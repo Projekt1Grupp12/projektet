@@ -18,12 +18,12 @@ public class ResourceReader {
 	 * @return an array of strings that holds every piece of the line
 	 * @throws IOException
 	 */
-	public static String[] getValuesOnLine(String path, int line) throws IOException {
+	public static String[] getValuesOnLine(String path, int line, String splitOn) throws IOException {
 		String[] tmp = null;
 		String l = "";
 		
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(path + ".txt"));
+			BufferedReader br = new BufferedReader(new FileReader(path));
 			int count = 0;
 			
 			l = br.readLine();
@@ -39,7 +39,7 @@ public class ResourceReader {
 		}
 		
 		if(l != null)
-			tmp = l.split(";");
+			tmp = l.split(splitOn);
 		
 		return tmp;
 	}
