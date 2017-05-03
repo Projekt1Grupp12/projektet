@@ -40,7 +40,7 @@ public class MainFrame extends AppCompatActivity {
             }
             else {
                 player.setUserID(result);
-                sendMessageToNextActivity();
+                startNextActivity();
             }
         }
     };
@@ -105,7 +105,7 @@ public class MainFrame extends AppCompatActivity {
     /*
     This method sends data(IP, Name, userID) to next activity using Intent class.
      */
-    public void sendMessageToNextActivity() {
+    private void startNextActivity() {
         Log.d(TAG, "Creating new intent and sending data");
         Intent intent = new Intent(this, MainMenu.class);
         intent.putExtra("player", player);
