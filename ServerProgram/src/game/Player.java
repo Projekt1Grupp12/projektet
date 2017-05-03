@@ -18,6 +18,8 @@ public class Player {
 		flushColorsPressed();
 		this.id = id;
 		flushMask();
+		
+		name = "";
 	}
 	
 	public void flushMask() {
@@ -97,5 +99,9 @@ public class Player {
 	
 	public int getId() {
 		return id;
+	}
+	
+	public String getName() {
+		return name;
 	}
 }

@@ -144,7 +144,8 @@ public class UDPServer implements Runnable
 	public void resetGame(Game g) {
 		game.closeGame = true;
 		game = g;
-		//hasStartedGame = false;
+		game.setTimer();
+		
 		try {
 			sendToArdurino("00");
 		} catch (IOException e) {
@@ -181,6 +182,7 @@ public class UDPServer implements Runnable
 				if(game.realTime) game.setInput(input);
 				if(!hasStartedGame) {
 					if(input.equals("-2")) {
+						game.setTimer();
 						hasStartedGame = true;
 						game.update(input);
 					}

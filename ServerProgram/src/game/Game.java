@@ -3,12 +3,14 @@ package game;
 import java.io.IOException;
 
 import core.ServerController;
+import core.Timer;
 import core.UDPServer;
 
 public abstract class Game implements Runnable {
 	private Player[] players;
 	
 	private int fullScreen;
+	private int winningPlayer;
 	
 	private UDPServer server;
 	
@@ -20,11 +22,17 @@ public abstract class Game implements Runnable {
 	
 	public boolean gameOver;
 	
+	private Timer timer;
+	
+	private HighscoreList highscoreList = new HighscoreList();
+	
 	public Game(Player[] players, UDPServer server) {
 		this.players = players;
 		this.server = server;
 		input = "";
 		closeGame = false;
+		
+		timer = new Timer();
 	}
 	
 	public void reset() {
@@ -33,6 +41,7 @@ public abstract class Game implements Runnable {
 			players[i] = new Player(players[i].getId());
 		}
 		closeGame = false;
+		gameOver = false;
 	}
 	
 	public int setupFullScreen() {
@@ -123,6 +132,28 @@ public abstract class Game implements Runnable {
 	
 	public String getInput() {
 		return input;
+	}
+	
+	public void setTimer() {
+		timer.start();
+	}
+	
+	public long endTimer() {
+		return timer.end();
+	}
+	
+	public void setWinningPlayer(int winningPlayer) {
+		this.winningPlayer = winningPlayer;
+	}
+	
+	public void setGameOver() {
+		long result = endTimer();
+		if(!gameOver) {
+			HighscoreEntry h = new HighscoreEntry(players[winningPlayer].getName(), result + "");
+			highscoreList.tryAdd(h);
+			System.out.println(highscoreList.toString());
+		}
+		gameOver = true;
 	}
 	
 	public abstract String getName();

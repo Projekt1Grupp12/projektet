@@ -27,4 +27,8 @@ public class HighscoreEntry {
 		else if(Long.parseLong(score) > Long.parseLong(h.getScore())) return 1;
 		else return -1;
 	}
+	
+	public String toString() {
+		return "{ " + getName() + " | " + getScore() + " }";
+	}
 }
