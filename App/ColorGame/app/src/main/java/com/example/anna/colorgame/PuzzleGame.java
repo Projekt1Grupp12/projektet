@@ -1,21 +1,25 @@
 package com.example.anna.colorgame;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
 /*
 Class is an activity that represents GUI of the game.
 It has three buttons with different colors and a three TextView.
 TextView shows different information to the user.(Move, points)
  */
 public class PuzzleGame extends AppCompatActivity implements View.OnClickListener {
-    private static final String TAG = "debug";
+    private static final String TAG = "debugPuzzle";
     private static final String RED = "3";
     private static final String YELLOW = "2";
     private static final String GREEN = "1";
@@ -24,6 +28,11 @@ public class PuzzleGame extends AppCompatActivity implements View.OnClickListene
     private Player player;
     private MediaPlayer mpGood;
     private MediaPlayer mpBad;
+
+
+    private Class intentNewGame =  MainMenu.class;
+    private Class intentPlayAgain=  ChooseGame.class;
+    private AlertDialogClass alertDialog;
 
     private AsyncResponse delegate = new AsyncResponse() {
         /*
@@ -52,9 +61,15 @@ public class PuzzleGame extends AppCompatActivity implements View.OnClickListene
                 } else if (result.contains("BAD")) {
                     afd = getAssets().openFd("badmove.mp3");
                     mpBad.reset();
-                    mpBad.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(),afd.getLength());
+                    mpBad.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
                     mpBad.prepare();
                     mpBad.start();
+                } else{
+
+                    Log.d(TAG, "starting GameOver activity");
+
+                    GameOver gameOver = new GameOver(PuzzleGame.this, player, result);
+                    Log.d(TAG, "answer: " + String.valueOf(gameOver.getAlertDialog().getAnswer()));
                 }
             } catch (IllegalStateException e) {
                 e.printStackTrace();
@@ -79,6 +94,7 @@ public class PuzzleGame extends AppCompatActivity implements View.OnClickListene
         //Initiate audioclips
         mpGood = MediaPlayer.create(PuzzleGame.this, R.raw.goodmove);
         mpBad = MediaPlayer.create(PuzzleGame.this, R.raw.badmove);
+
     }
     /*
     This method is called when one of the buttons is clicked in the GUI.
@@ -112,5 +128,16 @@ public class PuzzleGame extends AppCompatActivity implements View.OnClickListene
         System.gc();
         Log.d(TAG, "Execute task. " + color);
         runner.execute(data);
+    }
+
+    /*
+ This method sends data(IP, Name, userID) to next activity using Intent class.
+  */
+    public void sendMessageToNextActivity(Class startClass, Player player) {
+        Log.d(TAG, "Creating new intent and sending data");
+        Intent intent = new Intent(this, startClass);
+        intent.putExtra("player", player);
+        Log.d(TAG, "Starting new Activity");
+        startActivity(intent);
     }
 }

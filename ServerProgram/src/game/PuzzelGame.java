@@ -8,7 +8,7 @@ import core.BetterRandom;
 import core.UDPServer;
 
 public class PuzzelGame extends Game {
-	private int maxScore = 20;
+	private int maxScore = 2;
 	
 	private int delay;
 	private int maxDelay;
