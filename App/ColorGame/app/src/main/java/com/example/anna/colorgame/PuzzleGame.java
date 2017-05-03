@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import java.io.IOException;
+
+
 /*
 Class is an activity that represents GUI of the game.
 It has three buttons with different colors and a three TextView.
@@ -24,6 +26,7 @@ public class PuzzleGame extends AppCompatActivity implements View.OnClickListene
     private Player player;
     private MediaPlayer mpGood;
     private MediaPlayer mpBad;
+
 
     private AsyncResponse delegate = new AsyncResponse() {
         /*
@@ -70,6 +73,7 @@ public class PuzzleGame extends AppCompatActivity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.puzzle_game);
         //Get the intent that started this activity and extract the string
+        Log.d(TAG, "PuzzleGame, onCreate method. Creating an intent");
         Intent intent = getIntent();
         player = (Player) intent.getSerializableExtra("player");
         String toShow= "IP: " + player.getChoosenIP() + " Name: " + player.getName() + " UserID: " + player.getUserID();
@@ -79,6 +83,15 @@ public class PuzzleGame extends AppCompatActivity implements View.OnClickListene
         //Initiate audioclips
         mpGood = MediaPlayer.create(PuzzleGame.this, R.raw.goodmove);
         mpBad = MediaPlayer.create(PuzzleGame.this, R.raw.badmove);
+
+        //OnClickListener AlertDialog
+
+        //Handler and new thread
+        Log.d(TAG, "PuzzleGame, onCreate method. Creating a thread");
+        RecieveDataThread recieveDataThread = new RecieveDataThread(this, player);
+        Thread thread = new Thread(recieveDataThread);
+        thread.start();
+
     }
     /*
     This method is called when one of the buttons is clicked in the GUI.
