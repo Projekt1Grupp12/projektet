@@ -40,8 +40,13 @@ public class ChooseGame extends AppCompatActivity {
         startAsyncTask("join");
     }
     //This method is called when Traffic button is clicked. It starts next Activity and sends data to it.
-    public void startTraffic(View vierw){
+    public void startTraffic(View view){
         Intent intent = new Intent(this, TrafficGame.class);
+        intent.putExtra("player", player);
+        startActivity(intent);
+    }
+    public void startDuel(View view){
+        Intent intent = new Intent(this, DuelGame.class);
         intent.putExtra("player", player);
         startActivity(intent);
     }

@@ -80,7 +80,7 @@ public class RecieveDataThread implements Runnable {
                                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
-                                        //Start new AlertDialog
+                                        //Start new AlertDialog that shows message "Play again"
                                         secondAlertDialog();
 
                                         dialogInterface.dismiss();
@@ -100,7 +100,7 @@ public class RecieveDataThread implements Runnable {
                                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
-                                        //Start new AlertDialog
+                                        //Start new AlertDialog that shows message "Play again"
                                         secondAlertDialog();
 
                                         dialogInterface.dismiss();

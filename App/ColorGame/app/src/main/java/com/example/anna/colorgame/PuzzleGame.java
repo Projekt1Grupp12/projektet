@@ -36,7 +36,7 @@ public class PuzzleGame extends AppCompatActivity implements View.OnClickListene
         @Override
         public void postResult(String result) {
             TextView textViewMove = (TextView) findViewById(R.id.textViewMove);
-            Log.d(TAG, "Inside updateUI call 2");
+            Log.d(TAG, "Inside PuzzleGame");
             textViewMove.setText(result);
             Log.d(TAG, "Text updated");
             //Music is played here.
@@ -66,33 +66,34 @@ public class PuzzleGame extends AppCompatActivity implements View.OnClickListene
                 e.printStackTrace();
             }
         }
-
     };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.puzzle_game);
+
         //Get the intent that started this activity and extract the string
         Log.d(TAG, "PuzzleGame, onCreate method. Creating an intent");
         Intent intent = getIntent();
         player = (Player) intent.getSerializableExtra("player");
         String toShow= "IP: " + player.getChoosenIP() + " Name: " + player.getName() + " UserID: " + player.getUserID();
-        //Capture the layout's first TextView and set the string(IP, name, userID) as its text.
+
+        //Show information in TextView
         TextView textViewIP = (TextView) findViewById(R.id.textViewIP);
         textViewIP.setText(toShow);
+
         //Initiate audioclips
         mpGood = MediaPlayer.create(PuzzleGame.this, R.raw.goodmove);
         mpBad = MediaPlayer.create(PuzzleGame.this, R.raw.badmove);
-
-        //OnClickListener AlertDialog
 
         //Handler and new thread
         Log.d(TAG, "PuzzleGame, onCreate method. Creating a thread");
         RecieveDataThread recieveDataThread = new RecieveDataThread(this, player);
         Thread thread = new Thread(recieveDataThread);
         thread.start();
-
     }
+
     /*
     This method is called when one of the buttons is clicked in the GUI.
     Which button is pushed is stored in data variable.
@@ -115,15 +116,16 @@ public class PuzzleGame extends AppCompatActivity implements View.OnClickListene
         data += SEMICOLON + player.getUserID();
         startAsyncTask(temp, data);
     }
+
     /*
     This method is used to create new instance of a ConnectToServer class and send data as
     parameter to doInBackground method of that class.
      */
     public void startAsyncTask(String color, String data){
-        Log.d(TAG, "Create task. " + color);
+        Log.d(TAG, "Create task.PuzzleGame " + color);
         ConnectToServer runner = new ConnectToServer(player.getChoosenIP(), delegate);
         System.gc();
-        Log.d(TAG, "Execute task. " + color);
+        Log.d(TAG, "Execute task.PuzzleGame " + color);
         runner.execute(data);
     }
 }

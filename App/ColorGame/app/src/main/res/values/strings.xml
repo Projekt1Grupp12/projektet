@@ -19,4 +19,6 @@
     <string name="choose_game">Choose Game</string>
     <string name="puzzle_game">Puzzle Game</string>
     <string name="traffic_game">Traffic Game</string>
+    <string name="duel">Duel</string>
+    <string name="duel_game">Duel Game</string>
 </resources>
