@@ -65,11 +65,7 @@ public class PuzzleGame extends AppCompatActivity implements View.OnClickListene
                     mpBad.prepare();
                     mpBad.start();
                 } else{
-
-                    Log.d(TAG, "starting GameOver activity");
-
                     GameOver gameOver = new GameOver(PuzzleGame.this, player, result);
-                    Log.d(TAG, "answer: " + String.valueOf(gameOver.getAlertDialog().getAnswer()));
                 }
             } catch (IllegalStateException e) {
                 e.printStackTrace();
@@ -130,14 +126,4 @@ public class PuzzleGame extends AppCompatActivity implements View.OnClickListene
         runner.execute(data);
     }
 
-    /*
- This method sends data(IP, Name, userID) to next activity using Intent class.
-  */
-    public void sendMessageToNextActivity(Class startClass, Player player) {
-        Log.d(TAG, "Creating new intent and sending data");
-        Intent intent = new Intent(this, startClass);
-        intent.putExtra("player", player);
-        Log.d(TAG, "Starting new Activity");
-        startActivity(intent);
-    }
 }
