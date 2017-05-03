@@ -65,12 +65,10 @@ public class HighscoreList {
 				String[] r = ResourceReader.getValuesOnLine(path, i,  "-");
 				entries[i] = new HighscoreEntry(r[0], r[1]);
 			}
-			System.out.println(this.toString());
 		}
 	}
 	
 	public void save(String path) throws IOException {
-		System.out.println("lol");
 		PrintWriter writer = new PrintWriter(path);
 		writer.print("");
 		writer.close();

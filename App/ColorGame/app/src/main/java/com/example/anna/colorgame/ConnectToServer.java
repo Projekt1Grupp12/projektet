@@ -33,28 +33,27 @@ public class ConnectToServer extends AsyncTask<String, String, String> {
         String messageFromServer = "";
         DatagramSocket clientSocket = null;
         try {
-            Log.d(TAG, "Creating Socket and IPAdress");
+            Log.d(TAG, "Asynctask. Creating Socket and IPAdress");
             clientSocket = new DatagramSocket(PORT);
             InetAddress IPAddress = InetAddress.getByName(ip);
 
-            Log.d(TAG, "Initialising byte arrays");
+            Log.d(TAG, "Asynctask. Initialising byte arrays");
             byte[] sendData = new byte[24];
             byte[] receiveData = new byte[24];
             String sentence = message[0];
 
-            Log.d(TAG, "Sending user input to server");
+            Log.d(TAG, "Asynctask. Sending user input to server");
             sendData = sentence.getBytes();
             DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, PORT);
             clientSocket.send(sendPacket);
 
-            Log.d(TAG, "Recieving response from server");
+            Log.d(TAG, "Asynctask. Recieving response from server");
             DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
-            Log.d(TAG, "clientSocket.setSoTimeout(3000)");
-            clientSocket.setSoTimeout(3000);
-            Log.d(TAG, "Waiting for response");
+            Log.d(TAG, "clientSocket.setSoTimeout(9000)");
+            clientSocket.setSoTimeout(9000);
+            Log.d(TAG, "Asynctask. Waiting for response");
             clientSocket.receive(receivePacket);
-            Log.d(TAG, "Reading DatagramPacket we got from server");
-            Log.d(TAG, "FROM SERVER:" + messageFromServer);
+            Log.d(TAG, "Asynctask. Reading DatagramPacket we got from server");
             messageFromServer = putChar(receiveData, receiveData.length);
         } catch (SocketTimeoutException e) {
             if(messageFromServer.isEmpty())

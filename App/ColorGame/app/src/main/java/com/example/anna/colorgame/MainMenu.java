@@ -45,8 +45,8 @@ public class MainMenu extends AppCompatActivity {
         }else if(player.getUserID().equals("1")){
             chooseGameBtn.setText("Join Game");
             chooseGameBtn.setEnabled(false);
+            startAsyncTask("join");
         }
-        startAsyncTask("join");
     }
     /*
        This method is called when button "Choose Game" is clicked.
