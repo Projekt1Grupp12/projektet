@@ -33,7 +33,7 @@ public class MainMenu extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_menu);
-        Log.i(TAG, "onCreate()");
+        Log.i(TAG, "onCreate(). MainMenu");
         //Get the intent that started this activity and extract the string
         Intent intent = getIntent();
         player = (Player)intent.getSerializableExtra("player");
@@ -60,6 +60,7 @@ public class MainMenu extends AppCompatActivity {
             Log.d(TAG, "Inside if satsen");
             intent = new Intent(this, ChooseGame.class);
         } else if (player.getUserID().equals("1")) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //FLAG added because user shouldn't go back from PuzzleGame
             intent = new Intent(this, PuzzleGame.class);
         }
         Log.d(TAG, "Outside if satsen");
