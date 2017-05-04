@@ -29,7 +29,7 @@ public class ChooseGame extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.choose_game);
-        Log.i(TAG, "onCreate()");
+        Log.i(TAG, "onCreate().ChooseGame");
         //Get the intent that started this activity and extract the string
         Intent intent = getIntent();
         player = (Player)intent.getSerializableExtra("player");
@@ -67,6 +67,7 @@ public class ChooseGame extends AppCompatActivity {
 
     private void startActivity(){
         Intent intent = new Intent(this, PuzzleGame.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("player", player);
         startActivity(intent);
     }
