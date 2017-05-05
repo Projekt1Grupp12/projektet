@@ -58,6 +58,7 @@ public class ConnectToServer extends AsyncTask<String, String, String> {
         } catch (SocketTimeoutException e) {
             if(messageFromServer.isEmpty())
                 Log.d(TAG, "EMPTY MESSAGE");
+            messageFromServer = "SocketTimeoutException";
             Log.e(TAG, "SocketTimeoutException");
         }catch (IOException e) {
             Log.e(TAG, e.getMessage());
