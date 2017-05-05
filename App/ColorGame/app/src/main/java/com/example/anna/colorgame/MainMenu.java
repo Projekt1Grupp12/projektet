@@ -16,6 +16,8 @@ public class MainMenu extends AppCompatActivity {
     private static final String TAG = "debug";
     private Player player;
     private Button chooseGameBtn;
+    private Class startThisActivity = null;
+
     private AsyncResponse delegate = new AsyncResponse() {
         /*
         Method that has result from AsyncTask as parameter.
@@ -25,7 +27,19 @@ public class MainMenu extends AppCompatActivity {
         @Override
         public void postResult(String result) {
             Log.d(TAG, "RESULTAT FRÅN SERVER " + result);
-               chooseGameBtn.setEnabled(true);
+            if(result.contains("Game")) {
+                chooseGameBtn.setEnabled(true);
+                if(result.contains(("PuzzleGame")))
+                    startThisActivity = PuzzleGame.class;
+                else if(result.contains(("TrafficGame")))
+                    startThisActivity = TrafficGame.class;
+                else if(result.contains(("DuelGame")))
+                    startThisActivity = DuelGame.class;
+            } else if (result.contains("OK")) {
+                //do nothing
+            } else {
+                startAsyncTask("Join?");
+            }
         }
     };
 
@@ -45,7 +59,7 @@ public class MainMenu extends AppCompatActivity {
         }else if(player.getUserID().equals("1")){
             chooseGameBtn.setText("Join Game");
             chooseGameBtn.setEnabled(false);
-            startAsyncTask("join");
+            startAsyncTask("Join?");
         }
     }
     /*
@@ -53,17 +67,18 @@ public class MainMenu extends AppCompatActivity {
        It starts next activity and sends data to it using Intent class.
        */
     public void chooseGame(View view){
-        Log.d(TAG, "Button Choose Game is clicked");
+        Log.d(TAG, "Button Choose Game or Join Game is clicked");
         Intent intent = null;
         //There is two different ways to go depending on userID
         if (player.getUserID().equals("0")) {
-            Log.d(TAG, "Inside if satsen");
+            Log.d(TAG, "Inside if-satsen");
             intent = new Intent(this, ChooseGame.class);
         } else if (player.getUserID().equals("1")) {
+            startAsyncTask("Ready");
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //FLAG added because user shouldn't go back from PuzzleGame
-            intent = new Intent(this, PuzzleGame.class);
+            intent = new Intent(this, startThisActivity);
         }
-        Log.d(TAG, "Outside if satsen");
+        Log.d(TAG, "Outside if-satsen");
         intent.putExtra("player", player);
         startActivity(intent);
     }
