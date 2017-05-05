@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -21,6 +22,7 @@ public class MainFrame extends AppCompatActivity {
     private Player player = new Player(null, null, null);
     private AlertDialogClass alertDialog;
     private String[] ipAdresses = {"Choose IP from the list.", "10.2.19.242", "10.2.19.28"};
+    private Button loginButton = null;
 
     private AsyncResponse delegate = new AsyncResponse() {
         /*
@@ -36,6 +38,7 @@ public class MainFrame extends AppCompatActivity {
                 alertDialog.setTitle("Connection fialed");
                 alertDialog.setMessage("Connection to game server failed");
                 alertDialog.ButtonOK();
+                loginButton.setEnabled(true);
             }
             else {
                 player.setUserID(result);
@@ -78,6 +81,7 @@ public class MainFrame extends AppCompatActivity {
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {}
         });
+        this.loginButton = (Button)findViewById(R.id.loginButton);
     }
     /*
     This method is called when the button is clicked.
@@ -86,6 +90,7 @@ public class MainFrame extends AppCompatActivity {
      */
     public void sendMessage(View view) {//Button
         updateIPName();
+        loginButton.setEnabled(false);
         ConnectToServer runner = new ConnectToServer(player.getChoosenIP(), delegate);
         Log.d(TAG, "Task created");
         String messageToServer = "" + player.getName();//we want to send name to server
