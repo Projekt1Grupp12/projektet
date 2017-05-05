@@ -21,8 +21,10 @@ public class MainFrame extends AppCompatActivity {
     private static final String TAG = "debug";
     private Player player = new Player(null, null, null);
     private AlertDialogClass alertDialog;
-    private String[] ipAdresses = {"Choose IP from the list.", "10.2.19.242", "10.2.19.28"};
+    private String[] ipAdresses = {"Choose IP from the list.", "10.2.19.242", "10.2.19.28", "10.2.28.40"};
     private Button loginButton = null;
+    private EditText editIPText;
+    private EditText editNameText;
 
     private AsyncResponse delegate = new AsyncResponse() {
         /*
@@ -51,8 +53,8 @@ public class MainFrame extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_frame);
-
         //Here is drop-down list
+        editIPText = (EditText) findViewById(R.id.editIPText);
         final Spinner dynamicSpinner = (Spinner) findViewById(R.id.spinner);
         //ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, ipAdresses);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.my_spinner, ipAdresses);
@@ -67,13 +69,15 @@ public class MainFrame extends AppCompatActivity {
                         // Whatever you want to happen when the first item gets selected
                         break;
                     case 1:
-                        EditText editText1 = (EditText) findViewById(R.id.editIPText);
-                        editText1.setText(ipAdresses[1]);
+                        editIPText.setText(ipAdresses[1]);
                         dynamicSpinner.setSelection(0);
                         break;
                     case 2:
-                        EditText editText2 = (EditText) findViewById(R.id.editIPText);
-                        editText2.setText(ipAdresses[2]);
+                        editIPText.setText(ipAdresses[2]);
+                        dynamicSpinner.setSelection(0);
+                        break;
+                    case 3:
+                        editIPText.setText(ipAdresses[3]);
                         dynamicSpinner.setSelection(0);
                         break;
                 }
@@ -83,6 +87,7 @@ public class MainFrame extends AppCompatActivity {
         });
         this.loginButton = (Button)findViewById(R.id.loginButton);
     }
+
     /*
     This method is called when the button is clicked.
     upadateIPName method is called to store input from user as data in variables.
@@ -97,12 +102,13 @@ public class MainFrame extends AppCompatActivity {
         Log.d(TAG, "Execute task");
         runner.execute(messageToServer);
     }
+
     /*
     This method updates ip and name variables with user input.
      */
     public void updateIPName() {
-        EditText editIPText = (EditText) findViewById(R.id.editIPText);
-        EditText editNameText = (EditText) findViewById(R.id.editNameText);
+        editIPText = (EditText) findViewById(R.id.editIPText);
+        editNameText = (EditText) findViewById(R.id.editNameText);
         player.setChoosenIP(editIPText.getText().toString());
         player.setName(editNameText.getText().toString());
     }
@@ -115,6 +121,17 @@ public class MainFrame extends AppCompatActivity {
         intent.putExtra("player", player);
         Log.d(TAG, "Starting new Activity");
         startActivity(intent);
+    }
+
+    @Override
+    protected void onRestart() {
+        Log.d(TAG, "MF onRestart()");
+        super.onRestart();
+        editIPText = (EditText) findViewById(R.id.editIPText);
+        editNameText = (EditText) findViewById(R.id.editNameText);
+        editNameText.setText("");
+        editIPText.setText("");
+        loginButton.setEnabled(true);
     }
 }
 
