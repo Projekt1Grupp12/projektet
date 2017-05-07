@@ -26,6 +26,8 @@ public class UDPServer implements Runnable
 	private String sentHistory;
 	private String inputHistory;
 	
+	private String playerPickedGame;
+	
 	private int port;
 	private int sentHistoryIndex;
 	private int inputHistoryIndex;
@@ -136,9 +138,12 @@ public class UDPServer implements Runnable
 	public void recive() throws IOException {
 		serverSocket.receive(packet);
 		for(int i = 0; i < 2; i++) {
-			if(!hasStartedGame) sendToPhone("-1", i);
+			if(!hasStartedGame) { 
+				sendToPhone("-1", i);
+				//sendToClientSimulator("-1", i);
+			}
 		}
-		inputHistory = putTogether(packet.getData(), 5) + "  : " + (inputHistoryIndex++) + " : " + packet.getAddress().getHostName() + "\n" + inputHistory;
+		inputHistory = putTogether(packet.getData()) + "  : " + (inputHistoryIndex++) + " : " + packet.getAddress().getHostName() + "\n" + inputHistory;
 	}
 	
 	public void resetGame(Game g) {
@@ -177,10 +182,17 @@ public class UDPServer implements Runnable
 					e.printStackTrace();
 				}
 				recive();
-				String input = putTogether(packet.getData(), hasStartedGame ? 3 : 2);
+				String input = putTogether(packet.getData());
 				System.out.println(input);
 				if(game.realTime) game.setInput(input);
 				if(!hasStartedGame) {
+					if(input.contains("Game")) {
+						playerPickedGame = input;
+						System.out.println(playerPickedGame.split(";")[0] + " | " + (playerPickedGame.split(";")[1].equals("0") ? 1 : 0));
+						sendToPhone(playerPickedGame.split(";")[0], playerPickedGame.split(";")[1].equals("0") ? 1 : 0);
+						sendToClientSimulator(playerPickedGame.split(";")[0], playerPickedGame.split(";")[1].equals("0") ? 1 : 0);
+					}
+					
 					if(input.equals("-2")) {
 						game.setTimer();
 						hasStartedGame = true;

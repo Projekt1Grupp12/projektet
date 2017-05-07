@@ -5,9 +5,12 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.IOException;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -18,6 +21,7 @@ public class ClientView extends JPanel {
 	private JButton startButton = new JButton();
 	
 	private Color[] colors = new Color[]{Color.GREEN, Color.YELLOW, Color.RED};
+	private String[] gameNames = new String[]{"Puzzel Game", "Traffic Game", "Duel game"};
 	
 	private JLabel feedback = new JLabel();
 	
@@ -26,10 +30,16 @@ public class ClientView extends JPanel {
 	
 	private JLabel idText = new JLabel();
 	
+	private JComboBox<String> games = new JComboBox<String>();
+	
 	public ClientView(ClientController controller, int id) {
+		for(int i = 0; i < gameNames.length; i++) {
+			games.addItem(gameNames[i]);
+		}
+		
 		this.controller = controller;
 		controller.setView(this);
-		setLayout(new GridLayout(5, 0));
+		setLayout(new GridLayout(6, 0));
 		
 		ButtonListener listener = new ButtonListener();
 		
@@ -50,6 +60,9 @@ public class ClientView extends JPanel {
 		startButtonPanel.add(startButton);
 		startButtonPanel.add(new JLabel());
 		
+		ItemChangeListener changeListener = new ItemChangeListener();
+		games.addItemListener(changeListener);
+		
 		feedback.setPreferredSize(new Dimension(120, 32));
 		idText.setText("Player: " + controller.getId());
 		add(feedback);
@@ -57,10 +70,25 @@ public class ClientView extends JPanel {
 		add(new JLabel());
 		add(startButtonPanel);
 		add(idText);
+		add(games);
 	}
 	
 	public void setFeedbackText(String text) {
 		this.feedback.setText(text);
+	}
+	
+	class ItemChangeListener implements ItemListener {
+	    public void itemStateChanged(ItemEvent event) {	    	
+	       if (event.getStateChange() == ItemEvent.SELECTED) {
+	    	   if(event.getSource() == games) {
+	    		   try {
+					controller.send((String) games.getSelectedItem() + ";" + controller.getId());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+	    	   }
+	       }
+	    }
 	}
 	
 	public class ButtonListener implements ActionListener {
