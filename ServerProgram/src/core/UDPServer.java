@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.swing.JOptionPane;
 
+import game.DualGame;
 import game.Game;
 import game.Player;
 import game.PuzzelGame;
@@ -32,13 +33,15 @@ public class UDPServer implements Runnable
 	private int sentHistoryIndex;
 	private int inputHistoryIndex;
 	
-	private boolean hasStartedGame; 
+	public boolean hasStartedGame; 
 	
 	public boolean startNewThread;
 	
 	byte[] receiveData;
 	
 	Game game = new PuzzelGame(new Player[]{new Player(0), new Player(1)}, this);
+	
+	Game[] games = new Game[]{new PuzzelGame(new Player[]{new Player(0), new Player(1)}, this), new TrafficGame(new Player[]{new Player(0), new Player(1)}, this), new DualGame(new Player[]{new Player(0), new Player(1)}, this)};
 	
 	DatagramPacket packet;
 	
@@ -161,6 +164,8 @@ public class UDPServer implements Runnable
 		if(game.realTime) {
 			new Thread(game).start();
 		}
+		
+		hasStartedGame = false;
 	}
 
 	public void run() {
@@ -185,12 +190,17 @@ public class UDPServer implements Runnable
 				String input = putTogether(packet.getData());
 				System.out.println(input);
 				if(game.realTime) game.setInput(input);
+				System.out.println(hasStartedGame);
 				if(!hasStartedGame) {
 					if(input.contains("Game")) {
 						playerPickedGame = input;
-						System.out.println(playerPickedGame.split(";")[0] + " | " + (playerPickedGame.split(";")[1].equals("0") ? 1 : 0));
 						sendToPhone(playerPickedGame.split(";")[0], playerPickedGame.split(";")[1].equals("0") ? 1 : 0);
 						sendToClientSimulator(playerPickedGame.split(";")[0], playerPickedGame.split(";")[1].equals("0") ? 1 : 0);
+						for(int i = 0; i < games.length; i++) {
+							if(games[i].getName().equals(input.split(";")[0])) {
+								resetGame(games[i]);
+							}
+						}
 					}
 					
 					if(input.equals("-2")) {
@@ -199,8 +209,9 @@ public class UDPServer implements Runnable
 						game.update(input);
 					}
 				}
-				else
+				else {
 					if(!game.realTime) game.update(input);
+				}
 
 				receiveData = new byte[RECIVE_BUFFER_SIZE];
 				packet = new DatagramPacket(receiveData, receiveData.length);
