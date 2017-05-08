@@ -23,15 +23,18 @@ public class ChooseGame extends AppCompatActivity {
         public void postResult(String result) {
             Log.d(TAG, "RESULTAT FRÅN SERVER " + result);
 
-            if (result.contains("Yes")){
+            if (result.contains("yes;0")){
                 pd.dismiss();
                 startActivity(startThisClass);
             } else if(result.contains("SocketTimeoutException")){
+                startAsyncTask("timeout;0");
+            } else if(result.contains("-1")) {
+                startAsyncTask("ready?;0");
+            } else if(result.contains("OK")){
                 pd.dismiss();
                 startThisClass = MainMenu.class;
                 startActivity(startThisClass);
-            } else
-                startAsyncTask("Ready?");
+            }
         }
     };
     
@@ -48,18 +51,18 @@ public class ChooseGame extends AppCompatActivity {
     public void startPuzzle(View view){
         startProgressDialog();
         this.startThisClass = PuzzleGame.class;
-        startAsyncTask("Puzzle");
+        startAsyncTask("Puzzle;0");
     }
     //This method is called when Traffic button is clicked. It starts next Activity and sends data to it.
     public void startTraffic(View view){
         startProgressDialog();
         this.startThisClass = TrafficGame.class;
-        startAsyncTask("Traffic");
+        startAsyncTask("Traffic;0");
     }
     public void startDuel(View view){
         startProgressDialog();
         this.startThisClass = DuelGame.class;
-        startAsyncTask("Duel");
+        startAsyncTask("Duel;0");
     }
 
     private void startProgressDialog(){

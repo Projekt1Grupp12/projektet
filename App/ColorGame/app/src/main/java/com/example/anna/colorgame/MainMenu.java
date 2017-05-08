@@ -29,16 +29,22 @@ public class MainMenu extends AppCompatActivity {
             Log.d(TAG, "RESULTAT FRÅN SERVER " + result);
             if(result.contains("Game")) {
                 chooseGameBtn.setEnabled(true);
-                if(result.contains(("PuzzleGame")))
+                if (result.contains(("PuzzleGame")))
                     startThisActivity = PuzzleGame.class;
-                else if(result.contains(("TrafficGame")))
+                else if (result.contains(("TrafficGame")))
                     startThisActivity = TrafficGame.class;
-                else if(result.contains(("DuelGame")))
+                else if (result.contains(("DuelGame")))
                     startThisActivity = DuelGame.class;
+            }else if(result.contains("timeout")){
+                chooseGameBtn.setEnabled(false);
+                AlertDialogClass alertDialog = new AlertDialogClass(MainMenu.this);
+                alertDialog.setTitle("No game available");
+                alertDialog.setMessage("The available game does not exist anymore. Please wait for a new player to choose game.");
+                alertDialog.ButtonOK();
             } else if (result.contains("OK")) {
                 //do nothing
             } else {
-                startAsyncTask("Join?");
+                startAsyncTask("join?;1");
             }
         }
     };
@@ -59,7 +65,7 @@ public class MainMenu extends AppCompatActivity {
         }else if(player.getUserID().equals("1")){
             chooseGameBtn.setText("Join Game");
             chooseGameBtn.setEnabled(false);
-            startAsyncTask("Join?");
+            startAsyncTask("join?;1");
         }
     }
     /*
@@ -74,7 +80,7 @@ public class MainMenu extends AppCompatActivity {
             Log.d(TAG, "Inside if-satsen");
             intent = new Intent(this, ChooseGame.class);
         } else if (player.getUserID().equals("1")) {
-            startAsyncTask("Ready");
+            startAsyncTask("ready;1");
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //FLAG added because user shouldn't go back from PuzzleGame
             intent = new Intent(this, startThisActivity);
         }
