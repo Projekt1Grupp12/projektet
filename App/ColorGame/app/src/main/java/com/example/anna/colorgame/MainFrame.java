@@ -2,11 +2,14 @@ package com.example.anna.colorgame;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.AdapterView;
@@ -55,6 +58,11 @@ public class MainFrame extends AppCompatActivity {
         setContentView(R.layout.activity_main_frame);
         //Here is drop-down list
         editIPText = (EditText) findViewById(R.id.editIPText);
+        editIPText.setCursorVisible(false);
+
+        editNameText = (EditText) findViewById(R.id.editNameText);
+        editNameText.setCursorVisible(false);
+
         final Spinner dynamicSpinner = (Spinner) findViewById(R.id.spinner);
         //ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, ipAdresses);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.my_spinner, ipAdresses);
@@ -132,6 +140,46 @@ public class MainFrame extends AppCompatActivity {
         editNameText.setText("");
         editIPText.setText("");
         loginButton.setEnabled(true);
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        Log.d(TAG, "inside dispatchTouchEvent");
+        boolean handleReturn = super.dispatchTouchEvent(ev);
+
+        View view = getCurrentFocus();
+
+        int x = (int) ev.getX();
+        int y = (int) ev.getY();
+
+        if(view instanceof EditText){
+            View innerView = getCurrentFocus();
+            Log.d(TAG, "view instanceof EditText");
+            if (ev.getAction() == MotionEvent.ACTION_UP &&
+                    !getLocationOnScreen((EditText) innerView).contains(x, y)) {
+                Log.d(TAG, "ev.getAction() == MotionEvent.ACTION_UP");
+                InputMethodManager input = (InputMethodManager)
+                        getSystemService(MainFrame.this.INPUT_METHOD_SERVICE);
+                input.hideSoftInputFromWindow(getWindow().getCurrentFocus()
+                        .getWindowToken(), 0);
+            }
+        }
+
+        return handleReturn;
+    }
+
+    protected Rect getLocationOnScreen(EditText mEditText) {
+        Rect mRect = new Rect();
+        int[] location = new int[2];
+
+        mEditText.getLocationOnScreen(location);
+
+        mRect.left = location[0];
+        mRect.top = location[1];
+        mRect.right = location[0] + mEditText.getWidth();
+        mRect.bottom = location[1] + mEditText.getHeight();
+
+        return mRect;
     }
 }
 
