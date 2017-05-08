@@ -119,6 +119,7 @@ public class ClientView extends JPanel {
 				if(e.getSource() == joinButton) {
 					try {
 						controller.send("join?;" + controller.getId());
+						controller.send("yes");
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}
