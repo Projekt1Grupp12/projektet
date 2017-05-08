@@ -35,7 +35,7 @@ public class MainFrame extends AppCompatActivity {
         @Override
         public void postResult(String result) {
             Log.d(TAG, "RESULTAT FRÅN SERVER " + result);
-            if(result.isEmpty()){
+            if(result.contains("SocketTimeoutException")){
                 alertDialog = new AlertDialogClass(MainFrame.this);
                 alertDialog.setTitle("Connection fialed");
                 alertDialog.setMessage("Connection to game server failed");

@@ -121,5 +121,6 @@ public class TrafficGame extends AppCompatActivity implements View.OnClickListen
         System.gc();
         Log.d(TAG, "Execute task.TrafficGame " + color);
         runner.execute(data);
+        System.gc();
     }
 }
