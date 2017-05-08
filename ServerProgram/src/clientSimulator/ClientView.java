@@ -19,6 +19,7 @@ public class ClientView extends JPanel {
 	
 	private JButton[] colorButtons = new JButton[3];
 	private JButton startButton = new JButton();
+	private JButton joinButton = new JButton("JOIN");
 	
 	private Color[] colors = new Color[]{Color.GREEN, Color.YELLOW, Color.RED};
 	private String[] gameNames = new String[]{"Puzzel Game", "Traffic Game", "Duel game"};
@@ -39,7 +40,7 @@ public class ClientView extends JPanel {
 		
 		this.controller = controller;
 		controller.setView(this);
-		setLayout(new GridLayout(6, 0));
+		setLayout(new GridLayout(7, 0));
 		
 		ButtonListener listener = new ButtonListener();
 		
@@ -60,6 +61,8 @@ public class ClientView extends JPanel {
 		startButtonPanel.add(startButton);
 		startButtonPanel.add(new JLabel());
 		
+		joinButton.addActionListener(listener);
+		
 		ItemChangeListener changeListener = new ItemChangeListener();
 		games.addItemListener(changeListener);
 		
@@ -71,6 +74,7 @@ public class ClientView extends JPanel {
 		add(startButtonPanel);
 		add(idText);
 		add(games);
+		add(joinButton);
 	}
 	
 	public void setFeedbackText(String text) {
@@ -110,6 +114,14 @@ public class ClientView extends JPanel {
 						e1.printStackTrace();
 					}
 					idText.setText("Player: " + controller.getId());
+				}
+				
+				if(e.getSource() == joinButton) {
+					try {
+						controller.send("join?;" + controller.getId());
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
 				}
 			}
 		}

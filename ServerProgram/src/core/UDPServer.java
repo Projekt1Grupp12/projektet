@@ -60,6 +60,8 @@ public class UDPServer implements Runnable
 		sentHistory = "";
 		
 		collectedPlayerNames = new String[2];
+		
+		playerPickedGame = "";
 	}
 	
 	public void setup() {
@@ -194,12 +196,25 @@ public class UDPServer implements Runnable
 				if(!hasStartedGame) {
 					if(input.contains("Game")) {
 						playerPickedGame = input;
-						sendToPhone(playerPickedGame.split(";")[0], playerPickedGame.split(";")[1].equals("0") ? 1 : 0);
-						sendToClientSimulator(playerPickedGame.split(";")[0], playerPickedGame.split(";")[1].equals("0") ? 1 : 0);
 						for(int i = 0; i < games.length; i++) {
 							if(games[i].getName().equals(input.split(";")[0])) {
 								resetGame(games[i]);
 							}
+						}
+					}
+					
+					if(!playerPickedGame.equals(""))
+						System.out.println(input.split(";")[0] + " | " + input.split(";")[1] + " - " + playerPickedGame.split(";")[1]);
+					
+					if(!playerPickedGame.equals("") &&  input.split(";")[0].equals("join?") && !input.split(";")[1].equals(playerPickedGame.split(";")[1])) {
+						sendToPhone(playerPickedGame.split(";")[0], playerPickedGame.split(";")[1].equals("0") ? 1 : 0);
+						sendToClientSimulator(playerPickedGame.split(";")[0], playerPickedGame.split(";")[1].equals("0") ? 1 : 0);
+					}
+
+					if(input.split(";").length == 2) {
+						if(input.split(";")[0].equals("ready")) {
+							sendToPhone("ok", Integer.parseInt(input.split(";")[1]));
+							sendToClientSimulator("ok", Integer.parseInt(input.split(";")[1]));
 						}
 					}
 					
