@@ -22,7 +22,7 @@ public class ClientView extends JPanel {
 	private JButton joinButton = new JButton("JOIN");
 	
 	private Color[] colors = new Color[]{Color.GREEN, Color.YELLOW, Color.RED};
-	private String[] gameNames = new String[]{"Puzzel Game", "Traffic Game", "Duel game"};
+	private String[] gameNames = new String[]{" ", "Puzzle Game", "Traffic Game", "Duel Game"};
 	
 	private JLabel feedback = new JLabel();
 	
@@ -119,7 +119,7 @@ public class ClientView extends JPanel {
 				if(e.getSource() == joinButton) {
 					try {
 						controller.send("join?;" + controller.getId());
-						controller.send("yes");
+						controller.send("start");
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}

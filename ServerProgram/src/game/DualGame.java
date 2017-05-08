@@ -112,7 +112,7 @@ public class DualGame extends Game {
 	}
 
 	public String getName() {
-		return "Dual Game";
+		return "Duel Game";
 	}
 	
 	public void run() {

@@ -17,6 +17,12 @@ public class UDPServer implements Runnable
 {	
 	final int RECIVE_BUFFER_SIZE = 128;
 	
+	public static final String EXIT_INSTRUCTION = "exit";
+	public static final String START_SESSION_INSTRUCTION = "start";
+	public static final String START_GAME_INSTRUCTION = "-2";
+	public static final String[] ENGINE_INSTRUCTION = new String[]{"-3", "-4"};
+	public static final String JOIN_INSTRUCTION = "join?;";
+	
 	boolean recsive = true;
 	
 	private DatagramSocket serverSocket = null;
@@ -105,7 +111,7 @@ public class UDPServer implements Runnable
 	
 	public void send(String message, String ip) throws IOException {
 		InetAddress ipAddress = InetAddress.getByName(ip);
-		DatagramPacket sendPacket = new DatagramPacket(message.getBytes(), message.getBytes().length, ipAddress, port+(message.equals("WIN!") || message.equals("LOSE!") ? 1 : 0));
+		DatagramPacket sendPacket = new DatagramPacket(message.getBytes(), message.getBytes().length, ipAddress, port+(message.equals("WIN!") || message.equals("LOSE!") || message.equals("exit") ? 1 : 0));
 		serverSocket.send(sendPacket);
 
 		sentHistory = message + "  : " + (sentHistoryIndex++) + " : " + ip + "\n" + sentHistory;
@@ -171,6 +177,23 @@ public class UDPServer implements Runnable
 	}
 
 	public void run() {
+		
+		Runtime.getRuntime().addShutdownHook(new Thread()
+		{
+		    @Override
+		    public void run()
+		    {
+		        for(int i = 0; i < 2; i++) {
+		        	try {
+						sendToPhone("exit", i);
+						sendToClientSimulator("exit", i);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+		        }
+		    }
+		});
+		
 		if(!hasSetup) {
 			setup();
 		}
@@ -210,8 +233,10 @@ public class UDPServer implements Runnable
 
 					if(input.split(";").length == 2) {
 						if(input.split(";")[0].equals("ready")) {
-							sendToPhone("yes", Integer.parseInt(input.split(";")[1]));
-							sendToClientSimulator("yes", Integer.parseInt(input.split(";")[1]));
+							for(int i = 0; i < 2 ; i++) {
+								sendToPhone("start", 1);
+								sendToClientSimulator("start", 1);
+							}
 						}
 						
 						if(input.split(";")[0].equals("timeout")) {
