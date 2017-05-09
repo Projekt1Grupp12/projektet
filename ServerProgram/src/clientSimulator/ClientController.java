@@ -10,22 +10,34 @@ import java.util.concurrent.TimeUnit;
 
 import javax.swing.JFrame;
 
+import core.BetterRandom;
 import core.UDPServer;
 
 public class ClientController implements Runnable {
 	private int id;
 	private int port; 
 	
+	private String name;
+	
 	private ClientView view;
 	
 	DatagramSocket serverSocketListen = null;
+	
+	private boolean sentName;
 
 	public ClientController(int id) {
 		port = 4444;
 		this.id = id;
 		
 		try {
-			send("0");
+			if(!sentName) {
+				int length = BetterRandom.random(3, 8);
+				for(int i = 0; i < length; i++) {
+					name += (char)BetterRandom.random(0, 255);
+				}
+				send(name);
+				sentName = true;
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -59,6 +71,10 @@ public class ClientController implements Runnable {
 	
 	public int getId() {
 		return id;
+	}
+	
+	public String getName() {
+		return name;
 	}
 
 	@Override

@@ -168,6 +168,7 @@ public abstract class Game implements Runnable {
 			highscoreList.tryAdd(h);
 			server.hasStartedGame = false;
 		}
+		server.resetSession();
 		gameOver = true;
 	}
 	

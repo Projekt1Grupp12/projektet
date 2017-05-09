@@ -40,7 +40,9 @@ public class ClientView extends JPanel {
 		
 		this.controller = controller;
 		controller.setView(this);
-		setLayout(new GridLayout(7, 0));
+		setLayout(new GridLayout(8, 0));
+
+		add(new JLabel(controller.getName()));
 		
 		ButtonListener listener = new ButtonListener();
 		
