@@ -67,11 +67,6 @@ public class MainMenu extends AppCompatActivity {
             chooseGameBtn.setEnabled(false);
             startAsyncTask("join?;1");
         }
-        Log.d(TAG, "PuzzleGame, onCreate method. Creating a thread");
-        Log.d(TAG, "THREAD CREATED..........................");
-        RecieveDataThread recieveDataThread = new RecieveDataThread(this, player);
-        Thread thread = new Thread(recieveDataThread);
-        thread.start();
     }
     /*
        This method is called when button "Choose Game" is clicked.

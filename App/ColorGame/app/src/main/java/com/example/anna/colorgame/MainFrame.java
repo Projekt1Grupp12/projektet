@@ -40,7 +40,7 @@ public class MainFrame extends AppCompatActivity {
             Log.d(TAG, "RESULTAT FRÅN SERVER " + result);
             if(result.contains("SocketTimeoutException")){
                 alertDialog = new AlertDialogClass(MainFrame.this);
-                alertDialog.setTitle("Connection fialed");
+                alertDialog.setTitle("Connection failed");
                 alertDialog.setMessage("Connection to game server failed");
                 alertDialog.ButtonOK();
                 loginButton.setEnabled(true);

@@ -49,8 +49,10 @@ public class ConnectToServer extends AsyncTask<String, String, String> {
 
             Log.d(TAG, "Asynctask. Recieving response from server");
             DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
-            Log.d(TAG, "clientSocket.setSoTimeout(9000)");
-            clientSocket.setSoTimeout(9000);
+            Log.d(TAG, "clientSocket.setSoTimeout(3000)");
+
+
+            clientSocket.setSoTimeout(3000);
             Log.d(TAG, "Asynctask. Waiting for response");
             clientSocket.receive(receivePacket);
             Log.d(TAG, "Asynctask. Reading DatagramPacket we got from server");
