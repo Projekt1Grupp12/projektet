@@ -67,11 +67,16 @@ public class Game extends AppCompatActivity implements View.OnClickListener{
     };
 
 
-    public Game(){
-        //Initiate audioclips
-        mpGood = MediaPlayer.create(this, R.raw.goodmove);
-        mpBad = MediaPlayer.create(this, R.raw.badmove);
+    public void setPlayer(Player player){
+        this.player = player;
     }
+
+    public void setMusic(MediaPlayer mpGood, MediaPlayer mpBad){
+        this.mpGood = mpGood;
+        this.mpBad = mpBad;
+    }
+
+    public Game(){    }
 
     /*
     This method is called when one of the buttons is clicked in the GUI.
