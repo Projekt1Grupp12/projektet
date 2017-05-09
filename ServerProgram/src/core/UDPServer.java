@@ -222,6 +222,8 @@ public class UDPServer implements Runnable
 			new Thread(game).start();
 		}
 		
+		playerPickedGame = "";
+		
 		hasStartedGame = false;
 	}
 

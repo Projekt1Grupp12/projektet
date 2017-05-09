@@ -166,10 +166,9 @@ public abstract class Game implements Runnable {
 		if(!gameOver) {
 			HighscoreEntry h = new HighscoreEntry(players[winningPlayer].getName(), result + "");
 			highscoreList.tryAdd(h);
-			System.out.println(highscoreList.toString());
 			server.hasStartedGame = false;
 		}
-		server.resetSession();
+		//server.resetSession();
 		gameOver = true;
 	}
 	
