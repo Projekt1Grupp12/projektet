@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.swing.JOptionPane;
 
+import game.DualGame;
 import game.Game;
 import game.Player;
 import game.PuzzelGame;
@@ -15,6 +16,13 @@ import game.TrafficGame;
 public class UDPServer implements Runnable
 {	
 	final int RECIVE_BUFFER_SIZE = 128;
+	
+	public static final String EXIT_INSTRUCTION = "exit";
+	public static final String START_SESSION_INSTRUCTION = "start";
+	public static final String START_GAME_INSTRUCTION = "-2";
+	public static final String[] ENGINE_INSTRUCTION = new String[]{"-3", "-4"};
+	public static final String JOIN_INSTRUCTION = "join?";
+	public static final String ACK_INSTRUCTION = "-1";
 	
 	boolean recsive = true;
 	
@@ -26,17 +34,21 @@ public class UDPServer implements Runnable
 	private String sentHistory;
 	private String inputHistory;
 	
+	private String playerPickedGame;
+	
 	private int port;
 	private int sentHistoryIndex;
 	private int inputHistoryIndex;
 	
-	private boolean hasStartedGame; 
+	public boolean hasStartedGame; 
 	
 	public boolean startNewThread;
 	
 	byte[] receiveData;
 	
 	Game game = new PuzzelGame(new Player[]{new Player(0), new Player(1)}, this);
+	
+	Game[] games = new Game[]{new PuzzelGame(new Player[]{new Player(0), new Player(1)}, this), new TrafficGame(new Player[]{new Player(0), new Player(1)}, this), new DualGame(new Player[]{new Player(0), new Player(1)}, this)};
 	
 	DatagramPacket packet;
 	
@@ -55,6 +67,8 @@ public class UDPServer implements Runnable
 		sentHistory = "";
 		
 		collectedPlayerNames = new String[2];
+		
+		playerPickedGame = "";
 	}
 	
 	public void setup() {
@@ -73,7 +87,7 @@ public class UDPServer implements Runnable
 
 			serverSocket.receive(packet);
 			ips[0] = packet.getAddress().getHostName();
-			while(putTogether(packet.getData(), 2).equals("-2")) {
+			while(putTogether(packet.getData(), 2).equals(START_GAME_INSTRUCTION)) {
 				serverSocket.receive(packet);
 				ips[0] = packet.getAddress().getHostName();
 			}
@@ -81,7 +95,7 @@ public class UDPServer implements Runnable
 			System.out.println(ips[0] + " | ip 0");
 			serverSocket.receive(packet);
 			ips[1] = packet.getAddress().getHostName();
-			while(ips[0].equals(ips[1]) && playWithTwo || putTogether(packet.getData(), 2).equals("-2")) {
+			while(ips[0].equals(ips[1]) && playWithTwo || putTogether(packet.getData(), 2).equals(START_GAME_INSTRUCTION)) {
 				serverSocket.receive(packet);
 				ips[1] = packet.getAddress().getHostName();
 			}
@@ -98,7 +112,7 @@ public class UDPServer implements Runnable
 	
 	public void send(String message, String ip) throws IOException {
 		InetAddress ipAddress = InetAddress.getByName(ip);
-		DatagramPacket sendPacket = new DatagramPacket(message.getBytes(), message.getBytes().length, ipAddress, port+(message.equals("WIN!") || message.equals("LOSE!") ? 1 : 0));
+		DatagramPacket sendPacket = new DatagramPacket(message.getBytes(), message.getBytes().length, ipAddress, port+(message.equals("WIN!") || message.equals("LOSE!") || message.equals(EXIT_INSTRUCTION) ? 1 : 0));
 		serverSocket.send(sendPacket);
 
 		sentHistory = message + "  : " + (sentHistoryIndex++) + " : " + ip + "\n" + sentHistory;
@@ -136,9 +150,12 @@ public class UDPServer implements Runnable
 	public void recive() throws IOException {
 		serverSocket.receive(packet);
 		for(int i = 0; i < 2; i++) {
-			if(!hasStartedGame) sendToPhone("-1", i);
+			if(!hasStartedGame) { 
+				sendToPhone(ACK_INSTRUCTION, 1);
+				//sendToClientSimulator("-1", i);
+			}
 		}
-		inputHistory = putTogether(packet.getData(), 5) + "  : " + (inputHistoryIndex++) + " : " + packet.getAddress().getHostName() + "\n" + inputHistory;
+		inputHistory = putTogether(packet.getData()) + "  : " + (inputHistoryIndex++) + " : " + packet.getAddress().getHostName() + "\n" + inputHistory;
 	}
 	
 	public void resetGame(Game g) {
@@ -156,9 +173,28 @@ public class UDPServer implements Runnable
 		if(game.realTime) {
 			new Thread(game).start();
 		}
+		
+		hasStartedGame = false;
 	}
 
 	public void run() {
+		
+		Runtime.getRuntime().addShutdownHook(new Thread()
+		{
+		    @Override
+		    public void run()
+		    {
+		        for(int i = 0; i < 2; i++) {
+		        	try {
+						sendToPhone(EXIT_INSTRUCTION , i);
+						sendToClientSimulator(EXIT_INSTRUCTION, i);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+		        }
+		    }
+		});
+		
 		if(!hasSetup) {
 			setup();
 		}
@@ -177,18 +213,48 @@ public class UDPServer implements Runnable
 					e.printStackTrace();
 				}
 				recive();
-				String input = putTogether(packet.getData(), hasStartedGame ? 3 : 2);
-				System.out.println(input);
+				String input = putTogether(packet.getData());
+				//System.out.println(input);
 				if(game.realTime) game.setInput(input);
+				//System.out.println(hasStartedGame);
 				if(!hasStartedGame) {
-					if(input.equals("-2")) {
+					if(input.contains("Game")) {
+						playerPickedGame = input;
+						for(int i = 0; i < games.length; i++) {
+							if(games[i].getName().equals(input.split(";")[0])) {
+								resetGame(games[i]);
+							}
+						}
+					}
+					
+					if(!playerPickedGame.equals("") && playerPickedGame.split(";").length == 2 &&  input.split(";")[0].equals(JOIN_INSTRUCTION) && !input.split(";")[1].equals(playerPickedGame.split(";")[1])) {
+						sendToPhone(playerPickedGame.split(";")[0], playerPickedGame.split(";")[1].equals("0") ? 1 : 0);
+						sendToClientSimulator(playerPickedGame.split(";")[0], playerPickedGame.split(";")[1].equals("0") ? 1 : 0);
+					}
+
+					if(input.split(";").length == 2) {
+						if(input.split(";")[0].equals("ready")) {
+							for(int i = 0; i < 2 ; i++) {
+								sendToPhone(START_SESSION_INSTRUCTION, 1);
+								sendToClientSimulator(START_SESSION_INSTRUCTION, 1);
+							}
+						}
+						
+						if(input.split(";")[0].equals("timeout")) {
+							sendToPhone("ok", Integer.parseInt(input.split(";")[1]));
+							sendToClientSimulator("ok", Integer.parseInt(input.split(";")[1]));
+						}
+					}
+					
+					if(input.equals(START_GAME_INSTRUCTION)) {
 						game.setTimer();
 						hasStartedGame = true;
 						game.update(input);
 					}
 				}
-				else
+				else {
 					if(!game.realTime) game.update(input);
+				}
 
 				receiveData = new byte[RECIVE_BUFFER_SIZE];
 				packet = new DatagramPacket(receiveData, receiveData.length);

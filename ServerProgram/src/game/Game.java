@@ -95,7 +95,7 @@ public abstract class Game implements Runnable {
 	} 
 	
 	public void takeProgressStep(int index) throws IOException {
-		server.sendToArdurino((index == 0) ? "-3" : "-4");
+		server.sendToArdurino(UDPServer.ENGINE_INSTRUCTION[index]);
 		for(int i = 0; i < players.length; i++) {
 			if(players[i].amountLightsOn() > 1) {
 				server.sendToArdurino(setupFullScreen() + "");
@@ -166,7 +166,7 @@ public abstract class Game implements Runnable {
 		if(!gameOver) {
 			HighscoreEntry h = new HighscoreEntry(players[winningPlayer].getName(), result + "");
 			highscoreList.tryAdd(h);
-			System.out.println(highscoreList.toString());
+			server.hasStartedGame = false;
 		}
 		gameOver = true;
 	}

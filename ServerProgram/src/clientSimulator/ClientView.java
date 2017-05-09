@@ -5,9 +5,12 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.IOException;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -16,8 +19,10 @@ public class ClientView extends JPanel {
 	
 	private JButton[] colorButtons = new JButton[3];
 	private JButton startButton = new JButton();
+	private JButton joinButton = new JButton("JOIN");
 	
 	private Color[] colors = new Color[]{Color.GREEN, Color.YELLOW, Color.RED};
+	private String[] gameNames = new String[]{" ", "Puzzle Game", "Traffic Game", "Duel Game"};
 	
 	private JLabel feedback = new JLabel();
 	
@@ -26,10 +31,16 @@ public class ClientView extends JPanel {
 	
 	private JLabel idText = new JLabel();
 	
+	private JComboBox<String> games = new JComboBox<String>();
+	
 	public ClientView(ClientController controller, int id) {
+		for(int i = 0; i < gameNames.length; i++) {
+			games.addItem(gameNames[i]);
+		}
+		
 		this.controller = controller;
 		controller.setView(this);
-		setLayout(new GridLayout(5, 0));
+		setLayout(new GridLayout(7, 0));
 		
 		ButtonListener listener = new ButtonListener();
 		
@@ -50,6 +61,11 @@ public class ClientView extends JPanel {
 		startButtonPanel.add(startButton);
 		startButtonPanel.add(new JLabel());
 		
+		joinButton.addActionListener(listener);
+		
+		ItemChangeListener changeListener = new ItemChangeListener();
+		games.addItemListener(changeListener);
+		
 		feedback.setPreferredSize(new Dimension(120, 32));
 		idText.setText("Player: " + controller.getId());
 		add(feedback);
@@ -57,10 +73,26 @@ public class ClientView extends JPanel {
 		add(new JLabel());
 		add(startButtonPanel);
 		add(idText);
+		add(games);
+		add(joinButton);
 	}
 	
 	public void setFeedbackText(String text) {
 		this.feedback.setText(text);
+	}
+	
+	class ItemChangeListener implements ItemListener {
+	    public void itemStateChanged(ItemEvent event) {	    	
+	       if (event.getStateChange() == ItemEvent.SELECTED) {
+	    	   if(event.getSource() == games) {
+	    		   try {
+					controller.send((String) games.getSelectedItem() + ";" + controller.getId());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+	    	   }
+	       }
+	    }
 	}
 	
 	public class ButtonListener implements ActionListener {
@@ -82,6 +114,15 @@ public class ClientView extends JPanel {
 						e1.printStackTrace();
 					}
 					idText.setText("Player: " + controller.getId());
+				}
+				
+				if(e.getSource() == joinButton) {
+					try {
+						controller.send("join?;" + controller.getId());
+						controller.send("start");
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
 				}
 			}
 		}

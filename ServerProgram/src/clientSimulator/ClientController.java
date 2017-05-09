@@ -63,13 +63,17 @@ public class ClientController implements Runnable {
 
 	@Override
 	public void run() {
-		byte[] receiveData = new byte[1024];
+		byte[] receiveData = new byte[32];
 		DatagramPacket packet = new DatagramPacket(receiveData, receiveData.length);
 		try {
 			while(true) {	
 				serverSocketListen.receive(packet);
-				view.setFeedbackText(UDPServer.putTogether(packet.getData()/*, "XXXX MOVES! XXXX".length()*/));
-				receiveData = new byte[1024];
+				if(UDPServer.putTogether(packet.getData()).equals("-1")) {
+					send("Ready?");
+				} else {
+					view.setFeedbackText(UDPServer.putTogether(packet.getData()/*, "XXXX MOVES! XXXX".length()*/));
+				}
+				receiveData = new byte[32];
 				packet = new DatagramPacket(receiveData, receiveData.length);
 			} } catch (IOException e) {
 			e.printStackTrace();
