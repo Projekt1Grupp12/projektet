@@ -7,7 +7,7 @@
     <string name="write_an_ip">Login</string>
     <string name="write_hint">IP-address</string>
     <string name="send">SEND</string>
-    <string name="textview_game">move</string>
+    <string name="textview_game"> </string>
     <string name="write_your_name">User name</string>
     <string name="textviewname">TextView</string>
     <string name="textviewID">TextView</string>
@@ -21,4 +21,5 @@
     <string name="traffic_game">Traffic Game</string>
     <string name="duel">Duel</string>
     <string name="duel_game">Duel Game</string>
+    <string name="give_up">GIVE UP</string>
 </resources>

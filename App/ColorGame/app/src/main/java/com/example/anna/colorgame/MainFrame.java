@@ -184,24 +184,24 @@ public class MainFrame extends AppCompatActivity {
         Log.d(TAG, "validateIP " + str);
         String[] parts = str.split("\\.");
         if (str == null || str.isEmpty() || parts.length != 4 || str.endsWith(".")) {
-            return correctIPInput;
+            return false;
         } else {
             for (String s : parts) {
                 int digit = Integer.parseInt(s);
                 if ((digit < 0) || (digit > 255)) {
-                    return correctIPInput;
+                    return false;
                 }
             }
         }
-        return correctIPInput;
+        return true;
     }
 
     private boolean validateName(String str){
         Log.d(TAG, "validateName " + str);
         if(str.length()>20 || str.length()<1 || str.isEmpty() ){
-            return correctNameInput;
+            return false;
         }
-        return correctNameInput;
+        return true;
     }
 
     /*
