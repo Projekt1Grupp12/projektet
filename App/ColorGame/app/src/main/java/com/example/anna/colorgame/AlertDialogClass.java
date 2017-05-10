@@ -18,13 +18,17 @@ public class AlertDialogClass{
     String TAG = "DialogClassDebug";
     AlertDialog builder = null;
     private String answer = null;
-    private boolean isDimissed = false;
     private Player player = null;
     private Context context;
 
-    private Class intentNewGame = MainFrame.class;
-    private Class intentPlayAgain= ChooseGame.class;
+    private Class MainFrame = MainFrame.class;
+    private Class ChooseGame = ChooseGame.class;
+    private Class MainMenu = MainMenu.class;
 
+    /**
+     * Constructor
+     * @param context
+     */
     public AlertDialogClass(Context context){
         Log.d(TAG,"AlertDialog Constructor");
         this.context = context;
@@ -98,14 +102,14 @@ public class AlertDialogClass{
             if(player == null)
                 Log.d(TAG, "player == null");
             else if (answer.contains("YES")) {
-                sendMessageToNextActivity(intentPlayAgain, player);
+                if(player.getUserID().contains("0"))
+                    sendMessageToNextActivity(ChooseGame, player);
+                else
+                    sendMessageToNextActivity(MainMenu, player);
             } else if (answer.contains("NO")) {
-                sendMessageToNextActivity(intentNewGame, player);
+                sendMessageToNextActivity(MainFrame, player);
             } else
                 Log.d(TAG, "else, answer: " + answer);
-
-            setIsDismissed(true);
-            builder.dismiss();
         }
     };
 
@@ -113,11 +117,6 @@ public class AlertDialogClass{
         this.answer = answer;
     }
     public String getAnswer(){ return this.answer; }
-
-    private void setIsDismissed(boolean isDimissed){
-        this.isDimissed = isDimissed;
-    }
-    public boolean isDismissed(){ return this.isDimissed; }
 
     public void setPlayer(Player player){
         this.player = new Player(player.getName(), player.getUserID(), player.getChoosenIP());
@@ -129,6 +128,7 @@ public class AlertDialogClass{
     public void sendMessageToNextActivity(Class startClass, Player player) {
         Log.d(TAG, "Creating new intent and sending data");
         Intent intent = new Intent(context, startClass);
+        intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("player", player);
         Log.d(TAG, "Starting new Activity");
         context.startActivity(intent);

@@ -16,6 +16,8 @@ public class MainMenu extends AppCompatActivity {
     private static final String TAG = "debug";
     private Player player;
     private Button chooseGameBtn;
+    private Class startThisActivity = null;
+
     private AsyncResponse delegate = new AsyncResponse() {
         /*
         Method that has result from AsyncTask as parameter.
@@ -25,7 +27,25 @@ public class MainMenu extends AppCompatActivity {
         @Override
         public void postResult(String result) {
             Log.d(TAG, "RESULTAT FRÅN SERVER " + result);
-               chooseGameBtn.setEnabled(true);
+            if(result.contains("Game")) {
+                chooseGameBtn.setEnabled(true);
+                if (result.contains(("Puzzle Game")))
+                    startThisActivity = PuzzleGame.class;
+                else if (result.contains(("Traffic Game")))
+                    startThisActivity = TrafficGame.class;
+                else if (result.contains(("Duel Game")))
+                    startThisActivity = DuelGame.class;
+            }else if(result.contains("timeout")){
+                chooseGameBtn.setEnabled(false);
+                AlertDialogClass alertDialog = new AlertDialogClass(MainMenu.this);
+                alertDialog.setTitle("No game available");
+                alertDialog.setMessage("The available game does not exist anymore. Please wait for a new player to choose game.");
+                alertDialog.ButtonOK();
+            } else if (result.contains("start")) {
+                //do nothing
+            } else {
+                startAsyncTask("join?;1");
+            }
         }
     };
 
@@ -33,7 +53,7 @@ public class MainMenu extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_menu);
-        Log.i(TAG, "onCreate()");
+        Log.i(TAG, "onCreate(). MainMenu");
         //Get the intent that started this activity and extract the string
         Intent intent = getIntent();
         player = (Player)intent.getSerializableExtra("player");
@@ -45,7 +65,7 @@ public class MainMenu extends AppCompatActivity {
         }else if(player.getUserID().equals("1")){
             chooseGameBtn.setText("Join Game");
             chooseGameBtn.setEnabled(false);
-            startAsyncTask("join");
+            startAsyncTask("join?;1");
         }
     }
     /*
@@ -53,16 +73,17 @@ public class MainMenu extends AppCompatActivity {
        It starts next activity and sends data to it using Intent class.
        */
     public void chooseGame(View view){
-        Log.d(TAG, "Button Choose Game is clicked");
+        Log.d(TAG, "Button Choose Game or Join Game is clicked");
         Intent intent = null;
         //There is two different ways to go depending on userID
         if (player.getUserID().equals("0")) {
-            Log.d(TAG, "Inside if satsen");
+            Log.d(TAG, "Inside if-satsen");
             intent = new Intent(this, ChooseGame.class);
         } else if (player.getUserID().equals("1")) {
-            intent = new Intent(this, PuzzleGame.class);
+            startAsyncTask("ready;1");
+            intent = new Intent(this, startThisActivity);
         }
-        Log.d(TAG, "Outside if satsen");
+        Log.d(TAG, "Outside if-satsen");
         intent.putExtra("player", player);
         startActivity(intent);
     }
