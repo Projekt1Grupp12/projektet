@@ -2,7 +2,7 @@ package com.example.anna.colorgame;
 
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
-import android.os.AsyncTask;
+
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -69,14 +69,16 @@ public class Game extends AppCompatActivity implements View.OnClickListener{
 
     public void setPlayer(Player player){
         this.player = player;
+        String toShow= "IP: " + player.getChoosenIP() + " Name: " + player.getName() + " UserID: " + player.getUserID();
+        //Show information in TextView
+        TextView textViewIP = (TextView) findViewById(R.id.textViewIP);
+        textViewIP.setText(toShow);
     }
 
-    public void setMusic(MediaPlayer mpGood, MediaPlayer mpBad){
-        this.mpGood = mpGood;
-        this.mpBad = mpBad;
+    public void activateMusic(){
+        this.mpGood = MediaPlayer.create(this, R.raw.goodmove);
+        this.mpBad = MediaPlayer.create(this, R.raw.badmove);
     }
-
-    public Game(){    }
 
     /*
     This method is called when one of the buttons is clicked in the GUI.
@@ -111,6 +113,18 @@ public class Game extends AppCompatActivity implements View.OnClickListener{
         System.gc();
         Log.d(TAG, "Execute task. " + color);
         runner.execute(data);
+    }
+
+    /**
+     *  Handler and new thread
+     */
+
+    public void startThread(){
+        Log.d(TAG, "PuzzleGame, onCreate method. Creating a thread");
+        RecieveDataThread recieveDataThread = new RecieveDataThread(this, player);
+        Thread thread = new Thread(recieveDataThread);
+        thread.start();
+
     }
 
     public AsyncResponse getDelgate(){
