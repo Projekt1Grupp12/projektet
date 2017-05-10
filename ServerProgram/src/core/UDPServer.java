@@ -23,6 +23,8 @@ public class UDPServer implements Runnable
 	public static final String[] ENGINE_INSTRUCTION = new String[]{"-3", "-4"};
 	public static final String JOIN_INSTRUCTION = "join?";
 	public static final String ACK_INSTRUCTION = "-1";
+	public static final String TIMEOUT_INSTRUCTION = "timeout";
+	public static final String TIMEOUT_ACK_INSTRUCTION = "ok";
 	
 	boolean recsive = true;
 	
@@ -57,6 +59,8 @@ public class UDPServer implements Runnable
 	public boolean playWithTwo = false;
 	private boolean hasSetup; 
 	
+	public boolean reset;
+	
 	public UDPServer(int port) {
 		this.port = port;
 		
@@ -77,6 +81,35 @@ public class UDPServer implements Runnable
 		hasSetup = true;
 	}
 	
+	public String[] getIpsReset() {
+		String[] ips = new String[2];
+		
+		try {
+			serverSocket.receive(packet);
+			ips[0] = packet.getAddress().getHostName();
+			collectedPlayerNames[0] = putTogether(packet.getData());
+			while(putTogether(packet.getData(), 2).equals(START_GAME_INSTRUCTION)) {
+				serverSocket.receive(packet);
+				ips[0] = packet.getAddress().getHostName();
+			}
+			send("0", ips[0]);
+			System.out.println(ips[0] + " | ip 0");
+			serverSocket.receive(packet);
+			ips[1] = packet.getAddress().getHostName();
+			collectedPlayerNames[1] = putTogether(packet.getData());
+			while(ips[0].equals(ips[1]) && playWithTwo || putTogether(packet.getData(), 2).equals(START_GAME_INSTRUCTION)) {
+				serverSocket.receive(packet);
+				ips[1] = packet.getAddress().getHostName();
+			}
+			this.send("1", ips[1]);
+			System.out.println(ips[1] + " | ip 1");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return ips;
+	}
+	
 	public String[] getIps() {
 		String[] ips = new String[2];
 		byte[] receiveData = new byte[RECIVE_BUFFER_SIZE];
@@ -86,7 +119,10 @@ public class UDPServer implements Runnable
 			serverSocket = new DatagramSocket(4444);
 
 			serverSocket.receive(packet);
+			inputHistory = putTogether(packet.getData()) + "  : " + (inputHistoryIndex++) + " : " + packet.getAddress().getHostName() + "\n" + inputHistory;
 			ips[0] = packet.getAddress().getHostName();
+			collectedPlayerNames[0] = putTogether(packet.getData());
+			System.out.println(collectedPlayerNames[0]);
 			while(putTogether(packet.getData(), 2).equals(START_GAME_INSTRUCTION)) {
 				serverSocket.receive(packet);
 				ips[0] = packet.getAddress().getHostName();
@@ -94,7 +130,10 @@ public class UDPServer implements Runnable
 			send("0", ips[0]);
 			System.out.println(ips[0] + " | ip 0");
 			serverSocket.receive(packet);
+			inputHistory = putTogether(packet.getData()) + "  : " + (inputHistoryIndex++) + " : " + packet.getAddress().getHostName() + "\n" + inputHistory;
 			ips[1] = packet.getAddress().getHostName();
+			collectedPlayerNames[1] = putTogether(packet.getData());
+			System.out.println(collectedPlayerNames[1]);
 			while(ips[0].equals(ips[1]) && playWithTwo || putTogether(packet.getData(), 2).equals(START_GAME_INSTRUCTION)) {
 				serverSocket.receive(packet);
 				ips[1] = packet.getAddress().getHostName();
@@ -107,6 +146,9 @@ public class UDPServer implements Runnable
 			e.printStackTrace();
 		}
 		
+		for(int i = 0; i < game.getPlayers().length; i++)
+			getPlayers()[i].setName(collectedPlayerNames[i]);
+			
 		return ips;
 	}
 	
@@ -149,13 +191,21 @@ public class UDPServer implements Runnable
 	
 	public void recive() throws IOException {
 		serverSocket.receive(packet);
+			
 		for(int i = 0; i < 2; i++) {
 			if(!hasStartedGame) { 
 				sendToPhone(ACK_INSTRUCTION, 1);
 				//sendToClientSimulator("-1", i);
 			}
 		}
+	
 		inputHistory = putTogether(packet.getData()) + "  : " + (inputHistoryIndex++) + " : " + packet.getAddress().getHostName() + "\n" + inputHistory;
+	}
+	
+	public void resetSession() {
+		phoneIps = getIpsReset();
+		
+		playerPickedGame = "";
 	}
 	
 	public void resetGame(Game g) {
@@ -178,23 +228,6 @@ public class UDPServer implements Runnable
 	}
 
 	public void run() {
-		
-		Runtime.getRuntime().addShutdownHook(new Thread()
-		{
-		    @Override
-		    public void run()
-		    {
-		        for(int i = 0; i < 2; i++) {
-		        	try {
-						sendToPhone(EXIT_INSTRUCTION , i);
-						sendToClientSimulator(EXIT_INSTRUCTION, i);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-		        }
-		    }
-		});
-		
 		if(!hasSetup) {
 			setup();
 		}
@@ -207,6 +240,11 @@ public class UDPServer implements Runnable
 		
 		try {
 			while(true) {
+				if(reset) {
+					resetSession();
+					reset = false;
+				}
+				
 				try {
 					TimeUnit.MILLISECONDS.sleep(2);
 				} catch (InterruptedException e) {
@@ -240,9 +278,9 @@ public class UDPServer implements Runnable
 							}
 						}
 						
-						if(input.split(";")[0].equals("timeout")) {
-							sendToPhone("ok", Integer.parseInt(input.split(";")[1]));
-							sendToClientSimulator("ok", Integer.parseInt(input.split(";")[1]));
+						if(input.split(";")[0].equals(TIMEOUT_INSTRUCTION)) {
+							sendToPhone(TIMEOUT_ACK_INSTRUCTION, Integer.parseInt(input.split(";")[1]));
+							sendToClientSimulator(TIMEOUT_ACK_INSTRUCTION, Integer.parseInt(input.split(";")[1]));
 						}
 					}
 					

@@ -65,6 +65,7 @@ public class ServerView extends JPanel {
 	private JButton sendButton = new JButton("SEND");
 	private JButton createClient = new JButton("CREATE CLIENT");
 	private JButton resetGame = new JButton("RESET");
+	private JButton resetSession = new JButton("RESET SESSION");
 	
 	private JComboBox games = new JComboBox();
 	
@@ -129,6 +130,8 @@ public class ServerView extends JPanel {
 		this.messagePanel.add(this.message);
 		createClient.addActionListener(b);
 		this.messagePanel.add(resetGame);
+		messagePanel.add(resetSession);
+		resetSession.addActionListener(b);
 		resetGame.addActionListener(b);
 		
 		messagePanel.add(createClient);
@@ -199,6 +202,10 @@ public class ServerView extends JPanel {
 			
 			if(e.getSource() == resetGame) {
 				controller.getServer().resetGame(new PuzzelGame(new Player[]{new Player(0), new Player(1)}, controller.getServer()));
+			}
+			
+			if(e.getSource() == resetSession) {
+				controller.getServer().reset = true;
 			}
 		}
 	}
