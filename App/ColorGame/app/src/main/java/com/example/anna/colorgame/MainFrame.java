@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputFilter;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,11 +22,14 @@ It has two EditText and a Button.
  */
 public class MainFrame extends AppCompatActivity {
     private static final String TAG = "debug";
-    private Player player = null;
+    private Player player = new Player(null, null, null);
     private String[] ipAdresses = {"Choose IP from the list.", "10.2.19.242", "10.2.19.28", "10.2.28.40"};
+    private AlertDialogClass alertDialog;
     private Button loginButton = null;
     private EditText editIPText = null;
     private EditText editNameText = null;
+    private boolean correctIPInput = false;
+    private boolean correctNameInput = false;
 
     /*
     Method that has result from AsyncTask as parameter.
@@ -37,10 +41,7 @@ public class MainFrame extends AppCompatActivity {
         public void postResult(String result) {
             Log.d(TAG, "RESULTAT FRÅN SERVER " + result);
             if (result.contains("SocketTimeoutException")) {
-                AlertDialogClass alertDialog = new AlertDialogClass(MainFrame.this);
-                alertDialog.setTitle("Connection failed");
-                alertDialog.setMessage("Connection to game server failed");
-                alertDialog.ButtonOK();
+                showAlertDialog("Connection failed", "Connection to game server failed");
                 loginButton.setEnabled(true);
             } else {
                 player.setUserID(result);
@@ -53,20 +54,23 @@ public class MainFrame extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_frame);
+        alertDialog = new AlertDialogClass(MainFrame.this);
         this.loginButton = (Button) findViewById(R.id.loginButton);
-        //EditText code here
-        editNameText = (EditText) findViewById(R.id.editNameText);
-        editIPText = (EditText) findViewById(R.id.editIPText);
+        this.editNameText = (EditText) findViewById(R.id.editNameText);
+        this.editIPText = (EditText) findViewById(R.id.editIPText);
+        editNameText.setFilters(new InputFilter[] {
+                new InputFilter.LengthFilter(20) // 20 is max length of edittext
+        });
         //This listener is called when focus state of editIPText is changed.
         editIPText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 editIPText.setError(null);
-                boolean temp = validateIP(editIPText.getText().toString());
+                correctIPInput = validateIP(editIPText.getText().toString());
                 if (!hasFocus) {
                     Log.d(TAG, "When editIPText loses focus, validate ip");
-                    if (!temp) {
-                        editIPText.setError("Ip address is not valid");
+                    if (!correctIPInput) {
+                        editIPText.setError("Input is incorrect");
                     }
                 }
             }
@@ -91,31 +95,11 @@ public class MainFrame extends AppCompatActivity {
 
     @Override
     protected void onRestart() {
-        Log.d(TAG, "MF onRestart()");
+        Log.d(TAG, "onRestart()");
         super.onRestart();
-        editIPText = (EditText) findViewById(R.id.editIPText);
-        editNameText = (EditText) findViewById(R.id.editNameText);
-        editNameText.setText(null);//chnged "" to null 05-09
+        editNameText.setText(null);//changed "" to null 05-09
         editIPText.setText(null);
         loginButton.setEnabled(true);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume()");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d(TAG, "onStop()");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d(TAG, "onDestroy()");
     }
 
     /*
@@ -123,20 +107,26 @@ public class MainFrame extends AppCompatActivity {
     upadateIPName method is called to store input from user as data in variables.
     Next we send data to server to get back userID.
      */
-    private void login(View view) {//Button
-        updateIPName();
-        loginButton.setEnabled(false);
-        ConnectToServer runner = new ConnectToServer(player.getChoosenIP(), delegate);
-        Log.d(TAG, "Task created");
-        String messageToServer = "" + player.getName();
-        Log.d(TAG, "Execute task");
-        runner.execute(messageToServer);
+    public void login(View view) {//Button
+        Log.d(TAG, "Login button ");
+        loginButton.requestFocus();
+        correctNameInput = validateName(editNameText.getText().toString());
+        setPlayerIPName();
+        if(correctIPInput && correctNameInput){
+            loginButton.setEnabled(false);
+            ConnectToServer runner = new ConnectToServer(player.getChoosenIP(), delegate);
+            String messageToServer = "" + player.getName();
+            runner.execute(messageToServer);
+        }else{
+            showAlertDialog("Error", "Input is incorrect");
+        }
     }
 
     /*
     This method updates ip and name variables with user input.
      */
-    private void updateIPName() {
+    private void setPlayerIPName() {
+        Log.d(TAG, "Set Players IP and Name");
         player.setChoosenIP(editIPText.getText().toString());
         player.setName(editNameText.getText().toString());
     }
@@ -145,7 +135,6 @@ public class MainFrame extends AppCompatActivity {
     This method sends data(IP, Name, userID) to next activity using Intent class.
      */
     private void startNextActivity() {
-        Log.d(TAG, "Creating new intent and sending data");
         Intent intent = new Intent(this, MainMenu.class);
         intent.putExtra("player", player);
         Log.d(TAG, "Starting new Activity");
@@ -195,16 +184,24 @@ public class MainFrame extends AppCompatActivity {
         Log.d(TAG, "validateIP " + str);
         String[] parts = str.split("\\.");
         if (str == null || str.isEmpty() || parts.length != 4 || str.endsWith(".")) {
-            return false;
+            return correctIPInput;
         } else {
             for (String s : parts) {
                 int digit = Integer.parseInt(s);
                 if ((digit < 0) || (digit > 255)) {
-                    return false;
+                    return correctIPInput;
                 }
             }
         }
-        return true;
+        return correctIPInput;
+    }
+
+    private boolean validateName(String str){
+        Log.d(TAG, "validateName " + str);
+        if(str.length()>20 || str.length()<1 || str.isEmpty() ){
+            return correctNameInput;
+        }
+        return correctNameInput;
     }
 
     /*
@@ -231,6 +228,12 @@ public class MainFrame extends AppCompatActivity {
                 dynamicSpinner.setSelection(0);
                 break;
         }
+    }
+
+    private void showAlertDialog(String title, String message){
+        alertDialog.setTitle(title);
+        alertDialog.setMessage(message);
+        alertDialog.ButtonOK();
     }
 }
 

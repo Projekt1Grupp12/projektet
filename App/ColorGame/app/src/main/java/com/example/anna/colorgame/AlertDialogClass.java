@@ -128,6 +128,7 @@ public class AlertDialogClass{
     public void sendMessageToNextActivity(Class startClass, Player player) {
         Log.d(TAG, "Creating new intent and sending data");
         Intent intent = new Intent(context, startClass);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("player", player);
         Log.d(TAG, "Starting new Activity");
         context.startActivity(intent);
