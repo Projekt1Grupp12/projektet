@@ -33,7 +33,7 @@ public class ClientController implements Runnable {
 			if(!sentName) {
 				int length = BetterRandom.random(3, 8);
 				for(int i = 0; i < length; i++) {
-					name += (char)BetterRandom.random(0, 255);
+					name += (char)BetterRandom.random(1, 255);
 				}
 				send(name);
 				sentName = true;
