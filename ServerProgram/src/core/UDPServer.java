@@ -119,6 +119,7 @@ public class UDPServer implements Runnable
 			serverSocket = new DatagramSocket(4444);
 
 			serverSocket.receive(packet);
+			inputHistory = putTogether(packet.getData()) + "  : " + (inputHistoryIndex++) + " : " + packet.getAddress().getHostName() + "\n" + inputHistory;
 			ips[0] = packet.getAddress().getHostName();
 			collectedPlayerNames[0] = putTogether(packet.getData());
 			System.out.println(collectedPlayerNames[0]);
@@ -129,6 +130,7 @@ public class UDPServer implements Runnable
 			send("0", ips[0]);
 			System.out.println(ips[0] + " | ip 0");
 			serverSocket.receive(packet);
+			inputHistory = putTogether(packet.getData()) + "  : " + (inputHistoryIndex++) + " : " + packet.getAddress().getHostName() + "\n" + inputHistory;
 			ips[1] = packet.getAddress().getHostName();
 			collectedPlayerNames[1] = putTogether(packet.getData());
 			System.out.println(collectedPlayerNames[1]);
@@ -221,8 +223,6 @@ public class UDPServer implements Runnable
 		if(game.realTime) {
 			new Thread(game).start();
 		}
-		
-		playerPickedGame = "";
 		
 		hasStartedGame = false;
 	}
