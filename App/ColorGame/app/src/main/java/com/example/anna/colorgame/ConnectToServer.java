@@ -90,7 +90,6 @@ public class ConnectToServer extends AsyncTask<String, String, String> {
         }else if(constructor==0){
             Log.d(TAG, "result" + result);
         }
-        Log.d(TAG, "constuctor" + constructor);
     }
     /*
     This method is used to sort data received from server to sort away all of the "0".

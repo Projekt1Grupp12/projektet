@@ -26,6 +26,7 @@ public class Game extends AppCompatActivity implements View.OnClickListener{
     private MediaPlayer mpGood;
     private MediaPlayer mpBad;
     private RecieveDataThread recieveDataThread;
+    private Thread thread;
 
     private AsyncResponse delegate = new AsyncResponse() {
         /*
@@ -122,11 +123,16 @@ public class Game extends AppCompatActivity implements View.OnClickListener{
 
     public void startThread(){
         recieveDataThread = new RecieveDataThread(this, player);
-        Thread thread = new Thread(recieveDataThread);
+        thread = new Thread(recieveDataThread);
         thread.start();
     }
-    public void closeThread(){
-        recieveDataThread.closeConnection();
+    public void closeReceiveThread(){//this method closes socket, ends run method and stops the thread
+
+        recieveDataThread.closeSocket();
+        recieveDataThread.setIsRunning(false);
+        thread.interrupt();
+
+
     }
 
     public AsyncResponse getDelgate(){

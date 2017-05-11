@@ -53,6 +53,7 @@ public class GameOver extends AppCompatActivity {
      */
     public void displayMessage(){
         alertDialog = new AlertDialogClass(context);
+        alertDialog.setPlayer(player);
         alertDialog.setTitle("");
         alertDialog.setMessage(message);
         alertDialog.ButtonOK();
