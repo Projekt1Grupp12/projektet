@@ -57,6 +57,7 @@ public class ConnectToServer extends AsyncTask<String, String, String> {
             else {
                 clientSocket.setSoTimeout(3000);
             }
+            clientSocket.setSoTimeout(10000);
             Log.d(TAG, "Asynctask. Waiting for response");
             clientSocket.receive(receivePacket);
 
