@@ -8,7 +8,7 @@ import android.util.Log;
 import android.view.View;
 
 public class ChooseGame extends AppCompatActivity {
-    private static final String TAG = "debug";
+    private static final String TAG = "debugChoose";
     private Player player;
     private ProgressDialog pd;
     private Class startThisClass = null;

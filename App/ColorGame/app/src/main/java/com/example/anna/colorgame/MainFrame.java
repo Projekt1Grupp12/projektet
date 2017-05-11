@@ -21,7 +21,7 @@ Class is an activity that shows a Login window of application.
 It has two EditText and a Button.
  */
 public class MainFrame extends AppCompatActivity {
-    private static final String TAG = "debug";
+    private static final String TAG = "debugFrame";
     private Player player = new Player(null, null, null);
     private AlertDialogClass alertDialog;
     private String[] ipAdresses = {"Choose IP from the list.", "10.2.19.242", "10.2.19.28", "10.2.28.40"};
