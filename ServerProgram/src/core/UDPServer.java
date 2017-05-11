@@ -26,6 +26,7 @@ public class UDPServer implements Runnable
 	public static final String TIMEOUT_INSTRUCTION = "timeout";
 	public static final String TIMEOUT_ACK_INSTRUCTION = "ok";
 	public static final String LOG_OUT_INSCTRUCTION = "logout";
+	public static final String LOG_OUT_ACK_INSTRUCTION = "logout";
 	
 	boolean recsive = true;
 	
@@ -153,9 +154,9 @@ public class UDPServer implements Runnable
 		return ips;
 	}
 	
-	public void send(String message, String ip) throws IOException {
+	public void send(String message, String ip, int port) throws IOException {
 		InetAddress ipAddress = InetAddress.getByName(ip);
-		DatagramPacket sendPacket = new DatagramPacket(message.getBytes(), message.getBytes().length, ipAddress, port+(message.equals("WIN!") || message.equals("LOSE!") || message.equals(EXIT_INSTRUCTION) ? 1 : 0));
+		DatagramPacket sendPacket = new DatagramPacket(message.getBytes(), message.getBytes().length, ipAddress, port/*+(message.equals("WIN!") || message.equals("LOSE!") || message.equals(EXIT_INSTRUCTION) ? 1 : 0*/);
 		serverSocket.send(sendPacket);
 
 		sentHistory = message + "  : " + (sentHistoryIndex++) + " : " + ip + "\n" + sentHistory;
@@ -165,6 +166,10 @@ public class UDPServer implements Runnable
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void send(String message, String ip) throws IOException {
+		send(message, ip, 4444 +(message.equals("WIN!") || message.equals("LOSE!") || message.equals(EXIT_INSTRUCTION) ? 1 : 0));
 	}
 	
 	public void sendToClientSimulator(String message, int id) throws IOException {
@@ -195,7 +200,7 @@ public class UDPServer implements Runnable
 			
 		for(int i = 0; i < 2; i++) {
 			if(!hasStartedGame) { 
-				sendToPhone(ACK_INSTRUCTION, 1);
+				if(!playerPickedGame.equals("")) sendToPhone(ACK_INSTRUCTION, 1);
 				//sendToClientSimulator("-1", i);
 			}
 		}
@@ -296,9 +301,9 @@ public class UDPServer implements Runnable
 				}
 				
 				if(input.split(";")[0].equals(LOG_OUT_INSCTRUCTION)) {
-					sendToPhone(TIMEOUT_ACK_INSTRUCTION, Integer.parseInt(input.split(";")[1]));
+					sendToPhone(LOG_OUT_ACK_INSTRUCTION, Integer.parseInt(input.split(";")[1]));
+					send(LOG_OUT_ACK_INSTRUCTION, phoneIps[Integer.parseInt(input.split(";")[1]) == 0 ? 1 : 0], 4445);
 					hasStartedGame = false;
-					System.out.println("LOGGED OUT");
 					resetSession();
 				}
 
