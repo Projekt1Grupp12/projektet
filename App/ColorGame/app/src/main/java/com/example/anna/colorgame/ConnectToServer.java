@@ -18,10 +18,18 @@ public class ConnectToServer extends AsyncTask<String, String, String> {
     private static final String TAG = "ServerConnectDebug";
     private String ip = null;
     private AsyncResponse delegate = null;
+    private Player player;
+    private int constructor = 0;
 
     public ConnectToServer(String ip, AsyncResponse delegate){
+        this.constructor=1;
         this.ip=ip;
         this.delegate = delegate;
+    }
+    public ConnectToServer(Player player){//added constructor with one parameter for cases where we dont need delegate to update UI
+        this.constructor=2;
+        this.player=player;
+        this.ip=player.getChoosenIP();
     }
     /*
     This method is used to estabilish connection with server.
@@ -75,7 +83,14 @@ public class ConnectToServer extends AsyncTask<String, String, String> {
      */
     @Override
     protected void onPostExecute(String result){
-        delegate.postResult(result);
+        if(constructor==1){
+            delegate.postResult(result);
+        }else if(constructor==2){
+            Log.d(TAG, "result" + result);
+        }else if(constructor==0){
+            Log.d(TAG, "result" + result);
+        }
+        Log.d(TAG, "constuctor" + constructor);
     }
     /*
     This method is used to sort data received from server to sort away all of the "0".

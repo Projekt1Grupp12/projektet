@@ -26,15 +26,19 @@ public class GameOver extends AppCompatActivity {
         this.player = new Player(player.getName(), player.getUserID(), player.getChoosenIP());
         setResultMessage(result);
 
-        playAgainMessage();
+
         displayMessage();
     }
 
     private void setResultMessage(String result){
         if (result.contains("WIN")) {
             setMessageWinner();
+            playAgainMessage();
         } else if (result.contains("LOS")) {
             setMessageLoser();
+            playAgainMessage();
+        }else if(result.contains("Give Up")){
+            setMessageGiveUp();
         }
     }
 
@@ -42,6 +46,7 @@ public class GameOver extends AppCompatActivity {
         this.message = "You are the winner!";
     }
     private void setMessageLoser() { this.message = "Epic fail!"; }
+    private void setMessageGiveUp(){ this.message = "Game is interrupted." +"\nProgress will be lost";}
 
     /**
      * Prepares the alertDialog to display if player has won or lost the game

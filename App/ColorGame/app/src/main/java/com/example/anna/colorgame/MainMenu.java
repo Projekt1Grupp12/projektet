@@ -29,9 +29,10 @@ public class MainMenu extends AppCompatActivity {
             Log.d(TAG, "RESULTAT FRÅN SERVER " + result);
             if(result.contains("Game")) {
                 chooseGameBtn.setEnabled(true);
-                if (result.contains(("Puzzle Game")))
+                if (result.contains(("Puzzle Game"))) {
+                    Log.d(TAG, "Start puzzlegame " + result);
                     startThisActivity = PuzzleGame.class;
-                else if (result.contains(("Traffic Game")))
+                }else if (result.contains(("Traffic Game")))
                     startThisActivity = TrafficGame.class;
                 else if (result.contains(("Duel Game")))
                     startThisActivity = DuelGame.class;
@@ -43,7 +44,7 @@ public class MainMenu extends AppCompatActivity {
                 alertDialog.ButtonOK();
             } else if (result.contains("start")) {
                 //do nothing
-            } else {
+            } else if(result.contains("-1")) {
                 startAsyncTask("join?;1");
             }
         }
