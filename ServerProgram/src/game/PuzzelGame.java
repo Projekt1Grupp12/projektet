@@ -8,8 +8,6 @@ import core.BetterRandom;
 import core.UDPServer;
 
 public class PuzzelGame extends Game {
-	private final int MAX_SCORE = 5;
-	
 	private int delay;
 	private int maxDelay;
 	private int levelCount;
@@ -23,6 +21,8 @@ public class PuzzelGame extends Game {
 	public PuzzelGame(Player[] players, UDPServer server) {
 		super(players, server);
 		maxDelay = 128*2;
+		
+		setMaxScore(3);
 	}
 
 	public void sendBadFeedback(Player player) throws IOException {
@@ -115,7 +115,7 @@ public class PuzzelGame extends Game {
 		}
 		
 		for(int i = 0; i < getPlayers().length; i++) {
-			if(getPlayers()[i].getScore() >= MAX_SCORE-1) {
+			if(getPlayers()[i].getScore() >= getMaxScore()-1) {
 				sendToPhone("WIN!", i);
 				if(i == 0) sendToPhone("LOSE!", 1);
 				else sendToPhone("LOSE!", 0);

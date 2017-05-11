@@ -25,6 +25,7 @@ public class UDPServer implements Runnable
 	public static final String ACK_INSTRUCTION = "-1";
 	public static final String TIMEOUT_INSTRUCTION = "timeout";
 	public static final String TIMEOUT_ACK_INSTRUCTION = "ok";
+	public static final String LOG_OUT_INSCTRUCTION = "logout";
 	
 	boolean recsive = true;
 	
@@ -292,6 +293,11 @@ public class UDPServer implements Runnable
 				}
 				else {
 					if(!game.realTime) game.update(input);
+					if(input.split(";")[0].equals(LOG_OUT_INSCTRUCTION)) {
+						sendToPhone(TIMEOUT_ACK_INSTRUCTION, Integer.parseInt(input.split(";")[1]));
+						hasStartedGame = false;
+						resetSession();
+					}
 				}
 
 				receiveData = new byte[RECIVE_BUFFER_SIZE];
