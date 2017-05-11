@@ -293,11 +293,13 @@ public class UDPServer implements Runnable
 				}
 				else {
 					if(!game.realTime) game.update(input);
-					if(input.split(";")[0].equals(LOG_OUT_INSCTRUCTION)) {
-						sendToPhone(TIMEOUT_ACK_INSTRUCTION, Integer.parseInt(input.split(";")[1]));
-						hasStartedGame = false;
-						resetSession();
-					}
+				}
+				
+				if(input.split(";")[0].equals(LOG_OUT_INSCTRUCTION)) {
+					sendToPhone(TIMEOUT_ACK_INSTRUCTION, Integer.parseInt(input.split(";")[1]));
+					hasStartedGame = false;
+					System.out.println("LOGGED OUT");
+					resetSession();
 				}
 
 				receiveData = new byte[RECIVE_BUFFER_SIZE];
