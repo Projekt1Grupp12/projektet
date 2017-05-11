@@ -8,7 +8,7 @@ import android.util.Log;
 import android.view.View;
 
 public class ChooseGame extends AppCompatActivity {
-    private static final String TAG = "debug";
+    private static final String TAG = "debugChoose";
     private Player player;
     private ProgressDialog pd;
     private Class startThisClass = null;
@@ -23,7 +23,7 @@ public class ChooseGame extends AppCompatActivity {
         public void postResult(String result) {
             Log.d(TAG, "RESULTAT FRÅN SERVER " + result);
 
-            if (result.contains("start")){
+            if (result.contains("ok")){
                 pd.dismiss();
                 startActivity(startThisClass);
             } else if(result.contains("SocketTimeoutException")){

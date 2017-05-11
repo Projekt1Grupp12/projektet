@@ -24,6 +24,7 @@
 
         <activity
             android:name=".MainMenu"
+            android:noHistory="true"
             android:parentActivityName=".MainFrame"
             android:screenOrientation="portrait">
             <intent-filter>
