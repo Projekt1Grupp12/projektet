@@ -20,12 +20,13 @@ public class GameOver extends AppCompatActivity {
     private Player player;
     private AlertDialogClass alertDialog = null;
     private Context context = null;
+    private String result = null;
 
     public GameOver(Context context, Player player, String result){
         this.context = context;
         this.player = new Player(player.getName(), player.getUserID(), player.getChoosenIP());
         setResultMessage(result);
-
+        this.result = result;
 
         displayMessage();
     }
@@ -52,7 +53,7 @@ public class GameOver extends AppCompatActivity {
      * Prepares the alertDialog to display if player has won or lost the game
      */
     public void displayMessage(){
-        alertDialog = new AlertDialogClass(context);
+        alertDialog = new AlertDialogClass(context, result);
         alertDialog.setPlayer(player);
         alertDialog.setTitle("");
         alertDialog.setMessage(message);
