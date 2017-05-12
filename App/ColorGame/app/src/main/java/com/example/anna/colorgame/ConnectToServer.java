@@ -18,10 +18,18 @@ public class ConnectToServer extends AsyncTask<String, String, String> {
     private static final String TAG = "ServerConnectDebug";
     private String ip = null;
     private AsyncResponse delegate = null;
+    private Player player;
+    private int constructor = 0;
 
     public ConnectToServer(String ip, AsyncResponse delegate){
+        this.constructor=1;
         this.ip=ip;
         this.delegate = delegate;
+    }
+    public ConnectToServer(Player player){//added constructor with one parameter for cases where we dont need delegate to update UI
+        this.constructor=2;
+        this.player=player;
+        this.ip=player.getChoosenIP();
     }
     /*
     This method is used to estabilish connection with server.
@@ -51,10 +59,17 @@ public class ConnectToServer extends AsyncTask<String, String, String> {
             DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
             Log.d(TAG, "clientSocket.setSoTimeout(3000)");
 
-
-            clientSocket.setSoTimeout(3000);
+            if(sentence.contains("ready?")) {
+                clientSocket.setSoTimeout(3000);
+            }
+            else {
+                clientSocket.setSoTimeout(3000);
+            }
+            clientSocket.setSoTimeout(10000);
             Log.d(TAG, "Asynctask. Waiting for response");
             clientSocket.receive(receivePacket);
+
+
             Log.d(TAG, "Asynctask. Reading DatagramPacket we got from server");
             messageFromServer = putChar(receiveData, receiveData.length);
         } catch (SocketTimeoutException e) {
@@ -75,7 +90,13 @@ public class ConnectToServer extends AsyncTask<String, String, String> {
      */
     @Override
     protected void onPostExecute(String result){
-        delegate.postResult(result);
+        if(constructor==1){
+            delegate.postResult(result);
+        }else if(constructor==2){
+            Log.d(TAG, "result" + result);
+        }else if(constructor==0){
+            Log.d(TAG, "result" + result);
+        }
     }
     /*
     This method is used to sort data received from server to sort away all of the "0".

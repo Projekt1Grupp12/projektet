@@ -1,136 +1,1 @@
-package com.example.anna.colorgame;
-
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-
-import static android.support.v7.app.AlertDialog.*;
-
-/**
- * Created by George on 2017-04-28.
- */
-
-public class AlertDialogClass{
-
-    String TAG = "DialogClassDebug";
-    AlertDialog builder = null;
-    private String answer = null;
-    private Player player = null;
-    private Context context;
-
-    private Class MainFrame = MainFrame.class;
-    private Class ChooseGame = ChooseGame.class;
-    private Class MainMenu = MainMenu.class;
-
-    /**
-     * Constructor
-     * @param context
-     */
-    public AlertDialogClass(Context context){
-        Log.d(TAG,"AlertDialog Constructor");
-        this.context = context;
-
-        AlertDialog  builder = new AlertDialog.Builder(context).create();
-        this.builder = builder;
-
-        builder.setCanceledOnTouchOutside(false);
-    }
-
-    public void setTitle(String title){
-        builder.setTitle(title);
-        Log.d(TAG,"setTitle()");
-    }
-
-    public void setMessage(String message){
-        Log.d(TAG,"setMssage()");
-
-        builder.setMessage(message);
-    }
-
-    public void ButtonContinue(){
-        Log.d(TAG,"ButtonContinue()");
-
-        builder.setButton(BUTTON_NEUTRAL, "Continue", onClickListener);
-        builder.setOnDismissListener(onDismissListener);
-        builder.show();
-    }
-
-    public void ButtonOK(){
-        Log.d(TAG,"ButtonOK()");
-        builder.setButton(BUTTON_NEUTRAL, "OK", onClickListener);
-        builder.setOnDismissListener(onDismissListener);
-        builder.show();
-    }
-
-    public void ButtonYesNo(){
-        Log.d(TAG,"ButtonYesNo");
-        builder.setButton(BUTTON_POSITIVE, "Yes", onClickListener);
-        builder.setButton(BUTTON_NEGATIVE, "No", onClickListener);
-        builder.setOnDismissListener(onDismissListener);
-        builder.show();;
-    }
-
-    public OnClickListener onClickListener = new OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            Log.d(TAG, "OnClickListener");
-            switch (which) {
-                case BUTTON_NEUTRAL:
-                    Log.d(TAG, "OK button pressed");
-                    break;
-                case BUTTON_POSITIVE:
-                    Log.d(TAG, "YES button pressed");
-                    setAnswer("YES");
-                    break;
-                case BUTTON_NEGATIVE:
-                    Log.d(TAG, "NO button pressed");
-                    setAnswer("NO");
-                    break;
-            }
-            builder.dismiss();
-        }
-    };
-
-    public OnDismissListener onDismissListener = new OnDismissListener() {
-        @Override
-        public void onDismiss(DialogInterface dialog) {
-            Log.d(TAG, "Dialog dismissed");
-
-            if(player == null)
-                Log.d(TAG, "player == null");
-            else if (answer.contains("YES")) {
-                if(player.getUserID().contains("0"))
-                    sendMessageToNextActivity(ChooseGame, player);
-                else
-                    sendMessageToNextActivity(MainMenu, player);
-            } else if (answer.contains("NO")) {
-                sendMessageToNextActivity(MainFrame, player);
-            } else
-                Log.d(TAG, "else, answer: " + answer);
-        }
-    };
-
-    private void setAnswer(String answer){
-        this.answer = answer;
-    }
-    public String getAnswer(){ return this.answer; }
-
-    public void setPlayer(Player player){
-        this.player = new Player(player.getName(), player.getUserID(), player.getChoosenIP());
-    }
-
-    /*
- This method sends data(IP, Name, userID) to next activity using Intent class.
-  */
-    public void sendMessageToNextActivity(Class startClass, Player player) {
-        Log.d(TAG, "Creating new intent and sending data");
-        Intent intent = new Intent(context, startClass);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("player", player);
-        Log.d(TAG, "Starting new Activity");
-        context.startActivity(intent);
-    }
-}
+package com.example.anna.colorgame;import android.content.Context;import android.content.DialogInterface;import android.content.Intent;import android.support.v7.app.AlertDialog;import android.support.v7.app.AppCompatActivity;import android.util.Log;import static android.support.v7.app.AlertDialog.*;/** * Created by George on 2017-04-28. */public class AlertDialogClass{    String TAG = "DialogClassDebug";    AlertDialog builder = null;    private String answer = null;    private String result = null;    private Player player = null;    private Context context;    private Class MainFrame = MainFrame.class;    private Class ChooseGame = ChooseGame.class;    private Class MainMenu = MainMenu.class;    public AlertDialogClass(Context context){        this(context, null);    }    /**     * Constructor     * @param context     */    public AlertDialogClass(Context context, String result){        Log.d(TAG,"AlertDialog Constructor");        this.context = context;        this.result = result;        AlertDialog  builder = new AlertDialog.Builder(context).create();        this.builder = builder;        builder.setCanceledOnTouchOutside(false);    }    public void setTitle(String title){        builder.setTitle(title);        Log.d(TAG,"setTitle()");    }    public void setMessage(String message){        Log.d(TAG,"setMssage()");        builder.setMessage(message);    }    public void ButtonContinue(){        Log.d(TAG,"ButtonContinue()");        builder.setButton(BUTTON_NEUTRAL, "Continue", onClickListener);        builder.setOnDismissListener(onDismissListener);        builder.show();    }    public void ButtonOK(){        Log.d(TAG,"ButtonOK()");        builder.setButton(BUTTON_NEUTRAL, "OK", onClickListener);        builder.setOnDismissListener(onDismissListener);        builder.show();    }    public void ButtonYesNo(){        Log.d(TAG,"ButtonYesNo");        builder.setButton(BUTTON_POSITIVE, "Yes", onClickListener);        builder.setButton(BUTTON_NEGATIVE, "No", onClickListener);        builder.setOnDismissListener(onDismissListener);        builder.show();;    }    public OnClickListener onClickListener = new OnClickListener() {        @Override        public void onClick(DialogInterface dialog, int which) {            Log.d(TAG, "OnClickListener");            switch (which) {                case BUTTON_NEUTRAL:                    Log.d(TAG, "OK button pressed");                    setAnswer("OK");                    break;                case BUTTON_POSITIVE:                    Log.d(TAG, "YES button pressed");                    setAnswer("YES");                    break;                case BUTTON_NEGATIVE:                    Log.d(TAG, "NO button pressed");                    setAnswer("NO");                    break;            }            builder.dismiss();        }    };    public OnDismissListener onDismissListener = new OnDismissListener() {        @Override        public void onDismiss(DialogInterface dialog) {            Log.d(TAG, "Dialog dismissed");            if(player == null){                Log.d(TAG, "player == null");            }            if(answer.contains("YES")) {                if(player.getUserID().contains("0")) {                    sendMessageToNextActivity(ChooseGame, player);                }else{                    sendMessageToNextActivity(MainMenu, player);                }            }else if(answer.contains("NO")) {                sendMessageToNextActivity(MainFrame, player);            } else if(answer.contains("OK")){                Log.d(TAG, "else, answer: " + answer);                if(context.getClass().getName().contains("PuzzleGame")){                    if(result.contains("Give")) {                        Log.d(TAG, "else, answer: " + context.getClass().getName());                        logoutMessageToServer(player);//sends "logout;id" to server using asynctask                        sendMessageToNextActivity(MainFrame, player);                    }                }            }        }    };    private void setAnswer(String answer){        this.answer = answer;    }    public String getAnswer(){ return this.answer; }    public void setPlayer(Player player){        this.player = new Player(player.getName(), player.getUserID(), player.getChoosenIP());    }    /* This method sends data(IP, Name, userID) to next activity using Intent class.  */    public void sendMessageToNextActivity(Class startClass, Player player) {        Log.d(TAG, "Creating new intent and sending data");        Intent intent = new Intent(context, startClass);        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);        intent.putExtra("player", player);        Log.d(TAG, "Starting new Activity");        context.startActivity(intent);    }    private void logoutMessageToServer(Player player){//this method is used to send "logout" message to server using asynctask        Log.d(TAG, "inside LogoutMessage ");        String message = "logout" + ";" + player.getUserID();        Log.d(TAG, "else, answer: " + message);        ConnectToServer connectToServer = new ConnectToServer(player);        Log.d(TAG, "connectToServer is created " + player.getName());        System.gc();        connectToServer.execute(message);    }}

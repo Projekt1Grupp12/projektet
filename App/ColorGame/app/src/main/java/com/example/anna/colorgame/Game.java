@@ -25,6 +25,8 @@ public class Game extends AppCompatActivity implements View.OnClickListener{
     private Player player;
     private MediaPlayer mpGood;
     private MediaPlayer mpBad;
+    private RecieveDataThread recieveDataThread;
+    private Thread thread;
 
     private AsyncResponse delegate = new AsyncResponse() {
         /*
@@ -71,8 +73,8 @@ public class Game extends AppCompatActivity implements View.OnClickListener{
         this.player = player;
         String toShow= "IP: " + player.getChoosenIP() + " Name: " + player.getName() + " UserID: " + player.getUserID();
         //Show information in TextView
-        TextView textViewIP = (TextView) findViewById(R.id.textViewIP);
-        textViewIP.setText(toShow);
+        //TextView textViewIP = (TextView) findViewById(R.id.textViewIP);
+        //textViewIP.setText(toShow);
     }
 
     public void activateMusic(){
@@ -120,10 +122,16 @@ public class Game extends AppCompatActivity implements View.OnClickListener{
      */
 
     public void startThread(){
-        Log.d(TAG, "PuzzleGame, onCreate method. Creating a thread");
-        RecieveDataThread recieveDataThread = new RecieveDataThread(this, player);
-        Thread thread = new Thread(recieveDataThread);
+        recieveDataThread = new RecieveDataThread(this, player);
+        thread = new Thread(recieveDataThread);
         thread.start();
+    }
+    public void closeReceiveThread(){//this method closes socket, ends run method and stops the thread
+
+        recieveDataThread.closeSocket();
+        recieveDataThread.setIsRunning(false);
+        thread.interrupt();
+
 
     }
 

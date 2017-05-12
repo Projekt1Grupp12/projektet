@@ -13,10 +13,11 @@ Class is an activity that shows main menu of the application.
 It has three TextView to show data.
  */
 public class MainMenu extends AppCompatActivity {
-    private static final String TAG = "debug";
+    private static final String TAG = "debugMenu";
     private Player player;
     private Button chooseGameBtn;
     private Class startThisActivity = null;
+    private ConnectToServer runner;
 
     private AsyncResponse delegate = new AsyncResponse() {
         /*
@@ -29,22 +30,20 @@ public class MainMenu extends AppCompatActivity {
             Log.d(TAG, "RESULTAT FRÅN SERVER " + result);
             if(result.contains("Game")) {
                 chooseGameBtn.setEnabled(true);
-                if (result.contains(("Puzzle Game")))
+                if (result.contains(("Puzzle Game"))) {
+                    Log.d(TAG, "Start puzzlegame " + result);
                     startThisActivity = PuzzleGame.class;
-                else if (result.contains(("Traffic Game")))
+                }else if (result.contains(("Traffic Game")))
                     startThisActivity = TrafficGame.class;
                 else if (result.contains(("Duel Game")))
                     startThisActivity = DuelGame.class;
-            }else if(result.contains("timeout")){
-                chooseGameBtn.setEnabled(false);
-                AlertDialogClass alertDialog = new AlertDialogClass(MainMenu.this);
-                alertDialog.setTitle("No game available");
-                alertDialog.setMessage("The available game does not exist anymore. Please wait for a new player to choose game.");
-                alertDialog.ButtonOK();
+            }   else if(result.contains("SocketTimeoutException")){
+                    startAsyncTask("join?;1");
             } else if (result.contains("start")) {
                 //do nothing
-            } else {
+            } else if(result.contains("-1")) {
                 startAsyncTask("join?;1");
+                Log.d(TAG, "postResult else: " + result);
             }
         }
     };
@@ -90,7 +89,7 @@ public class MainMenu extends AppCompatActivity {
     public void showHighScore(View view) {}
 
     public void startAsyncTask(String message) {//Button
-        ConnectToServer runner = new ConnectToServer(player.getChoosenIP(), delegate);
+        runner = new ConnectToServer(player.getChoosenIP(), delegate);
         Log.d(TAG, "Task created");
         Log.d(TAG, "Execute task");
         runner.execute(message);

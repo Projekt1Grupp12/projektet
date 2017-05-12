@@ -10,10 +10,15 @@ import core.Timer;
 import core.UDPServer;
 
 public abstract class Game implements Runnable {
+	public final int MAX_STEPS = 8;
+	
 	private Player[] players;
 	
 	private int fullScreen;
 	private int winningPlayer;
+	private int maxScore;
+	private int stepParts;
+	private int stepsCount;
 	
 	private UDPServer server;
 	
@@ -93,12 +98,19 @@ public abstract class Game implements Runnable {
 		fullScreen = 0;
 		server.sendToArdurino("00");
 	} 
-	
+	int x = 0;
 	public void takeProgressStep(int index) throws IOException {
 		server.sendToArdurino(UDPServer.ENGINE_INSTRUCTION[index]);
 		for(int i = 0; i < players.length; i++) {
 			if(players[i].amountLightsOn() > 1) {
-				server.sendToArdurino(setupFullScreen() + "");
+				stepsCount += 1;
+				if(stepsCount % stepParts == 0) {
+					x += 1;
+					System.out.println((players[index].getScore() % MAX_STEPS) + " | " + players[index].getScore());
+					server.sendToArdurino(setupFullScreen() + "");
+					stepsCount = 0;
+				}
+				System.out.println(x);
 				break;
 			}
 		}
@@ -192,5 +204,14 @@ public abstract class Game implements Runnable {
 	
 	public String toString() {
 		return getName();
+	}
+	
+	public int getMaxScore() {
+		return maxScore;
+	}
+	
+	public void setMaxScore(int maxScore) {
+		this.maxScore = maxScore*MAX_STEPS;
+		stepParts = (this.maxScore / MAX_STEPS);
 	}
 }
