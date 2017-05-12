@@ -49,7 +49,7 @@ public class ConnectToServer extends AsyncTask<String, String, String> {
             byte[] sendData = new byte[24];
             byte[] receiveData = new byte[24];
             String sentence = message[0];
-
+            Log.d(TAG, "SKICKAT TILL SERVER:" + sentence);
             Log.d(TAG, "Asynctask. Sending user input to server");
             sendData = sentence.getBytes();
             DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, PORT);

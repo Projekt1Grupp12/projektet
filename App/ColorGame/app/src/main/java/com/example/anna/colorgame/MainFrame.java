@@ -31,6 +31,12 @@ public class MainFrame extends AppCompatActivity {
     private boolean correctIPInput = false;
     private boolean correctNameInput = false;
 
+
+    //Variables for debugging app
+    private final boolean debug = true;
+    private final String debugIP = "10.2.28.40";
+    private final String debugUserName = "User0";
+
     /*
     Method that has result from AsyncTask as parameter.
     It is used to get result from Asynctask and store it in userID variable.
@@ -41,9 +47,11 @@ public class MainFrame extends AppCompatActivity {
         public void postResult(String result) {
             Log.d(TAG, "RESULTAT FRÅN SERVER " + result);
             if (result.contains("SocketTimeoutException")) {
-                showAlertDialog("Connection failed", "Connection to game server failed");
+                alertDialog.showAlertDialog("Connection failed", "Connection to game server failed");
                 loginButton.setEnabled(true);
-            } else {
+            } else if(result == null)
+                alertDialog.showAlertDialog("No userID", "You do not exist, please try again.");
+            else {
                 player.setUserID(result);
                 startNextActivity();
             }
@@ -91,14 +99,24 @@ public class MainFrame extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
+        if(debug){
+            this.editNameText.setText(debugUserName);//changed "" to null 05-09
+            editIPText.setText(debugIP);
+        }
     }
 
     @Override
     protected void onRestart() {
         Log.d(TAG, "onRestart()");
         super.onRestart();
-        editNameText.setText(null);//changed "" to null 05-09
-        editIPText.setText(null);
+        if(debug){
+            editNameText.setText(debugUserName);//changed "" to null 05-09
+            editIPText.setText(debugIP);
+        }
+        else {
+            editNameText.setText(null);//changed "" to null 05-09
+            editIPText.setText(null);
+        }
         loginButton.setEnabled(true);
     }
 
@@ -118,7 +136,7 @@ public class MainFrame extends AppCompatActivity {
             String messageToServer = "" + player.getName();
             runner.execute(messageToServer);
         }else{
-            showAlertDialog("Error", "Input is incorrect");
+            alertDialog.showAlertDialog("Error", "Input is incorrect");
         }
     }
 
@@ -230,11 +248,7 @@ public class MainFrame extends AppCompatActivity {
         }
     }
 
-    private void showAlertDialog(String title, String message){
-        alertDialog.setTitle(title);
-        alertDialog.setMessage(message);
-        alertDialog.ButtonOK();
-    }
+
 }
 
 

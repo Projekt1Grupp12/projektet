@@ -21,9 +21,9 @@ public class ChooseGame extends AppCompatActivity {
          */
         @Override
         public void postResult(String result) {
-            Log.d(TAG, "RESULTAT FRÅN SERVER " + result);
+            Log.d(TAG, "RESULTAT FRÅN SERVER: " + result);
 
-            if (result.contains("ok")){
+            if (result.contains("start")){
                 pd.dismiss();
                 startActivity(startThisClass);
             } else if(result.contains("SocketTimeoutException")){

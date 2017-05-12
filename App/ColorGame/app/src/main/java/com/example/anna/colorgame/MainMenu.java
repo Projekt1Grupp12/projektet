@@ -27,7 +27,7 @@ public class MainMenu extends AppCompatActivity {
          */
         @Override
         public void postResult(String result) {
-            Log.d(TAG, "RESULTAT FRÅN SERVER " + result);
+            Log.d(TAG, "RESULTAT FRÅN SERVER: " + result);
             if(result.contains("Game")) {
                 chooseGameBtn.setEnabled(true);
                 if (result.contains(("Puzzle Game"))) {
@@ -42,7 +42,6 @@ public class MainMenu extends AppCompatActivity {
             } else if (result.contains("start")) {
                 //do nothing
             } else if(result.contains("-1")) {
-                startAsyncTask("join?;1");
                 Log.d(TAG, "postResult else: " + result);
             }
         }
