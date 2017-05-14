@@ -22,7 +22,11 @@ public class PuzzelGame extends Game {
 		super(players, server);
 		maxDelay = 128*2;
 		
+<<<<<<< a50cba73234581059142073aa6be6b90f1592080
 		setMaxScore(1);
+=======
+		setMaxScore(2);
+>>>>>>> fixed scoring system
 	}
 
 	public void sendBadFeedback(Player player) throws IOException {
