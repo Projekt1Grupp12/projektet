@@ -22,17 +22,24 @@ public class ScreenSimulatorController {
 	}
 	
 	/**
-	 * Set a light to on
-	 * @param index
+	 * Set a light to on at a specific index
+	 * @param index the index
 	 */
 	public void setLight(int index) {
 		view.getLights()[index].setBackground(lightColors[index]);
 	}
 	
+	/**
+	 * Clear a light to on at a specific index
+	 * @param index the index
+	 */
 	public void clearLight(int index) {
 		view.getLights()[index].setBackground(Color.BLACK);
 	}
 	
+	/**
+	 * Clear all lights
+	 */
 	public void flushLights() {
 		for(int i = 0; i < view.getLights().length; i++)
 			clearLight(i);

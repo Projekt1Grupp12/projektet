@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -126,31 +127,36 @@ public class ClientView extends JPanel {
 					}
 					idText.setText("Player: " + controller.getId());
 				}
-				
-				if(e.getSource() == startButton) {
-					try {
-						controller.send("-2");
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
-					idText.setText("Player: " + controller.getId());
+			}
+			
+			if(e.getSource() == startButton) {
+				try {
+					controller.send("-2");
+				} catch (IOException e1) {
+					e1.printStackTrace();
 				}
-				
-				if(e.getSource() == logOut) {
-					try {
-						controller.send("logout;" + controller.getId());
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
+				idText.setText("Player: " + controller.getId());
+			}
+			
+			if(e.getSource() == logOut) {
+				try {
+					controller.send("logout;" + controller.getId());
+				} catch (IOException e1) {
+					e1.printStackTrace();
 				}
-				
-				if(e.getSource() == joinButton) {
+			}
+			
+			if(e.getSource() == joinButton) {
+				try {
+					controller.send("join?;" + controller.getId());
+					controller.send("ready;" + controller.getId());
 					try {
-						controller.send("join?;" + controller.getId());
-						controller.send("start");
-					} catch (IOException e1) {
-						e1.printStackTrace();
+						TimeUnit.MILLISECONDS.sleep(10);
+					} catch (InterruptedException ie) {
+						ie.printStackTrace();
 					}
+				} catch (IOException e1) {
+					e1.printStackTrace();
 				}
 			}
 		}

@@ -32,6 +32,8 @@ public class TrafficGame extends Game {
 		}
 		
 		realTime = true;
+		
+		setMaxScore(4);
 	}
 	
 	public void stepLight() {

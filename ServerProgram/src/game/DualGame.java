@@ -22,6 +22,8 @@ public class DualGame extends Game {
 		realTime = true;
 		
 		maxDelay = 128+96;
+		
+		setMaxScore(1);
 	}
 	
 	public void sendBadFeedback(Player player) throws IOException {

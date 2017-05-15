@@ -259,6 +259,9 @@ public class UDPServer implements Runnable
 		phoneIps = getIpsReset();
 		
 		playerPickedGame = "";
+		
+		sentHistory = "";
+		inputHistory = "";
 	}
 	
 	/**
@@ -333,9 +336,10 @@ public class UDPServer implements Runnable
 					if(input.split(";").length == 2) {
 						if(input.split(";")[0].equals("ready")) {
 							for(int i = 0; i < 2 ; i++) {
-								sendToPhone(START_SESSION_INSTRUCTION, 1);
-								sendToClientSimulator(START_SESSION_INSTRUCTION, 1);
+								sendToPhone(START_SESSION_INSTRUCTION, i);
+								sendToClientSimulator(START_SESSION_INSTRUCTION, i);
 							}
+							input = "";
 						}
 						
 						if(input.split(";")[0].equals(TIMEOUT_INSTRUCTION)) {
