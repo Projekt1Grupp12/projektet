@@ -152,14 +152,9 @@ public class PuzzelGame extends Game {
 		
 		if(delay == 1) changeLights();
 		
+		checkIfWon();
+		
 		for(int i = 0; i < getPlayers().length; i++) {
-			if(getPlayers()[i].getScore() >= getMaxScore()-1) {
-				sendToPhone("WIN!", i);
-				if(i == 0) sendToPhone("LOSE!", 1);
-				else sendToPhone("LOSE!", 0);
-				setGameOver();
-			}
-			
 			if(getPlayers()[i].amountLightsOn() == 0) {
 				changeLights(i);
 				break;

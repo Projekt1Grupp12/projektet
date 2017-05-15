@@ -270,6 +270,24 @@ public abstract class Game implements Runnable {
 	}
 	
 	/**
+	 * Check if a player has won, set game over if so
+	 */
+	public void checkIfWon() {
+		for(int i = 0; i < getPlayers().length; i++) {
+			if(getPlayers()[i].getScore() >= getMaxScore()-1) {
+				try {
+					sendToPhone("WIN!", i);
+					if(i == 0) sendToPhone("LOSE!", 1);
+					else sendToPhone("LOSE!", 0);
+					setGameOver();
+				} catch (IOException e) {
+					
+				}
+			}
+		}
+	}
+	
+	/**
 	 * Sets the game to game over and update highscore list
 	 */
 	public void setGameOver() {

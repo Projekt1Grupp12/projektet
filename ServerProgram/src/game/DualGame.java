@@ -87,14 +87,9 @@ public class DualGame extends Game {
 			}
 		}
 		
+		checkIfWon();
+		
 		for(int i = 0; i < getPlayers().length; i++) {
-			if(getPlayers()[i].getScore() >= getMaxScore()-1) {
-				sendToPhone("WIN!", i);
-				if(i == 0) sendToPhone("LOSE!", 1);
-				else sendToPhone("LOSE!", 0);
-				setGameOver();
-			}
-			
 			checkGoodInput(getPlayers()[i]);
 			getPlayers()[i].setAmountPressed(0);
 			getPlayers()[i].flushColorsPressed();
