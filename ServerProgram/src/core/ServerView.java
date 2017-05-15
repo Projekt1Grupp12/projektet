@@ -29,6 +29,11 @@ import game.Player;
 import game.PuzzelGame;
 import game.TrafficGame;
 
+/**
+ * The GUI for the server, mostly used for testing
+ * @author tom.leonardsson
+ *
+ */
 public class ServerView extends JPanel {
 	private ServerController controller;
 	private Timer timer = new Timer(100, new MyListener()); 
@@ -72,7 +77,7 @@ public class ServerView extends JPanel {
 	private JCheckBox twoPlayers = new JCheckBox("two players?");
 	
 	/**
-	 * Constructor that creates the UI
+	 * Constructor that creates the UI with a specifc controller
 	 * @param controller
 	 */
 	public ServerView(ServerController controller) {
@@ -153,7 +158,7 @@ public class ServerView extends JPanel {
 		timer.start(); 
 	}
 
-	private class MyListener implements ActionListener {
+	class MyListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) { 
 			currentOutput.setText(controller.getSentHistory());
 			currentInput.setText(controller.getInputHistory());
@@ -176,7 +181,7 @@ public class ServerView extends JPanel {
 	    }
 	}
 	
-	public class ButtonListener implements ActionListener {
+	class ButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			if(e.getSource() == twoPlayers) {
 				controller.getServer().playWithTwo = twoPlayers.isSelected();
@@ -210,6 +215,10 @@ public class ServerView extends JPanel {
 		}
 	}
 	
+	/**
+	 * Get the screeen simulators controller
+	 * @return the controller
+	 */
 	public ScreenSimulatorController getScreenSimulatorController() {
 		return screenSimulatorController;
 	}

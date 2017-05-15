@@ -14,6 +14,11 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * The GUI of the client
+ * @author tom.leonardsson
+ *
+ */
 public class ClientView extends JPanel {
 	ClientController controller;
 	
@@ -34,6 +39,11 @@ public class ClientView extends JPanel {
 	
 	private JComboBox<String> games = new JComboBox<String>();
 	
+	/**
+	 * Create a client view with a specific controller and player id
+	 * @param controller the specifc controller
+	 * @param id the palyer id
+	 */
 	public ClientView(ClientController controller, int id) {
 		for(int i = 0; i < gameNames.length; i++) {
 			games.addItem(gameNames[i]);
@@ -83,6 +93,10 @@ public class ClientView extends JPanel {
 		add(logOut);
 	}
 	
+	/**
+	 * Set the feedback text to a specific text
+	 * @param text the specifc text to set it to
+	 */
 	public void setFeedbackText(String text) {
 		this.feedback.setText(text);
 	}
@@ -101,7 +115,7 @@ public class ClientView extends JPanel {
 	    }
 	}
 	
-	public class ButtonListener implements ActionListener {
+	class ButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			for(int i = 0; i < colorButtons.length; i++) {
 				if(e.getSource() == colorButtons[i]) {

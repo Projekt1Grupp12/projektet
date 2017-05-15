@@ -13,6 +13,11 @@ import javax.swing.JFrame;
 import core.BetterRandom;
 import core.UDPServer;
 
+/**
+ * Controller for the GUI of the client
+ * @author tom.leonardsson
+ *
+ */
 public class ClientController implements Runnable {
 	private int id;
 	private int port; 
@@ -25,6 +30,10 @@ public class ClientController implements Runnable {
 	
 	private boolean sentName;
 
+	/**
+	 * Create client controller with a specific player id
+	 * @param id the player id of the client
+	 */
 	public ClientController(int id) {
 		port = 4444;
 		this.id = id;
@@ -52,10 +61,19 @@ public class ClientController implements Runnable {
 		new Thread(this).start();
 	}
 	
+	/**
+	 * Set the specific view of the controller
+	 * @param view the specifc view
+	 */
 	public void setView(ClientView view) {
 		this.view = view;
 	}
 	
+	/**
+	 * Send a message to the server at the port
+	 * @param message the message to send
+	 * @throws IOException
+	 */
 	public void send(String message) throws IOException {
 		DatagramSocket serverSocket = new DatagramSocket();
 		InetAddress ipAddress = InetAddress.getByName("localhost");
@@ -70,15 +88,25 @@ public class ClientController implements Runnable {
 		serverSocket.close();
 	}
 	
+	/**
+	 * Get the player id of the client
+	 * @return the id
+	 */
 	public int getId() {
 		return id;
 	}
 	
+	/**
+	 * get the player name of the client
+	 * @return the player name
+	 */
 	public String getName() {
 		return name;
 	}
 
-	@Override
+	/**
+	 * The update loop of the client in which it recives and responds
+	 */
 	public void run() {
 		byte[] receiveData = new byte[32];
 		DatagramPacket packet = new DatagramPacket(receiveData, receiveData.length);

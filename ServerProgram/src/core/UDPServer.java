@@ -13,6 +13,11 @@ import game.Player;
 import game.PuzzelGame;
 import game.TrafficGame;
 
+/**
+ * The UDP server, handels the connections and logic of the server
+ * @author tom.leonardsson
+ *
+ */
 public class UDPServer implements Runnable
 {	
 	final int RECIVE_BUFFER_SIZE = 128;
@@ -63,6 +68,10 @@ public class UDPServer implements Runnable
 	
 	public boolean reset;
 	
+	/**
+	 * Create a server with a specifc port
+	 * @param port
+	 */
 	public UDPServer(int port) {
 		this.port = port;
 		
@@ -77,12 +86,19 @@ public class UDPServer implements Runnable
 		playerPickedGame = "";
 	}
 	
+	/**
+	 * Setup the IP address
+	 */
 	public void setup() {
 		phoneIps = getIps();
 		ardurinoIp = "192.168.0.2";
 		hasSetup = true;
 	}
 	
+	/**
+	 * Get the IP addresses of the clients while the server has aldready been running, get the client player names and give them a player ID
+	 * @return the IP addresses of the clients
+	 */
 	public String[] getIpsReset() {
 		String[] ips = new String[2];
 		
@@ -112,6 +128,10 @@ public class UDPServer implements Runnable
 		return ips;
 	}
 	
+	/**
+	 * Listen for messages to pick up client IP address and their player name and give them a spot and player id
+	 * @return the IP address of the clients
+	 */
 	public String[] getIps() {
 		String[] ips = new String[2];
 		byte[] receiveData = new byte[RECIVE_BUFFER_SIZE];
@@ -154,6 +174,13 @@ public class UDPServer implements Runnable
 		return ips;
 	}
 	
+	/**
+	 * Send message to a specifc IP address and port and add to histoiry of output
+	 * @param message the message
+	 * @param ip the specifc IP
+	 * @param port the specifc port
+	 * @throws IOException
+	 */
 	public void send(String message, String ip, int port) throws IOException {
 		InetAddress ipAddress = InetAddress.getByName(ip);
 		DatagramPacket sendPacket = new DatagramPacket(message.getBytes(), message.getBytes().length, ipAddress, port/*+(message.equals("WIN!") || message.equals("LOSE!") || message.equals(EXIT_INSTRUCTION) ? 1 : 0*/);
@@ -168,33 +195,50 @@ public class UDPServer implements Runnable
 		}
 	}
 	
+	/**
+	 * Send message to the default port at specifc IP address and add to histoiry of output
+	 * @param message the message
+	 * @param ip the specific IP address
+	 * @throws IOException
+	 */
 	public void send(String message, String ip) throws IOException {
-		send(message, ip, 4444 +(message.equals("WIN!") || message.equals("LOSE!") || message.equals(EXIT_INSTRUCTION) ? 1 : 0));
+		send(message, ip, port + (message.equals("WIN!") || message.equals("LOSE!") || message.equals(EXIT_INSTRUCTION) ? 1 : 0));
 	}
 	
-	public void sendToClientSimulator(String message, int id) throws IOException {
-		InetAddress ipAddress = InetAddress.getByName(phoneIps[id]);
-		DatagramPacket sendPacket = new DatagramPacket(message.getBytes(), message.getBytes().length, ipAddress, port+1+id);
-		serverSocket.send(sendPacket);
-
-		sentHistory = message + "  : " + (sentHistoryIndex++) + " : " + ipAddress.getHostName() + "\n" + sentHistory;
-		
-		try {
-			TimeUnit.MILLISECONDS.sleep(10);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+	/**
+	 * Send message to the client simulaotr(the client that is run on the computer) at specifc player id and add to histoiry of output
+	 * @param message the message
+	 * @param index the specifc player id
+	 * @throws IOException
+	 */
+	public void sendToClientSimulator(String message, int index) throws IOException {
+		send(message, phoneIps[index], port+1+index);
 	}
 	
+	/**
+	 * Send messsage to the client with spefic id and add to histoiry of output
+	 * @param message the message 
+	 * @param index the specific id
+	 * @throws IOException
+	 */
 	public void sendToPhone(String message, int index) throws IOException {
 		if(!phoneIps[index].equals("127.0.0.1") && !phoneIps[index].equals("localhost"))
 			send(message, phoneIps[index]);
 	}
 	
-	public void sendToArdurino(String message) throws IOException {
+	/**
+	 * Send message to the embeededsystem and add to histoiry of output
+	 * @param message the message
+	 * @throws IOException
+	 */
+	public void sendToArdurino(String message) throws IOException { 
 		send(message, ardurinoIp);
 	}
 	
+	/**
+	 * Rescive and ACK data incoming at default port and add the data to the input history
+	 * @throws IOException
+	 */
 	public void recive() throws IOException {
 		serverSocket.receive(packet);
 			
@@ -208,12 +252,19 @@ public class UDPServer implements Runnable
 		inputHistory = putTogether(packet.getData()) + "  : " + (inputHistoryIndex++) + " : " + packet.getAddress().getHostName() + "\n" + inputHistory;
 	}
 	
+	/**
+	 * Listen for new client IP addresses and unpick game
+	 */
 	public void resetSession() {
 		phoneIps = getIpsReset();
 		
 		playerPickedGame = "";
 	}
 	
+	/**
+	 * Reset the game to a specifc game
+	 * @param g the specifc game
+	 */
 	public void resetGame(Game g) {
 		game.closeGame = true;
 		game = g;
@@ -232,7 +283,10 @@ public class UDPServer implements Runnable
 		
 		hasStartedGame = false;
 	}
-
+	
+	/**
+	 * The update loop of the server, listens and sends messages and setup the server
+	 */
 	public void run() {
 		if(!hasSetup) {
 			setup();
@@ -315,22 +369,43 @@ public class UDPServer implements Runnable
 		}
 	}
 	
+	/**
+	 * Get the players in the game
+	 * @return the players
+	 */
 	public Player[] getPlayers() {
 		return this.game.getPlayers();
 	}
 	
+	/**
+	 * Get the history of sent data
+	 * @return the history of sent data
+	 */
 	public String getSentHistory() {
 		return sentHistory;
 	}
 	
+	/**
+	 * Get the history of rescived data
+	 * @return the history of rescived data
+	 */
 	public String getInputHistory() {
 		return inputHistory;
 	}
 	
+	/**
+	 * Turn of the game
+	 */
 	public void endGame() {
 		game.closeGame = true;
 	}
 	
+	/**
+	 * Turn the data from a UDP packet into a string with the data translated to chars
+	 * @param t the data
+	 * @param l the length of data taken
+	 * @return a string of the data converterd
+	 */
 	public static String putTogether(byte[] t, int l) {
 		String tmp = "";
 		
@@ -341,6 +416,12 @@ public class UDPServer implements Runnable
 		return tmp;
 	}
 	
+	/**
+	 * Take all the data recisved, reverse it while turning it into chars and traverse until no more zeros 
+	 * keep everything past that point and reverse again and return
+	 * @param t the data
+	 * @return the string of data
+	 */
 	public static String putTogether(byte[] t) {
 		String tmp = "";
 		

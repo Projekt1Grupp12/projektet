@@ -6,7 +6,16 @@ import java.io.StringWriter;
 
 import javax.swing.JFrame;
 
+/**
+ * Runs the program
+ * @author tom.leonardsson
+ *
+ */
 public class Program {
+	/**
+	 * Create a GUI that starts the server
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		ServerView viewer = new ServerView(new ServerController());
 		JFrame frame = new JFrame("Server");
@@ -17,17 +26,5 @@ public class Program {
 		frame.setResizable(true);
 		frame.pack();
 		frame.setVisible(true);
-	}
-	
-	public static String getStack() {
-		String tmp = "";
-		
-		StackTraceElement[] s = Thread.currentThread().getStackTrace();
-		
-		for(int i = 0; i < s.length; i++) {
-			tmp += "{ " + s[i].getFileName() + " | "+ s[i].getMethodName() + " | " + s[i].getLineNumber() + " }\n";
-		}
-		
-		return tmp;
 	}
 }

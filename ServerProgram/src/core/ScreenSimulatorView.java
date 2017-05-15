@@ -8,11 +8,21 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * The GUI of the panel that shows what the physical screen should
+ * be showing based of data from the player
+ * @author tom.leonardsson
+ *
+ */
 public class ScreenSimulatorView extends JPanel {
 	private JButton[] lights = new JButton[6];
 	
 	private ScreenSimulatorController controller;
 	
+	/**
+	 * create a view with a specifc view
+	 * @param controller
+	 */
 	public ScreenSimulatorView(ScreenSimulatorController controller) {
 		this.controller = controller;
 		controller.setView(this);
@@ -27,6 +37,10 @@ public class ScreenSimulatorView extends JPanel {
 		}
 	}
 	
+	/**
+	 * Get the lights
+	 * @return the lights
+	 */
 	public JButton[] getLights() {
 		return lights;
 	}
