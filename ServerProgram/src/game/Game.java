@@ -98,21 +98,16 @@ public abstract class Game implements Runnable {
 		fullScreen = 0;
 		server.sendToArdurino("00");
 	} 
-	int x = 0;
+
 	public void takeProgressStep(int index) throws IOException {
 		server.sendToArdurino(UDPServer.ENGINE_INSTRUCTION[index]);
 		for(int i = 0; i < players.length; i++) {
-			if(players[i].amountLightsOn() > 1) {
-				stepsCount += 1;
-				if(stepsCount % stepParts == 0) {
-					x += 1;
-					System.out.println((players[index].getScore() % MAX_STEPS) + " | " + players[index].getScore());
-					server.sendToArdurino(setupFullScreen() + "");
-					stepsCount = 0;
-				}
-				System.out.println(x);
-				break;
+			stepsCount += 1;
+			if(stepsCount >= maxScore / MAX_STEPS) {
+				server.sendToArdurino(setupFullScreen() + "");
+				stepsCount = 0;
 			}
+			break;
 		}
 	}
 	
@@ -179,6 +174,7 @@ public abstract class Game implements Runnable {
 			HighscoreEntry h = new HighscoreEntry(players[winningPlayer].getName(), result + "");
 			highscoreList.tryAdd(h);
 			server.hasStartedGame = false;
+			stepsCount = 0;
 		}
 		//server.resetSession();
 		gameOver = true;

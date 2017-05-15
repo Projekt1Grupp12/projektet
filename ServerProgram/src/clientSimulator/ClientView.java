@@ -8,12 +8,18 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * The GUI of the client
+ * @author tom.leonardsson
+ *
+ */
 public class ClientView extends JPanel {
 	ClientController controller;
 	
@@ -34,6 +40,11 @@ public class ClientView extends JPanel {
 	
 	private JComboBox<String> games = new JComboBox<String>();
 	
+	/**
+	 * Create a client view with a specific controller and player id
+	 * @param controller the specifc controller
+	 * @param id the palyer id
+	 */
 	public ClientView(ClientController controller, int id) {
 		for(int i = 0; i < gameNames.length; i++) {
 			games.addItem(gameNames[i]);
@@ -83,6 +94,10 @@ public class ClientView extends JPanel {
 		add(logOut);
 	}
 	
+	/**
+	 * Set the feedback text to a specific text
+	 * @param text the specifc text to set it to
+	 */
 	public void setFeedbackText(String text) {
 		this.feedback.setText(text);
 	}
@@ -101,7 +116,7 @@ public class ClientView extends JPanel {
 	    }
 	}
 	
-	public class ButtonListener implements ActionListener {
+	class ButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			for(int i = 0; i < colorButtons.length; i++) {
 				if(e.getSource() == colorButtons[i]) {
@@ -112,31 +127,36 @@ public class ClientView extends JPanel {
 					}
 					idText.setText("Player: " + controller.getId());
 				}
-				
-				if(e.getSource() == startButton) {
-					try {
-						controller.send("-2");
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
-					idText.setText("Player: " + controller.getId());
+			}
+			
+			if(e.getSource() == startButton) {
+				try {
+					controller.send("-2");
+				} catch (IOException e1) {
+					e1.printStackTrace();
 				}
-				
-				if(e.getSource() == logOut) {
-					try {
-						controller.send("logout;" + controller.getId());
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
+				idText.setText("Player: " + controller.getId());
+			}
+			
+			if(e.getSource() == logOut) {
+				try {
+					controller.send("logout;" + controller.getId());
+				} catch (IOException e1) {
+					e1.printStackTrace();
 				}
-				
-				if(e.getSource() == joinButton) {
+			}
+			
+			if(e.getSource() == joinButton) {
+				try {
+					controller.send("join?;" + controller.getId());
+					controller.send("ready;" + controller.getId());
 					try {
-						controller.send("join?;" + controller.getId());
-						controller.send("start");
-					} catch (IOException e1) {
-						e1.printStackTrace();
+						TimeUnit.MILLISECONDS.sleep(10);
+					} catch (InterruptedException ie) {
+						ie.printStackTrace();
 					}
+				} catch (IOException e1) {
+					e1.printStackTrace();
 				}
 			}
 		}

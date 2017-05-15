@@ -21,8 +21,8 @@ public class PuzzelGame extends Game {
 	public PuzzelGame(Player[] players, UDPServer server) {
 		super(players, server);
 		maxDelay = 128*2;
-		
-		setMaxScore(1);
+
+		setMaxScore(2);
 	}
 
 	public void sendBadFeedback(Player player) throws IOException {

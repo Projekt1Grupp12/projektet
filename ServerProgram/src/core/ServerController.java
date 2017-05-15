@@ -18,8 +18,12 @@ import javax.swing.SwingConstants;
 import clientSimulator.ClientController;
 import clientSimulator.ClientView;
 
+/**
+ * The controller of the GUI for the server
+ * @author tom.leonardsson 
+ *
+ */
 public class ServerController {
-	
 	private UDPServer server;
 	
 	private ServerView view;
@@ -37,6 +41,9 @@ public class ServerController {
 		new Thread(server).start();
 	}
 	
+	/**
+	 * Update the simluators screen with the screen data and mask form the player
+	 */
 	public void updateSimulatorScreen() {
 		for(int i = 0; i < server.getPlayers().length; i++) {
 			for(int j = 0; j < server.getPlayers()[i].lightsOn().length; j++) {
@@ -48,6 +55,9 @@ public class ServerController {
 		}
 	}
 	
+	/**
+	 * Create a client and raise the next id
+	 */
 	public void createClient() {
 		ClientView viewer = new ClientView(new ClientController(nextId), nextId);
 		JFrame frame = new JFrame("client");
@@ -61,21 +71,33 @@ public class ServerController {
 		nextId = nextId + 1;
 	}
 	
+	/**
+	 * Set set the next id to give out
+	 * @param nextId the id
+	 */
 	public void setNextId(int nextId) {
 		this.nextId = nextId;
 	}
 	
+	/**
+	 * Get the next id to give out
+	 * @return the id
+	 */
 	public int getNextId() {
 		return nextId;
 	}
 	
+	/**
+	 * Set a specific view
+	 * @param view the specifc view
+	 */
 	public void setView(ServerView view) {
 		this.view = view;
 	}
 	
 	/**
 	 * Returns the instance of the UDPServer
-	 * @return
+	 * @return the instance of the server
 	 */
 	public UDPServer getServer() {
 		return server;
@@ -83,7 +105,7 @@ public class ServerController {
 	
 	/**
 	 * Returns the history of all the data sent from the server
-	 * @return
+	 * @return the history of sent data
 	 */
 	public String getSentHistory() {
 		return server.getSentHistory();
@@ -91,7 +113,7 @@ public class ServerController {
 	
 	/**
 	 * Returns the history of all the input data from the client(s)
-	 * @return
+	 * @return the history of recsived data
 	 */
 	public String getInputHistory() {
 		return server.getInputHistory();
