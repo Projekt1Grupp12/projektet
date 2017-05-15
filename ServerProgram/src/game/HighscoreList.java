@@ -9,11 +9,20 @@ import java.io.Writer;
 
 import core.ResourceReader;
 
+/**
+ * A list of highscore entries
+ * @author tom.leonardsson
+ *
+ */
 public class HighscoreList {
 	private final int AMOUNT_OF_HIGHSCORE = 8;
 	
 	private HighscoreEntry[] entries;
 	
+	/**
+	 * Create a new highscore list that loads a list from a file
+	 * @param path the path to the file with the highscore list
+	 */
 	public HighscoreList(String path) {
 		entries = new HighscoreEntry[AMOUNT_OF_HIGHSCORE];
 		for(int i = 0; i < entries.length; i++) {
@@ -27,6 +36,11 @@ public class HighscoreList {
 		}
 	}
 	
+	/**
+	 * Try to add a highscore entry to the list 
+	 * @param e the highscore entry
+	 * @return if the highscore could be placed
+	 */
 	public boolean tryAdd(HighscoreEntry e) {
 		HighscoreEntry[] tmp = new HighscoreEntry[AMOUNT_OF_HIGHSCORE];
 		
@@ -46,6 +60,11 @@ public class HighscoreList {
 		return offset != 0;
 	}
 	
+	/**
+	 * Load a highscore list from a file
+	 * @param path the path to the file
+	 * @throws IOException
+	 */
 	public void load(String path) throws IOException {
 		if(ResourceReader.getValuesOnLine(path, 0,"-") == null) {
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path), "utf-8"));
@@ -68,6 +87,11 @@ public class HighscoreList {
 		}
 	}
 	
+	/**
+	 * Save the highscore list to a file
+	 * @param path the path to the file
+	 * @throws IOException
+	 */
 	public void save(String path) throws IOException {
 		PrintWriter writer = new PrintWriter(path);
 		writer.print("");
@@ -87,6 +111,10 @@ public class HighscoreList {
 		}
 	}
 	
+	/**
+	 * Structure the data of the highscore list into a structed string that displays a list
+	 * @return the structured string
+	 */
 	public String toString() {
 		String tmp = "";
 		for(int i = 0; i < AMOUNT_OF_HIGHSCORE; i++) {

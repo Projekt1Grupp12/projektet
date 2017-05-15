@@ -119,7 +119,7 @@ public class UDPServer implements Runnable
 				serverSocket.receive(packet);
 				ips[1] = packet.getAddress().getHostName();
 			}
-			this.send("1", ips[1]);
+			send("1", ips[1]);
 			System.out.println(ips[1] + " | ip 1");
 		} catch (IOException e) {
 			e.printStackTrace();
