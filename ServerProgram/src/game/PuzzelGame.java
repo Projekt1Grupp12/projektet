@@ -111,8 +111,10 @@ public class PuzzelGame extends Game {
 		
 		if(delay == maxDelay) {
 			//changeLights();
-			delay = 0;
+			//delay = 0;
 		}
+		
+		if(delay == 1) changeLights();
 		
 		for(int i = 0; i < getPlayers().length; i++) {
 			if(getPlayers()[i].getScore() >= getMaxScore()-1) {

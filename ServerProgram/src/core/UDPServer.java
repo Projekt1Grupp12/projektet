@@ -256,12 +256,12 @@ public class UDPServer implements Runnable
 	 * Listen for new client IP addresses and unpick game
 	 */
 	public void resetSession() {
+		sentHistory = "";
+		inputHistory = "";
+		
 		phoneIps = getIpsReset();
 		
 		playerPickedGame = "";
-		
-		sentHistory = "";
-		inputHistory = "";
 	}
 	
 	/**
