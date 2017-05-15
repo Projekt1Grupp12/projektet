@@ -59,13 +59,8 @@ public class ConnectToServer extends AsyncTask<String, String, String> {
             DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
             Log.d(TAG, "clientSocket.setSoTimeout(3000)");
 
-            if(sentence.contains("ready?")) {
-                clientSocket.setSoTimeout(3000);
-            }
-            else {
-                clientSocket.setSoTimeout(3000);
-            }
-            clientSocket.setSoTimeout(10000);
+
+            clientSocket.setSoTimeout(5000);
             Log.d(TAG, "Asynctask. Waiting for response");
             clientSocket.receive(receivePacket);
 
