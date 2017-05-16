@@ -350,6 +350,7 @@ public class UDPServer implements Runnable
 						
 						if(input.split(";")[0].equals(HIGHSCORE_INSTRUCTION)) {
 							sendToPhone(game.getHighscoreList(), Integer.parseInt(input.split(";")[1]));
+							sendToClientSimulator(game.getHighscoreList(), Integer.parseInt(input.split(";")[1]));
 						}
 					}
 					
