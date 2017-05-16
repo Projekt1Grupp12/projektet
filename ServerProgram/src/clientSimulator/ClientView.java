@@ -150,6 +150,7 @@ public class ClientView extends JPanel {
 				try {
 					controller.send("join?;" + controller.getId());
 					controller.send("ready;" + controller.getId());
+					controller.send("highscore;" + controller.getId());
 					try {
 						TimeUnit.MILLISECONDS.sleep(10);
 					} catch (InterruptedException ie) {
