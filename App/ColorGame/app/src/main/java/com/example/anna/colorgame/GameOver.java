@@ -14,8 +14,7 @@ public class GameOver extends AppCompatActivity {
 
     //The alertDialog
     private String text = null;// text to show in AlertDialog window
-    private String playAgainTitle = "New game?";
-    private String playAgain = "Do you want to play again?";
+
     //Player and the new intents
     private Player player;
     private AlertDialogClass alertDialog = null;
@@ -66,10 +65,8 @@ public class GameOver extends AppCompatActivity {
      * Prepares the alertDialog to display if player has won or lost the game
      */
     public void displayMessage(){
-        alertDialog = new AlertDialogClass(context, message);
+        alertDialog = new AlertDialogClass(context, text);
         alertDialog.setPlayer(player);
-        alertDialog.setTitleOfAlertDialog("");
-        alertDialog.setTextToShowInAlertDialog(text);
         alertDialog.ButtonOK();
     }
 
@@ -78,10 +75,8 @@ public class GameOver extends AppCompatActivity {
      * to play again or not.
      */
     private void playAgainMessage() {
-        alertDialog = new AlertDialogClass(context);
+        alertDialog = new AlertDialogClass(context, "New game?", "Do you want to play again?");
         alertDialog.setPlayer(player);
-        alertDialog.setTitleOfAlertDialog(playAgainTitle);
-        alertDialog.setTextToShowInAlertDialog(playAgain);
         alertDialog.ButtonYesNo();
     }
 
