@@ -159,14 +159,15 @@ void loop() {
   
   if(sensorValue >= 1023){
     sensorValue = 1;
+    Udp.beginPacket(serverIp, localPort);
+    Udp.write("-2");
+    Udp.endPacket();
   }
   else{
     sensorValue = 0;
   }
   if(sensorValue == 1 && !hasPressed){
-    Udp.beginPacket(serverIp, localPort);
-    Udp.write("-2");
-    Udp.endPacket();
+
     Serial.println("haj ");
     hasPressed = true;
   }
