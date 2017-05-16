@@ -24,6 +24,7 @@ public class HighScore extends AppCompatActivity {
     private AlertDialogClass alertDialog = null;
 
     private MediaPlayer mpHighScore;
+    private Thread thread = null;
 
     private AsyncResponse delegate = new AsyncResponse() {
 
@@ -45,37 +46,37 @@ public class HighScore extends AppCompatActivity {
 
             Log.d(TAG, "RESULTAT FRÅN SERVER " + result);
 
-            if(result != null){
+            if(result != null) {
                 textViewMove.setText(result);
                 Log.d(TAG, "Text updated");
                 //Music is played here.
-                if(mpHighScore.isPlaying()) {
+                if (mpHighScore.isPlaying()) {
                     mpHighScore.stop();
                 }
-                Handler h = new Handler();
-                        h.postDelayed(new Runnable() {
-                            public void run(){
-                                try {
-                                    while(true) {
-                                        AssetFileDescriptor afd = getAssets().openFd("goodmove.mp3");
-                                        mpHighScore.stop();
-                                        mpHighScore.reset();
-                                        mpHighScore.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
-                                        mpHighScore.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                                        mpHighScore.prepare();
-                                        mpHighScore.start();
-                                        wait(2000);
-                                    }
 
-                                }catch (IOException e) {
-                                    e.printStackTrace();
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
+                thread = new Thread() {
+                    public void run() {
+                        while (true) {
+                            try {
+                                AssetFileDescriptor afd = getAssets().openFd("goodmove.mp3");
+                                mpHighScore.stop();
+                                mpHighScore.reset();
+                                mpHighScore.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+                                mpHighScore.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                                mpHighScore.prepare();
+                                mpHighScore.start();
+                                sleep(1000);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
                             }
-                        }, 1 * 1000);
-            }
-            else if(result.contains("SocketTimeoutException")){
+                        }
+                    }
+                };
+                thread.start();
+
+            }else if(result.contains("SocketTimeoutException")){
                 alertDialog.setTitleMessage("Connections lost", "No connection to the Server. Try again later.");
                 alertDialog.ButtonOK();
             }
@@ -125,5 +126,4 @@ public class HighScore extends AppCompatActivity {
         runner.execute(message);
 
     }
-
 }
