@@ -15,7 +15,7 @@ import core.UDPServer;
  *
  */
 public abstract class Game implements Runnable {
-	public final int MAX_STEPS = 8;
+	public final int MAX_STEPS = 9;
 	
 	private Player[] players;
 	
@@ -127,10 +127,10 @@ public abstract class Game implements Runnable {
 	 * @throws IOException
 	 */
 	public void takeProgressStep(int index) throws IOException {
-		server.sendToArdurino(UDPServer.ENGINE_INSTRUCTION[index]);
 		for(int i = 0; i < players.length; i++) {
 			stepsCount += 1;
 			if(stepsCount >= maxScore / MAX_STEPS) {
+				server.sendToArdurino(UDPServer.ENGINE_INSTRUCTION[index]);
 				server.sendToArdurino(setupFullScreen() + "");
 				stepsCount = 0;
 			}
@@ -275,6 +275,7 @@ public abstract class Game implements Runnable {
 	public void checkIfWon() {
 		for(int i = 0; i < getPlayers().length; i++) {
 			if(getPlayers()[i].getScore() >= getMaxScore()-1) {
+				winningPlayer = i;
 				try {
 					sendToPhone("WIN!", i);
 					if(i == 0) sendToPhone("LOSE!", 1);
@@ -355,5 +356,9 @@ public abstract class Game implements Runnable {
 	public void setMaxScore(int maxScore) {
 		this.maxScore = maxScore*MAX_STEPS;
 		stepParts = (this.maxScore / MAX_STEPS);
+	}
+	
+	public String getHighscoreList() {
+		return highscoreList.toString();
 	}
 }
