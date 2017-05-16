@@ -20,7 +20,7 @@ import game.TrafficGame;
  */
 public class UDPServer implements Runnable
 {	
-	final int RECIVE_BUFFER_SIZE = 128;
+	final int RECIVE_BUFFER_SIZE = BetterRandom.powerOfTwo(5);
 	
 	public static final String EXIT_INSTRUCTION = "exit";
 	public static final String START_SESSION_INSTRUCTION = "start";
@@ -32,6 +32,7 @@ public class UDPServer implements Runnable
 	public static final String TIMEOUT_ACK_INSTRUCTION = "ok";
 	public static final String LOG_OUT_INSCTRUCTION = "logout";
 	public static final String LOG_OUT_ACK_INSTRUCTION = "logout";
+	public static final String HIGHSCORE_INSTRUCTION = "highscore";
 	
 	boolean recsive = true;
 	
@@ -119,7 +120,7 @@ public class UDPServer implements Runnable
 				serverSocket.receive(packet);
 				ips[1] = packet.getAddress().getHostName();
 			}
-			this.send("1", ips[1]);
+			send("1", ips[1]);
 			System.out.println(ips[1] + " | ip 1");
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -256,12 +257,12 @@ public class UDPServer implements Runnable
 	 * Listen for new client IP addresses and unpick game
 	 */
 	public void resetSession() {
+		sentHistory = "";
+		inputHistory = "";
+		
 		phoneIps = getIpsReset();
 		
 		playerPickedGame = "";
-		
-		sentHistory = "";
-		inputHistory = "";
 	}
 	
 	/**
@@ -345,6 +346,10 @@ public class UDPServer implements Runnable
 						if(input.split(";")[0].equals(TIMEOUT_INSTRUCTION)) {
 							sendToPhone(TIMEOUT_ACK_INSTRUCTION, Integer.parseInt(input.split(";")[1]));
 							sendToClientSimulator(TIMEOUT_ACK_INSTRUCTION, Integer.parseInt(input.split(";")[1]));
+						}
+						
+						if(input.split(";")[0].equals(HIGHSCORE_INSTRUCTION)) {
+							sendToPhone(game.getHighscoreList(), Integer.parseInt(input.split(";")[1]));
 						}
 					}
 					

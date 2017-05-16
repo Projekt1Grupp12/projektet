@@ -6,6 +6,11 @@ import java.util.concurrent.TimeUnit;
 import core.BetterRandom;
 import core.UDPServer;
 
+/**
+ * Duel game that inherints from the game class
+ * @author tom.leonardsson
+ *
+ */
 public class DualGame extends Game {
 	private int state;
 	private int delay;
@@ -15,7 +20,12 @@ public class DualGame extends Game {
 	private boolean shot;
 	
 	private boolean blink;
-
+	
+	/**
+	 * create a puzzel game with a set of players and server
+	 * @param players the set of players
+	 * @param server the server
+	 */
 	public DualGame(Player[] players, UDPServer server) {
 		super(players, server);
 		state = -1;
@@ -26,14 +36,26 @@ public class DualGame extends Game {
 		setMaxScore(1);
 	}
 	
+	/**
+	 * Send bad move and the score to the player
+	 * @param player the player to send bad feedback to
+	 */
 	public void sendBadFeedback(Player player) throws IOException {
 		sendToPhone("DEAD! " +  player.getScore(), player.getId());
 	}
 
+	/**
+	 * Raise the player score, send good move and score and move the engine one step
+	 * @param player the player to send good feedback to
+	 */
 	public void sendGoodFeedback(Player player) throws IOException {
 		sendToPhone("YOU WIN! " +  player.getScore(), player.getId());
 	}
-
+	
+	/**
+	 * update the game loop, blink the lights and light up the "target"
+	 * @param the input from the server
+	 */
 	public void update(String input) throws IOException {
 		setInput(input);
 		
@@ -65,6 +87,8 @@ public class DualGame extends Game {
 			}
 		}
 		
+		checkIfWon();
+		
 		for(int i = 0; i < getPlayers().length; i++) {
 			checkGoodInput(getPlayers()[i]);
 			getPlayers()[i].setAmountPressed(0);
@@ -80,7 +104,12 @@ public class DualGame extends Game {
 			e.printStackTrace();
 		}
 	}
-
+	
+	/**
+	 * Check which player shot who first
+	 * @param player the player to check
+	 * @return if the player hit the other or if the miss fired
+	 */
 	public boolean checkGoodInput(Player player) {
 		if(!shot && (player.lightsOn()[lightUp] && colorsPressed(player)[lightUp])  && state == 2) {
 			shot = true;
@@ -113,10 +142,17 @@ public class DualGame extends Game {
 		return false;
 	}
 
+	/**
+	 * Get the name of the game
+	 * @return the name 
+	 */
 	public String getName() {
 		return "Duel Game";
 	}
 	
+	/**
+	 * Run the game loop in a thread
+	 */
 	public void run() {
 		try {
 			while(!closeGame)
