@@ -13,50 +13,63 @@ public class GameOver extends AppCompatActivity {
     private String TAG = "GameOverDebug";
 
     //The alertDialog
-    private String message = null;
+    private String text = null;// text to show in AlertDialog window
     private String playAgainTitle = "New game?";
     private String playAgain = "Do you want to play again?";
     //Player and the new intents
     private Player player;
     private AlertDialogClass alertDialog = null;
     private Context context = null;
-    private String result = null;
+    private String message = null;// "Give Up", "logoutok", "LOSE!", "WIN!"
 
-    public GameOver(Context context, Player player, String result){
+    public GameOver(Context context, Player player, String message){
         this.context = context;
         this.player = new Player(player.getName(), player.getUserID(), player.getChoosenIP());
-        setResultMessage(result);
-        this.result = result;
-
+        this.message = message;
+        setTextMessageOfAlertDialog(message);
         displayMessage();
     }
 
-    private void setResultMessage(String result){
-        if (result.contains("WIN")) {
-            setMessageWinner();
+    private void setTextMessageOfAlertDialog(String message){
+        switch(message){
+            case "WIN!":
+                setTextWinner();
+                playAgainMessage();
+            case "LOSE!":
+                setTextLoser();
+                playAgainMessage();
+            case "logoutok":
+                setTextLogout();
+            case "Give Up":
+                setTextGiveUp();
+        }
+
+     /*   if (result.contains("WIN")) {
+            setTextWinner();
             playAgainMessage();
         } else if (result.contains("LOS")) {
-            setMessageLoser();
+            setTextLoser();
             playAgainMessage();
         }else if(result.contains("Give Up")){
-            setMessageGiveUp();
-        }
+            setTextGiveUp();
+        }*/
     }
 
-    private void setMessageWinner(){
-        this.message = "You are the winner!";
+    private void setTextWinner(){
+        this.text = "You are the winner!";
     }
-    private void setMessageLoser() { this.message = "Epic fail!"; }
-    private void setMessageGiveUp(){ this.message = "Game is interrupted." +"\nProgress will be lost";}
+    private void setTextLoser(){ this.text = "Epic fail!"; }
+    private void setTextGiveUp(){ this.text = "Game is interrupted." +"\nProgress will be lost";}
+    private void setTextLogout(){ this.text = "Game is interrupted." + "\nYou will be logged out";}
 
     /**
      * Prepares the alertDialog to display if player has won or lost the game
      */
     public void displayMessage(){
-        alertDialog = new AlertDialogClass(context, result);
+        alertDialog = new AlertDialogClass(context, message);
         alertDialog.setPlayer(player);
-        alertDialog.setTitle("");
-        alertDialog.setMessage(message);
+        alertDialog.setTitleOfAlertDialog("");
+        alertDialog.setTextToShowInAlertDialog(text);
         alertDialog.ButtonOK();
     }
 
@@ -67,8 +80,8 @@ public class GameOver extends AppCompatActivity {
     private void playAgainMessage() {
         alertDialog = new AlertDialogClass(context);
         alertDialog.setPlayer(player);
-        alertDialog.setTitle(playAgainTitle);
-        alertDialog.setMessage(playAgain);
+        alertDialog.setTitleOfAlertDialog(playAgainTitle);
+        alertDialog.setTextToShowInAlertDialog(playAgain);
         alertDialog.ButtonYesNo();
     }
 

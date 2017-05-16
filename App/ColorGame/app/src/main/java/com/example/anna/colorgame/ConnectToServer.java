@@ -20,6 +20,7 @@ public class ConnectToServer extends AsyncTask<String, String, String> {
     private AsyncResponse delegate = null;
     private Player player;
     private int constructor = 0;
+    private boolean connection = false;
 
     public ConnectToServer(String ip, AsyncResponse delegate){
         this.constructor=1;
@@ -53,6 +54,7 @@ public class ConnectToServer extends AsyncTask<String, String, String> {
             Log.d(TAG, "Asynctask. Sending user input to server");
             sendData = sentence.getBytes();
             DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, PORT);
+
             clientSocket.send(sendPacket);
 
             Log.d(TAG, "Asynctask. Recieving response from server");
