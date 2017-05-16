@@ -155,7 +155,7 @@ public abstract class Game implements Runnable {
 	 */
 	public void sendToPhone(String message, int index) throws IOException {
 		server.sendToPhone(message, index);
-		//if(ServerController.hasCreatedClient) server.sendToClientSimulator(message, index);
+		if(ServerController.hasCreatedClient && server.isLocalAddress(index)) server.sendToClientSimulator(message, index);
 	}
 	
 	/**

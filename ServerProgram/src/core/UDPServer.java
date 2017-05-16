@@ -410,6 +410,10 @@ public class UDPServer implements Runnable
 		game.closeGame = true;
 	}
 	
+	public boolean isLocalAddress(int index) {
+		return phoneIps[index].equals("127.0.0.1");
+	}
+	
 	/**
 	 * Turn the data from a UDP packet into a string with the data translated to chars
 	 * @param t the data
