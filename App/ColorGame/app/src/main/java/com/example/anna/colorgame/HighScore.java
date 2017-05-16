@@ -56,18 +56,24 @@ public class HighScore extends AppCompatActivity {
                         h.postDelayed(new Runnable() {
                             public void run(){
                                 try {
-                                    AssetFileDescriptor afd = getAssets().openFd("goodmove.mp3");
-                                    mpHighScore.stop();
-                                    mpHighScore.reset();
-                                    mpHighScore.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
-                                    mpHighScore.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                                    mpHighScore.prepare();
-                                    mpHighScore.start();
+                                    while(true) {
+                                        AssetFileDescriptor afd = getAssets().openFd("goodmove.mp3");
+                                        mpHighScore.stop();
+                                        mpHighScore.reset();
+                                        mpHighScore.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+                                        mpHighScore.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                                        mpHighScore.prepare();
+                                        mpHighScore.start();
+                                        wait(2000);
+                                    }
+
                                 }catch (IOException e) {
+                                    e.printStackTrace();
+                                } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }
                             }
-                        }, 3 * 1000);
+                        }, 1 * 1000);
             }
             else if(result.contains("SocketTimeoutException")){
                 alertDialog.setTitleMessage("Connections lost", "No connection to the Server. Try again later.");
