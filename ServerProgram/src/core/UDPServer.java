@@ -322,6 +322,8 @@ public class UDPServer implements Runnable
 				if(!hasStartedGame) {
 					if(input.contains("Game")) {
 						playerPickedGame = input;
+						sendToPhone(ACK_INSTRUCTION, 0);
+						sendToClientSimulator(ACK_INSTRUCTION, 0);
 						for(int i = 0; i < games.length; i++) {
 							if(games[i].getName().equals(input.split(";")[0])) {
 								resetGame(games[i]);
@@ -330,7 +332,8 @@ public class UDPServer implements Runnable
 					}
 					
 					if(!playerPickedGame.equals("") && playerPickedGame.split(";").length == 2 &&  input.split(";")[0].equals(JOIN_INSTRUCTION) && !input.split(";")[1].equals(playerPickedGame.split(";")[1])) {
-						sendToPhone(playerPickedGame.split(";")[0], playerPickedGame.split(";")[1].equals("0") ? 1 : 0);
+						//sendToPhone(playerPickedGame.split(";")[0], playerPickedGame.split(";")[1].equals("0") ? 1 : 0);
+						send(playerPickedGame.split(";")[0], phoneIps[1], port+1);
 						sendToClientSimulator(playerPickedGame.split(";")[0], playerPickedGame.split(";")[1].equals("0") ? 1 : 0);
 					}
 
@@ -408,6 +411,15 @@ public class UDPServer implements Runnable
 	 */
 	public void endGame() {
 		game.closeGame = true;
+	}
+	
+	/**
+	 * Check if a client has local ip-addreess
+	 * @param index the index of the client
+	 * @return if it's a local ip-address
+	 */
+	public boolean isLocalAddress(int index) {
+		return phoneIps[index].equals("127.0.0.1");
 	}
 	
 	/**
