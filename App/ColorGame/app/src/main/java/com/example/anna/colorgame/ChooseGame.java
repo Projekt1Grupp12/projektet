@@ -100,15 +100,15 @@ public class ChooseGame extends AppCompatActivity implements View.OnClickListene
         switch(view.getId()){
             case R.id.buttonPuzzle:
                 this.startThisClass = PuzzleGame.class;
-                data = "Puzzle Game";
+                data = "PuzzleGame";
                 break;
             case R.id.buttonTraffic:
                 this.startThisClass = TrafficGame.class;
-                data = "Traffic Game";
+                data = "TrafficGame";
                 break;
             case R.id.buttonDuel:
                 this.startThisClass = DuelGame.class;
-                data = "Duel Game";
+                data = "DuelGame";
                 break;
         }
         data += SEMICOLON + player.getUserID();
