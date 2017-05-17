@@ -332,7 +332,7 @@ public class UDPServer implements Runnable
 					}
 					
 					if(!playerPickedGame.equals("") && playerPickedGame.split(";").length == 2 &&  input.split(";")[0].equals(JOIN_INSTRUCTION) && !input.split(";")[1].equals(playerPickedGame.split(";")[1])) {
-						//sendToPhone(playerPickedGame.split(";")[0], playerPickedGame.split(";")[1].equals("0") ? 1 : 0);
+						sendToPhone(playerPickedGame.split(";")[0], playerPickedGame.split(";")[1].equals("0") ? 1 : 0);
 						send(playerPickedGame.split(";")[0], phoneIps[1], port+1);
 						sendToClientSimulator(playerPickedGame.split(";")[0], playerPickedGame.split(";")[1].equals("0") ? 1 : 0);
 					}
