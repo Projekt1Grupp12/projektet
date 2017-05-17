@@ -51,7 +51,7 @@ public class ChooseGame extends AppCompatActivity implements View.OnClickListene
         Intent intent = getIntent();
         player = (Player)intent.getSerializableExtra("player");
 
-        recieveDataThread = new RecieveDataThread(this, player);//added thread 05-16
+        recieveDataThread = new RecieveDataThread(this, player, this);//added thread 05-16
         thread = new Thread(recieveDataThread);
         thread.start();
     }
@@ -71,7 +71,9 @@ public class ChooseGame extends AppCompatActivity implements View.OnClickListene
         pd.setMessage("Waiting for opponent...");
         pd.show();
     }
+
     public void setStart(boolean start){this.start=start;}
+
     public void startAsyncTask(String message) {//Button
         ConnectToServer runner = new ConnectToServer(player.getChoosenIP(), delegate);
         Log.d(TAG, "Task created");
