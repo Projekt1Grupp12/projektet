@@ -28,4 +28,19 @@ public class BetterRandom {
 		
 		return (lastResult = r);
 	}
+	
+	/**
+	 * Just counts 2^x
+	 * @param x the value to raise up 2 by
+	 * @return 2^x
+	 */
+	public static int powerOfTwo(int x) {
+		int r = 2;
+		
+		for(int i = 0; i < x; i++) {
+			r *= 2;
+		}
+		
+		return r/2;
+	}
 }
