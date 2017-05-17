@@ -30,4 +30,11 @@ public class DuelGame extends Game implements View.OnClickListener{
         activateMusic();
         startThread();
     }
+
+    @Override
+    protected void onDestroy() {
+        Log.d(TAG, "onDestroy");
+        closeReceiveThread();
+        super.onDestroy();
+    }
 }

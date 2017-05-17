@@ -2,6 +2,7 @@ package com.example.anna.colorgame;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.icu.util.TimeUnit;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,6 +27,9 @@ public class ChooseGame extends AppCompatActivity implements View.OnClickListene
         @Override
         public void postResult(String result) {
             Log.d(TAG, "RESULTAT FRÅN SERVER: " + result);
+            if(result.contains("SocketTimeoutException")) {
+                pd.dismiss();
+            }
         }
     };
     @Override
@@ -41,16 +45,16 @@ public class ChooseGame extends AppCompatActivity implements View.OnClickListene
         thread.start();
     }
     @Override
-    protected void onDestroy() {//added 05-16 for thread
+    protected void onStop() {//added 05-16 for thread
         Log.d(TAG, "onDestroy() ");
-        recieveDataThread.closeSocket();
         recieveDataThread.setIsRunning(false);
         thread.interrupt();
-        super.onDestroy();
+        super.onStop();
     }
 
     private void startProgressDialog(){
         pd = new ProgressDialog(ChooseGame.this);
+        pd.setCanceledOnTouchOutside(false);
         pd.setProgressStyle(pd.STYLE_SPINNER);
         pd.setMessage("Waiting for opponent...");
         pd.show();

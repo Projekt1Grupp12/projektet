@@ -20,7 +20,7 @@ public class GameOver extends AppCompatActivity {
     private Player player;
     private AlertDialogClass alertDialog = null;
     private Context context = null;
-    private String message = null;// "Give Up", "logoutok", "LOSE!", "WIN!"
+    private String message = null;// "Give Up", "logout", "LOSE!", "WIN!"
 
     public GameOver(Context context, Player player, String message){
         this.context = context;
@@ -40,23 +40,13 @@ public class GameOver extends AppCompatActivity {
                 setTextLoser();
                 playAgainMessage();
                 break;
-            case "logoutok":
+            case "logout":
                 setTextLogout();
                 break;
             case "Give Up":
                 setTextGiveUp();
                 break;
         }
-
-     /*   if (result.contains("WIN")) {
-            setTextWinner();
-            playAgainMessage();
-        } else if (result.contains("LOS")) {
-            setTextLoser();
-            playAgainMessage();
-        }else if(result.contains("Give Up")){
-            setTextGiveUp();
-        }*/
     }
 
     private void setTextWinner(){
@@ -86,5 +76,6 @@ public class GameOver extends AppCompatActivity {
         alertDialog.setPlayer(player);
         alertDialog.ButtonYesNo();
     }
+
 
 }

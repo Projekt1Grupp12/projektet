@@ -1,5 +1,6 @@
 package com.example.anna.colorgame;
 
+import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 
@@ -127,15 +128,32 @@ public class Game extends AppCompatActivity implements View.OnClickListener{
         thread.start();
     }
     public void closeReceiveThread(){//this method closes socket, ends run method and stops the thread
-
-        recieveDataThread.closeSocket();
         recieveDataThread.setIsRunning(false);
         thread.interrupt();
-
-
     }
 
     public AsyncResponse getDelgate(){
         return this.delegate;
+    }
+
+    /**
+     * Shows AlertDialog in PuzzleGame activity.
+     */
+    public void showAlertDialog(Context context){
+        GameOver gameOver = new GameOver(context, this.player, "Give Up");
+
+    }
+
+    /**
+     * This method is called when button "Give Up" is clicked.
+     * @param view
+     */
+    public void giveUp(View view){
+        showAlertDialog(this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        showAlertDialog(this);
     }
 }
