@@ -1,5 +1,6 @@
 package com.example.anna.colorgame;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
@@ -11,8 +12,10 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -22,7 +25,7 @@ public class HighScore extends AppCompatActivity {
     private String TAG = "debugHighScore";
     private Player player = null;
     private AlertDialogClass alertDialog = null;
-
+    private boolean isRunning = true;
     private MediaPlayer mpHighScore;
     private Thread thread = null;
 
@@ -56,7 +59,7 @@ public class HighScore extends AppCompatActivity {
 
                 thread = new Thread() {
                     public void run() {
-                        while (true) {
+                        while (isRunning) {
                             try {
                                 AssetFileDescriptor afd = getAssets().openFd("goodmove.mp3");
                                 mpHighScore.stop();
@@ -97,25 +100,19 @@ public class HighScore extends AppCompatActivity {
         Intent intent = getIntent();
         player = (Player)intent.getSerializableExtra("player");
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         alertDialog = new AlertDialogClass(this);
         this.mpHighScore = MediaPlayer.create(this, R.raw.goodmove);
         String message = "highscore;" + player.getUserID();
         startAsyncTask(message);
     }
 
+
+
+    @Override
+    protected void onStop() {
+        isRunning = false;
+        super.onStop();
+    }
 
     public void startAsyncTask(String message) {
 
@@ -125,5 +122,33 @@ public class HighScore extends AppCompatActivity {
 
         runner.execute(message);
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        String message = "logout" + ";" + player.getUserID();
+        ConnectToServer connectToServer = new ConnectToServer(player);
+        Log.d(TAG, "connectToServer is created " + player.getName());
+        System.gc();
+        connectToServer.execute(message);
+
+        Log.d(TAG, "Creating new intent and sending data");
+
+        Intent intent = new Intent(this, MainMenu.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("player", player);
+        Log.d(TAG, "Starting new Activity");
+        startActivity(intent);
     }
 }

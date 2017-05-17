@@ -1,11 +1,13 @@
 package com.example.anna.colorgame;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.icu.util.TimeUnit;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 
 public class ChooseGame extends AppCompatActivity implements View.OnClickListener {
@@ -60,8 +62,6 @@ public class ChooseGame extends AppCompatActivity implements View.OnClickListene
         pd.show();
     }
 
-    public void setStart(boolean start){this.start=start;}
-
     public void startAsyncTask(String message) {//Button
         ConnectToServer runner = new ConnectToServer(player.getChoosenIP(), delegate);
         Log.d(TAG, "Task created");
@@ -106,4 +106,33 @@ public class ChooseGame extends AppCompatActivity implements View.OnClickListene
         intent.putExtra("player", player);
         startActivity(intent);
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        String message = "logout" + ";" + player.getUserID();
+        ConnectToServer connectToServer = new ConnectToServer(player);
+        Log.d(TAG, "connectToServer is created " + player.getName());
+        System.gc();
+        connectToServer.execute(message);
+
+        Log.d(TAG, "Creating new intent and sending data");
+
+        Intent intent = new Intent(this, MainMenu.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("player", player);
+        Log.d(TAG, "Starting new Activity");
+        startActivity(intent);
+    }
+
 }
