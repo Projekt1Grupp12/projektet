@@ -32,7 +32,7 @@ public class PuzzelGame extends Game {
 		super(players, server);
 		maxDelay = 128*2;
 
-		setMaxScore(2);
+		setMaxScore(1);
 	}
 	
 	/**

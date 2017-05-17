@@ -3,6 +3,7 @@ package com.example.anna.colorgame;
 
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 /**
  * Created by George on 2017-04-28.
@@ -34,13 +35,17 @@ public class GameOver extends AppCompatActivity {
             case "WIN!":
                 setTextWinner();
                 playAgainMessage();
+                break;
             case "LOSE!":
                 setTextLoser();
                 playAgainMessage();
+                break;
             case "logoutok":
                 setTextLogout();
+                break;
             case "Give Up":
                 setTextGiveUp();
+                break;
         }
 
      /*   if (result.contains("WIN")) {
@@ -65,7 +70,8 @@ public class GameOver extends AppCompatActivity {
      * Prepares the alertDialog to display if player has won or lost the game
      */
     public void displayMessage(){
-        alertDialog = new AlertDialogClass(context, text);
+        alertDialog = new AlertDialogClass(context, message);
+        alertDialog.setTextToShowInAlertDialog(text);
         alertDialog.setPlayer(player);
         alertDialog.ButtonOK();
     }
@@ -75,7 +81,8 @@ public class GameOver extends AppCompatActivity {
      * to play again or not.
      */
     private void playAgainMessage() {
-        alertDialog = new AlertDialogClass(context, "New game?", "Do you want to play again?");
+        alertDialog = new AlertDialogClass(context, "New game?", " ");
+        alertDialog.setTextToShowInAlertDialog("Do you want to play again?");
         alertDialog.setPlayer(player);
         alertDialog.ButtonYesNo();
     }
