@@ -410,6 +410,11 @@ public class UDPServer implements Runnable
 		game.closeGame = true;
 	}
 	
+	/**
+	 * Check if a client has local ip-addreess
+	 * @param index the index of the client
+	 * @return if it's a local ip-address
+	 */
 	public boolean isLocalAddress(int index) {
 		return phoneIps[index].equals("127.0.0.1");
 	}
