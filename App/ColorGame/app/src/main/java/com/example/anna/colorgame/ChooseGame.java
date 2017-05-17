@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-public class ChooseGame extends AppCompatActivity {
+public class ChooseGame extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "debugChoose";
     private Player player;
     private ProgressDialog pd;
@@ -15,6 +15,7 @@ public class ChooseGame extends AppCompatActivity {
     private RecieveDataThread recieveDataThread;
     private Thread thread;
     private boolean start = false;
+    private static final String SEMICOLON = ";";
 
     private AsyncResponse delegate = new AsyncResponse() {
         /*
@@ -63,30 +64,7 @@ public class ChooseGame extends AppCompatActivity {
         finish();//do we need this method?
         super.onDestroy();
     }
-    /**
-     * This method is called when Puzzle button is clicked. It starts next Activity and sends data to it.
-     * @param view
-     */
-    public void startPuzzle(View view){
-        startProgressDialog();
-        this.startThisClass = PuzzleGame.class;
-        startAsyncTask("Puzzle Game;0");//sending message to server
-        while(!start){
-            //do nothing while start=false
-        }
-        pd.dismiss();//when start=true, start next activity
-        startActivity(startThisClass);
-    } //Button
-    public void startTraffic(View view){
-        startProgressDialog();
-        this.startThisClass = TrafficGame.class;
-        startAsyncTask("Traffic Game;0");
-    } //Button
-    public void startDuel(View view){
-        startProgressDialog();
-        this.startThisClass = DuelGame.class;
-        startAsyncTask("Duel Game;0");
-    } //Button
+
     private void startProgressDialog(){
         pd = new ProgressDialog(ChooseGame.this);
         pd.setProgressStyle(pd.STYLE_SPINNER);
@@ -106,4 +84,59 @@ public class ChooseGame extends AppCompatActivity {
         intent.putExtra("player", player);
         startActivity(intent);
     }
+
+    /*
+    This method is called when one of the buttons is clicked in the GUI.
+    Which button is pushed is stored in data variable.
+    Then the semicolon and userID is added to data string and sent to startAsyncTask method.
+     */
+    @Override
+    public void onClick(View view) {
+       startProgressDialog();
+        Log.d(TAG, "onClick()-metod");
+        String data = " ";
+        switch(view.getId()){
+            case R.id.buttonPuzzle:
+                this.startThisClass = PuzzleGame.class;
+                data = "Puzzle Game";
+                break;
+            case R.id.buttonTraffic:
+                this.startThisClass = TrafficGame.class;
+                data = "Traffic Game";
+                break;
+            case R.id.buttonDuel:
+                this.startThisClass = DuelGame.class;
+                data = "Duel Game";
+                break;
+        }
+        data += SEMICOLON + player.getUserID();
+        Log.d(TAG, "onClick-method data: " + String.valueOf(data));
+        startAsyncTask(data);
+    }
 }
+
+/**
+ * This method is called when Puzzle button is clicked. It starts next Activity and sends data to it.
+ * @param view
+ */
+    /*public void startPuzzle(View view){
+        startProgressDialog();
+        this.startThisClass = PuzzleGame.class;
+        startAsyncTask("Puzzle Game;0");//sending message to server
+        while(!start){
+            //do nothing while start=false
+        }
+        pd.dismiss();//when start=true, start next activity
+        startActivity(startThisClass);
+    } //Button
+    public void startTraffic(View view){
+        startProgressDialog();
+        this.startThisClass = TrafficGame.class;
+        startAsyncTask("Traffic Game;0");
+    } //Button
+    public void startDuel(View view){
+        startProgressDialog();
+        this.startThisClass = DuelGame.class;
+        startAsyncTask("Duel Game;0");
+    } //Button
+*/
