@@ -26,21 +26,6 @@ public class ChooseGame extends AppCompatActivity implements View.OnClickListene
         @Override
         public void postResult(String result) {
             Log.d(TAG, "RESULTAT FRÅN SERVER: " + result);
-            if(result.contains("ok")){
-                //do nothing
-            }
-
-
-          /*  if (result.contains("start")){
-                pd.dismiss();
-                startActivity(startThisClass);
-            } else if(result.contains("SocketTimeoutException")){
-                startAsyncTask("timeout;0");
-            } else if(result.contains("ok")){
-                pd.dismiss();
-                startThisClass = MainMenu.class;
-                startActivity(startThisClass);
-            }*/
         }
     };
     @Override
@@ -61,7 +46,6 @@ public class ChooseGame extends AppCompatActivity implements View.OnClickListene
         recieveDataThread.closeSocket();
         recieveDataThread.setIsRunning(false);
         thread.interrupt();
-        finish();//do we need this method?
         super.onDestroy();
     }
 
@@ -80,12 +64,7 @@ public class ChooseGame extends AppCompatActivity implements View.OnClickListene
         Log.d(TAG, "Execute task");
         runner.execute(message);
     }
-    private void startActivity(Class startThisClass){
-        Intent intent = new Intent(this, startThisClass);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("player", player);
-        startActivity(intent);
-    }
+
 
     /*
     This method is called when one of the buttons is clicked in the GUI.
@@ -115,30 +94,12 @@ public class ChooseGame extends AppCompatActivity implements View.OnClickListene
         Log.d(TAG, "onClick-method data: " + String.valueOf(data));
         startAsyncTask(data);
     }
-}
 
-/**
- * This method is called when Puzzle button is clicked. It starts next Activity and sends data to it.
- * @param view
- */
-    /*public void startPuzzle(View view){
-        startProgressDialog();
-        this.startThisClass = PuzzleGame.class;
-        startAsyncTask("Puzzle Game;0");//sending message to server
-        while(!start){
-            //do nothing while start=false
-        }
+    public void startGame() {
+        Intent intent = null;
         pd.dismiss();//when start=true, start next activity
-        startActivity(startThisClass);
-    } //Button
-    public void startTraffic(View view){
-        startProgressDialog();
-        this.startThisClass = TrafficGame.class;
-        startAsyncTask("Traffic Game;0");
-    } //Button
-    public void startDuel(View view){
-        startProgressDialog();
-        this.startThisClass = DuelGame.class;
-        startAsyncTask("Duel Game;0");
-    } //Button
-*/
+        intent = new Intent(this, startThisClass);
+        intent.putExtra("player", player);
+        startActivity(intent);
+    }
+}

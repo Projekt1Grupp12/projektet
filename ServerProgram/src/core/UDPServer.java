@@ -26,7 +26,7 @@ public class UDPServer implements Runnable
 	public static final String START_SESSION_INSTRUCTION = "start";
 	public static final String START_GAME_INSTRUCTION = "-2";
 	public static final String[] ENGINE_INSTRUCTION = new String[]{"-3", "-4"};
-	public static final String JOIN_INSTRUCTION = "join?";
+	public static final String JOIN_INSTRUCTION = "ready";
 	public static final String ACK_INSTRUCTION = "-1";
 	public static final String TIMEOUT_INSTRUCTION = "timeout";
 	public static final String TIMEOUT_ACK_INSTRUCTION = "ok";
@@ -323,6 +323,7 @@ public class UDPServer implements Runnable
 					if(input.contains("Game")) {
 						playerPickedGame = input;
 						sendToPhone(ACK_INSTRUCTION, 0);
+						send(playerPickedGame.split(";")[0], phoneIps[1], port+1);
 						sendToClientSimulator(ACK_INSTRUCTION, 0);
 						for(int i = 0; i < games.length; i++) {
 							if(games[i].getName().equals(input.split(";")[0])) {
@@ -339,8 +340,10 @@ public class UDPServer implements Runnable
 
 					if(input.split(";").length == 2) {
 						if(input.split(";")[0].equals("ready")) {
+							int portThread = port+1;
 							for(int i = 0; i < 2 ; i++) {
-								sendToPhone(START_SESSION_INSTRUCTION, i);
+								send(START_SESSION_INSTRUCTION, phoneIps[i], portThread);
+								//sendToPhone(START_SESSION_INSTRUCTION, i);
 								sendToClientSimulator(START_SESSION_INSTRUCTION, i);
 							}
 							input = "";
