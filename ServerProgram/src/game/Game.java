@@ -22,8 +22,8 @@ public abstract class Game implements Runnable {
 	private int fullScreen;
 	private int winningPlayer;
 	private int maxScore;
-	private int stepParts;
-	private int stepsCount;
+	private int[] stepParts;
+	private int[] stepsCount;
 	
 	private UDPServer server;
 	
@@ -49,6 +49,9 @@ public abstract class Game implements Runnable {
 		this.server = server;
 		input = "";
 		closeGame = false;
+		
+		stepParts = new int[2];
+		stepsCount = new int[2];
 		
 		timer = new Timer();
 		
@@ -128,11 +131,11 @@ public abstract class Game implements Runnable {
 	 */
 	public void takeProgressStep(int index) throws IOException {
 		for(int i = 0; i < players.length; i++) {
-			stepsCount += 1;
-			if(stepsCount >= maxScore / MAX_STEPS) {
+			stepsCount[index] += 1;
+			if(stepsCount[index] >= maxScore / MAX_STEPS) {
 				server.sendToArdurino(UDPServer.ENGINE_INSTRUCTION[index]);
 				server.sendToArdurino(setupFullScreen() + "");
-				stepsCount = 0;
+				stepsCount[index] = 0;
 			}
 			break;
 		}
@@ -155,7 +158,7 @@ public abstract class Game implements Runnable {
 	 */
 	public void sendToPhone(String message, int index) throws IOException {
 		server.sendToPhone(message, index);
-		if(ServerController.hasCreatedClient) server.sendToClientSimulator(message, index);
+		if(ServerController.hasCreatedClient && server.isLocalAddress(index)) server.sendToClientSimulator(message, index);
 	}
 	
 	/**
@@ -297,7 +300,8 @@ public abstract class Game implements Runnable {
 			HighscoreEntry h = new HighscoreEntry(players[winningPlayer].getName(), result + "");
 			highscoreList.tryAdd(h);
 			server.hasStartedGame = false;
-			stepsCount = 0;
+			for(int i = 0; i < stepsCount.length; i++)
+				stepsCount[i] = 0;
 		}
 		//server.resetSession();
 		gameOver = true;
@@ -355,7 +359,7 @@ public abstract class Game implements Runnable {
 	 */
 	public void setMaxScore(int maxScore) {
 		this.maxScore = maxScore*MAX_STEPS;
-		stepParts = (this.maxScore / MAX_STEPS);
+		//stepParts = (this.maxScore / MAX_STEPS);
 	}
 	
 	public String getHighscoreList() {
