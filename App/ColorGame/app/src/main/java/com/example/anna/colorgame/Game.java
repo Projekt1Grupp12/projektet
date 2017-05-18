@@ -16,7 +16,6 @@ import java.io.IOException;
  */
 
 public class Game extends AppCompatActivity implements View.OnClickListener{
-
     private static final String TAG = "debugGame";
     private static final String RED = "3";
     private static final String YELLOW = "2";
@@ -83,10 +82,11 @@ public class Game extends AppCompatActivity implements View.OnClickListener{
         this.mpBad = MediaPlayer.create(this, R.raw.badmove);
     }
 
-    /*
-    This method is called when one of the buttons is clicked in the GUI.
-    Which button is pushed is stored in data variable.
-    Then the semicolon and userID is added to data string and sent to startAsyncTask method.
+    /**
+     * This method is called when one of the buttons is clicked in the GUI.
+     * Which button is pushed is stored in data variable.
+     * Then the semicolon and userID is added to data string and sent to startAsyncTask method.
+     * @param view
      */
     @Override
     public void onClick(View view) {
@@ -106,9 +106,11 @@ public class Game extends AppCompatActivity implements View.OnClickListener{
         startAsyncTask(temp, data);
     }
 
-    /*
-    This method is used to create new instance of a ConnectToServer class and send data as
-    parameter to doInBackground method of that class.
+    /**
+     * This method is used to create new instance of a ConnectToServer class and send data as
+     * parameter to doInBackground method of that class.
+     * @param color
+     * @param data
      */
     public void startAsyncTask(String color, String data){
         Log.d(TAG, "Create task. " + color);
@@ -121,7 +123,6 @@ public class Game extends AppCompatActivity implements View.OnClickListener{
     /**
      *  Handler and new thread
      */
-
     public void startThread(){
         recieveDataThread = new RecieveDataThread(this, player);
         thread = new Thread(recieveDataThread);

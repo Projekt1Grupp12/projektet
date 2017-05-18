@@ -1,34 +1,20 @@
 package com.example.anna.colorgame;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.IOException;
 
-public class HighScore extends AppCompatActivity {
-
-
+public class HighScore extends SuperActivity {
     private String TAG = "debugHighScore";
-    private Player player = null;
-    private AlertDialogClass alertDialog = null;
     private boolean isRunning = true;
     private MediaPlayer mpHighScore;
-    private Thread thread = null;
-
     private AsyncResponse delegate = new AsyncResponse() {
 
         /*
@@ -45,19 +31,15 @@ public class HighScore extends AppCompatActivity {
 
         public void postResult(String result) {
             TextView textViewMove = (TextView) findViewById(R.id.textViewMove);
-            Log.d(TAG, "Inside updateUI call 2");
-
             Log.d(TAG, "RESULTAT FRÅN SERVER " + result);
-
-            if(result != null) {
+            if (result != null) {
                 textViewMove.setText(result);
                 Log.d(TAG, "Text updated");
                 //Music is played here.
                 if (mpHighScore.isPlaying()) {
                     mpHighScore.stop();
                 }
-
-                thread = new Thread() {
+                setThread(new Thread() {
                     public void run() {
                         while (isRunning) {
                             try {
@@ -76,17 +58,13 @@ public class HighScore extends AppCompatActivity {
                             }
                         }
                     }
-                };
-                thread.start();
+                });
+                getThread().start();
 
-            }else if(result.contains("SocketTimeoutException")){
-                alertDialog.setTitleMessage("Connections lost", "No connection to the Server. Try again later.");
-                alertDialog.ButtonOK();
-            }
-            else{
-                alertDialog.setTitleMessage("There is no cake", "The cake is a lie!");
-                alertDialog.ButtonOK();
-
+            } else if (result.contains("SocketTimeoutException")) {
+                showAlertDialog("Connections lost", "No connection to the Server. Try again later.");
+            } else {
+                showAlertDialog("There is no cake", "The cake is a lie!");
             }
         }
     };
@@ -95,33 +73,17 @@ public class HighScore extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_high_score);
-
-        //Get the intent that started this activity and extract the string
         Intent intent = getIntent();
-        player = (Player)intent.getSerializableExtra("player");
-
-        alertDialog = new AlertDialogClass(this);
+        setPlayer((Player) intent.getSerializableExtra("player"));
+        setAlertDialog(new AlertDialogClass(this));
         this.mpHighScore = MediaPlayer.create(this, R.raw.goodmove);
-        String message = "highscore;" + player.getUserID();
-        startAsyncTask(message);
+        startAsyncTask("highscore;" + getPlayer().getUserID(), getPlayer(), delegate);//using new class
     }
-
-
 
     @Override
     protected void onStop() {
         isRunning = false;
         super.onStop();
-    }
-
-    public void startAsyncTask(String message) {
-
-        ConnectToServer runner = new ConnectToServer(player.getChoosenIP(), delegate);
-
-        Log.d(TAG, "Task created");
-
-        runner.execute(message);
-
     }
 
     @Override
@@ -136,19 +98,8 @@ public class HighScore extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        String message = "logout" + ";" + player.getUserID();
-        ConnectToServer connectToServer = new ConnectToServer(player);
-        Log.d(TAG, "connectToServer is created " + player.getName());
-        System.gc();
-        connectToServer.execute(message);
-
-        Log.d(TAG, "Creating new intent and sending data");
-
-        Intent intent = new Intent(this, MainMenu.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("player", player);
-        Log.d(TAG, "Starting new Activity");
-        startActivity(intent);
+        Log.d(TAG, "onBackPressed");
+        startAsyncTask("logout" + ";" + getPlayer().getUserID(), getPlayer(), delegate);//using new class
+        startNextActivity(getPlayer(), this, MainMenu.class);
     }
 }
