@@ -32,7 +32,10 @@ public class HighScore extends SuperActivity {
         public void postResult(String result) {
             TextView textViewMove = (TextView) findViewById(R.id.textViewMove);
             Log.d(TAG, "RESULTAT FRÅN SERVER " + result);
-            if (result != null) {
+            if (result.contains("SocketTimeoutException")) {
+                showAlertDialog("Connections lost", "No connection to the Server. Try again later.");
+            }
+            else if (result != null) {
                 textViewMove.setText(result);
                 Log.d(TAG, "Text updated");
                 //Music is played here.
@@ -60,9 +63,6 @@ public class HighScore extends SuperActivity {
                     }
                 });
                 getThread().start();
-
-            } else if (result.contains("SocketTimeoutException")) {
-                showAlertDialog("Connections lost", "No connection to the Server. Try again later.");
             } else {
                 showAlertDialog("There is no cake", "The cake is a lie!");
             }
@@ -99,7 +99,6 @@ public class HighScore extends SuperActivity {
     @Override
     public void onBackPressed() {
         Log.d(TAG, "onBackPressed");
-        startAsyncTask("logout" + ";" + getPlayer().getUserID(), getPlayer(), delegate);//using new class
         startNextActivity(getPlayer(), this, MainMenu.class);
     }
 }

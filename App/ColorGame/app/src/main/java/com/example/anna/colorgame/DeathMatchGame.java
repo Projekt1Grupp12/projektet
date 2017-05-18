@@ -9,7 +9,7 @@ import android.widget.TextView;
  * Created by George on 2017-05-18.
  */
 
-public class DeathMatchGame extends Game{
+public class DeathmatchGame extends Game{
     private static final String TAG = "debugPuzzleGame";
     private Player player;
 
@@ -21,7 +21,7 @@ public class DeathMatchGame extends Game{
         viewToChange.setText("Deathmatch Game");
 
         //Get the intent that started this activity and extract the string
-        Log.d(TAG, "PuzzleGame, onCreate method. Creating an intent");
+        Log.d(TAG, "DeathmatchGame, onCreate method. Creating an intent");
         Intent intent = getIntent();
         player = (Player) intent.getSerializableExtra("player");
         setPlayer(this.player);
