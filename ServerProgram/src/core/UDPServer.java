@@ -340,9 +340,12 @@ public class UDPServer implements Runnable
 					if(input.split(";").length == 2) {
 						if(input.split(";")[0].equals("ready")) {
 							for(int i = 0; i < 2 ; i++) {
-								sendToPhone(START_SESSION_INSTRUCTION, i);
-								sendToClientSimulator(START_SESSION_INSTRUCTION, i);
+								//sendToPhone(START_SESSION_INSTRUCTION, i);
+								//sendToClientSimulator(START_SESSION_INSTRUCTION, i);
 							}
+							
+							sendToPhone(ACK_INSTRUCTION, 1);
+							send(START_SESSION_INSTRUCTION, phoneIps[0], port+1);
 							input = "";
 						}
 						
