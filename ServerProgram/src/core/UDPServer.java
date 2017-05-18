@@ -57,7 +57,7 @@ public class UDPServer implements Runnable
 	
 	byte[] receiveData;
 	
-	Game game = new PuzzelGame(new Player[]{new Player(0), new Player(1)}, this);
+	Game game;// = new PuzzelGame(new Player[]{new Player(0), new Player(1)}, this);
 	
 	Game[] games = new Game[]{new PuzzelGame(new Player[]{new Player(0), new Player(1)}, this), new TrafficGame(new Player[]{new Player(0), new Player(1)}, this), new DualGame(new Player[]{new Player(0), new Player(1)}, this)};
 	
@@ -86,6 +86,8 @@ public class UDPServer implements Runnable
 		collectedPlayerNames = new String[2];
 		
 		playerPickedGame = "";
+		
+		game = games[0];
 	}
 	
 	/**
@@ -335,6 +337,7 @@ public class UDPServer implements Runnable
 						
 						send(playerPickedGame.split(";")[0], phoneIps[1], port+1);
 						sendToClientSimulator(playerPickedGame.split(";")[0], playerPickedGame.split(";")[1].equals("0") ? 1 : 0);
+						
 						for(int i = 0; i < games.length; i++) {
 							if(games[i].getName().equals(input.split(";")[0])) {
 								resetGame(games[i]);
