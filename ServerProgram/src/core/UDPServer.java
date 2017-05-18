@@ -33,6 +33,7 @@ public class UDPServer implements Runnable
 	public static final String LOG_OUT_INSCTRUCTION = "logout";
 	public static final String LOG_OUT_ACK_INSTRUCTION = "logout";
 	public static final String HIGHSCORE_INSTRUCTION = "highscore";
+	public static final String GET_GAMES_INSTRUCTION =  "getgames";
 	
 	boolean recsive = true;
 	
@@ -320,10 +321,20 @@ public class UDPServer implements Runnable
 				if(game.realTime) game.setInput(input);
 				//System.out.println(hasStartedGame);
 				if(!hasStartedGame) {
+					if(input.equals(GET_GAMES_INSTRUCTION)) {
+						String t = "";
+						for(int i = 0; i < games.length; i++)
+							t += games[i].getName();
+						sendToPhone(t, 0);
+					}
+					
 					if(input.contains("Game")) {
 						playerPickedGame = input;
 						sendToPhone(ACK_INSTRUCTION, 0);
 						sendToClientSimulator(ACK_INSTRUCTION, 0);
+						
+						send(playerPickedGame.split(";")[0], phoneIps[1], port+1);
+						sendToClientSimulator(playerPickedGame.split(";")[0], playerPickedGame.split(";")[1].equals("0") ? 1 : 0);
 						for(int i = 0; i < games.length; i++) {
 							if(games[i].getName().equals(input.split(";")[0])) {
 								resetGame(games[i]);
@@ -331,13 +342,6 @@ public class UDPServer implements Runnable
 						}
 					}
 					
-					System.out.println(input.split(";")[0].equals(JOIN_INSTRUCTION));
-					if(input.split(";")[0].equals(JOIN_INSTRUCTION)) { //input.split(";")[0].equals(JOIN_INSTRUCTION) && !input.split(";")[1].equals(playerPickedGame.split(";")[1])) {
-						//sendToPhone(playerPickedGame.split(";")[0], playerPickedGame.split(";")[1].equals("0") ? 1 : 0);
-						send(playerPickedGame.split(";")[0], phoneIps[1], port+1);
-						sendToClientSimulator(playerPickedGame.split(";")[0], playerPickedGame.split(";")[1].equals("0") ? 1 : 0);
-					}
-
 					if(input.split(";").length == 2) {
 						if(input.split(";")[0].equals("ready")) {
 							int p = port + 1;
