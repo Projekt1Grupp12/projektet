@@ -324,7 +324,7 @@ public class UDPServer implements Runnable
 					if(input.equals(GET_GAMES_INSTRUCTION)) {
 						String t = "";
 						for(int i = 0; i < games.length; i++)
-							t += games[i].getName();
+							t += games[i].getName() + ((i != games.length-1) ? ";" : "");
 						sendToPhone(t, 0);
 					}
 					
