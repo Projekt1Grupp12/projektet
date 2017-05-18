@@ -29,6 +29,8 @@ public class ClientController implements Runnable {
 	DatagramSocket serverSocketListen = null;
 	
 	private boolean sentName;
+	
+	public boolean hasGottenGame;
 
 	/**
 	 * Create client controller with a specific player id
@@ -117,6 +119,9 @@ public class ClientController implements Runnable {
 					send("Ready?");
 				} else {
 					view.setFeedbackText(UDPServer.putTogether(packet.getData()/*, "XXXX MOVES! XXXX".length()*/));
+				}
+				if(UDPServer.putTogether(packet.getData()).contains("Game")) {
+					hasGottenGame = true;
 				}
 				receiveData = new byte[32];
 				packet = new DatagramPacket(receiveData, receiveData.length);

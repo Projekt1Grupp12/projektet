@@ -1,33 +1,29 @@
 package com.example.anna.colorgame;
 
 import android.content.Intent;
-import android.content.res.AssetFileDescriptor;
-import android.media.MediaPlayer;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 
-import java.io.IOException;
+/**
+ * Created by George on 2017-05-18.
+ */
 
-public class TrafficGame extends Game implements View.OnClickListener{
-
-    private static final String TAG = "debugTraffic";
+public class DeathMatchGame extends Game{
+    private static final String TAG = "debugPuzzleGame";
     private Player player;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.game_main_layout);
         final TextView viewToChange = (TextView) findViewById(R.id.textPuzzleGame);
-        viewToChange.setText("Traffic Game");
+        viewToChange.setText("Deathmatch Game");
 
-        super.onCreate(savedInstanceState);
         //Get the intent that started this activity and extract the string
-        Log.d(TAG, "TrafficGame, onCreate method. Creating an intent");
+        Log.d(TAG, "PuzzleGame, onCreate method. Creating an intent");
         Intent intent = getIntent();
         player = (Player) intent.getSerializableExtra("player");
-
         setPlayer(this.player);
         activateMusic();
         startThread();
@@ -39,5 +35,4 @@ public class TrafficGame extends Game implements View.OnClickListener{
         closeReceiveThread();
         super.onDestroy();
     }
-
 }

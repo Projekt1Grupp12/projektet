@@ -140,7 +140,8 @@ public class ClientView extends JPanel {
 			
 			if(e.getSource() == logOut) {
 				try {
-					controller.send("logout;" + controller.getId());
+					if(!controller.hasGottenGame) controller.send("logout;" + controller.getId());
+					else controller.hasGottenGame = false;
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -148,9 +149,9 @@ public class ClientView extends JPanel {
 			
 			if(e.getSource() == joinButton) {
 				try {
-					controller.send("join?;" + controller.getId());
-					controller.send("ready;" + controller.getId());
-					controller.send("highscore;" + controller.getId());
+					if(!controller.hasGottenGame) controller.send("Ready?;" + controller.getId());
+					else controller.send("ready;" + controller.getId());
+					//controller.send("highscore;" + controller.getId());
 					try {
 						TimeUnit.MILLISECONDS.sleep(10);
 					} catch (InterruptedException ie) {

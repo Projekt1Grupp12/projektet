@@ -26,13 +26,14 @@ public class UDPServer implements Runnable
 	public static final String START_SESSION_INSTRUCTION = "start";
 	public static final String START_GAME_INSTRUCTION = "-2";
 	public static final String[] ENGINE_INSTRUCTION = new String[]{"-3", "-4"};
-	public static final String JOIN_INSTRUCTION = "ready";
+	public static final String JOIN_INSTRUCTION = "Ready?";
 	public static final String ACK_INSTRUCTION = "-1";
 	public static final String TIMEOUT_INSTRUCTION = "timeout";
 	public static final String TIMEOUT_ACK_INSTRUCTION = "ok";
-	public static final String LOG_OUT_INSCTRUCTION = "logout";
+	public static final String LOG_OUT_INSTRUCTION = "logout";
 	public static final String LOG_OUT_ACK_INSTRUCTION = "logout";
 	public static final String HIGHSCORE_INSTRUCTION = "highscore";
+	public static final String GET_GAMES_INSTRUCTION =  "getgames";
 	
 	boolean recsive = true;
 	
@@ -56,7 +57,7 @@ public class UDPServer implements Runnable
 	
 	byte[] receiveData;
 	
-	Game game = new PuzzelGame(new Player[]{new Player(0), new Player(1)}, this);
+	Game game;// = new PuzzelGame(new Player[]{new Player(0), new Player(1)}, this);
 	
 	Game[] games = new Game[]{new PuzzelGame(new Player[]{new Player(0), new Player(1)}, this), new TrafficGame(new Player[]{new Player(0), new Player(1)}, this), new DualGame(new Player[]{new Player(0), new Player(1)}, this)};
 	
@@ -85,6 +86,8 @@ public class UDPServer implements Runnable
 		collectedPlayerNames = new String[2];
 		
 		playerPickedGame = "";
+		
+		game = games[0];
 	}
 	
 	/**
@@ -107,7 +110,7 @@ public class UDPServer implements Runnable
 			serverSocket.receive(packet);
 			ips[0] = packet.getAddress().getHostName();
 			collectedPlayerNames[0] = putTogether(packet.getData());
-			while(putTogether(packet.getData(), 2).equals(START_GAME_INSTRUCTION)) {
+			while(putTogether(packet.getData(), 2).equals(START_GAME_INSTRUCTION) || putTogether(packet.getData()).equals(LOG_OUT_INSTRUCTION)) {
 				serverSocket.receive(packet);
 				ips[0] = packet.getAddress().getHostName();
 			}
@@ -116,7 +119,7 @@ public class UDPServer implements Runnable
 			serverSocket.receive(packet);
 			ips[1] = packet.getAddress().getHostName();
 			collectedPlayerNames[1] = putTogether(packet.getData());
-			while(ips[0].equals(ips[1]) && playWithTwo || putTogether(packet.getData(), 2).equals(START_GAME_INSTRUCTION)) {
+			while(ips[0].equals(ips[1]) && playWithTwo || putTogether(packet.getData(), 2).equals(START_GAME_INSTRUCTION) || putTogether(packet.getData()).equals(LOG_OUT_INSTRUCTION)) {
 				serverSocket.receive(packet);
 				ips[1] = packet.getAddress().getHostName();
 			}
@@ -320,11 +323,21 @@ public class UDPServer implements Runnable
 				if(game.realTime) game.setInput(input);
 				//System.out.println(hasStartedGame);
 				if(!hasStartedGame) {
+					if(input.equals(GET_GAMES_INSTRUCTION)) {
+						String t = "";
+						for(int i = 0; i < games.length; i++)
+							t += games[i].getName() + ((i != games.length-1) ? ";" : "");
+						sendToPhone(t, 0);
+					}
+					
 					if(input.contains("Game")) {
 						playerPickedGame = input;
 						sendToPhone(ACK_INSTRUCTION, 0);
-						send(playerPickedGame.split(";")[0], phoneIps[1], port+1);
 						sendToClientSimulator(ACK_INSTRUCTION, 0);
+						
+						send(playerPickedGame.split(";")[0], phoneIps[1], port+1);
+						sendToClientSimulator(playerPickedGame.split(";")[0], playerPickedGame.split(";")[1].equals("0") ? 1 : 0);
+						
 						for(int i = 0; i < games.length; i++) {
 							if(games[i].getName().equals(input.split(";")[0])) {
 								resetGame(games[i]);
@@ -332,20 +345,17 @@ public class UDPServer implements Runnable
 						}
 					}
 					
-					if(!playerPickedGame.equals("") && playerPickedGame.split(";").length == 2 &&  input.split(";")[0].equals(JOIN_INSTRUCTION) && !input.split(";")[1].equals(playerPickedGame.split(";")[1])) {
-						//sendToPhone(playerPickedGame.split(";")[0], playerPickedGame.split(";")[1].equals("0") ? 1 : 0);
-						send(playerPickedGame.split(";")[0], phoneIps[1], port+1);
-						sendToClientSimulator(playerPickedGame.split(";")[0], playerPickedGame.split(";")[1].equals("0") ? 1 : 0);
-					}
-
 					if(input.split(";").length == 2) {
 						if(input.split(";")[0].equals("ready")) {
-							int portThread = port+1;
+							int p = port + 1;
 							for(int i = 0; i < 2 ; i++) {
-								send(START_SESSION_INSTRUCTION, phoneIps[i], portThread);
 								//sendToPhone(START_SESSION_INSTRUCTION, i);
-								sendToClientSimulator(START_SESSION_INSTRUCTION, i);
+								send(START_SESSION_INSTRUCTION, phoneIps[i], p);
+								//sendToClientSimulator(START_SESSION_INSTRUCTION, i);
 							}
+							
+							//sendToPhone(ACK_INSTRUCTION, 1);
+							//send(START_SESSION_INSTRUCTION, phoneIps[0], port+1);
 							input = "";
 						}
 						
@@ -370,7 +380,7 @@ public class UDPServer implements Runnable
 					if(!game.realTime) game.update(input);
 				}
 				
-				if(input.split(";")[0].equals(LOG_OUT_INSCTRUCTION)) {
+				if(input.split(";")[0].equals(LOG_OUT_INSTRUCTION)) {
 					sendToPhone(LOG_OUT_ACK_INSTRUCTION, Integer.parseInt(input.split(";")[1]));
 					send(LOG_OUT_ACK_INSTRUCTION, phoneIps[Integer.parseInt(input.split(";")[1]) == 0 ? 1 : 0], 4445);
 					hasStartedGame = false;
