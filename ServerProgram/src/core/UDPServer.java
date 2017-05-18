@@ -34,6 +34,7 @@ public class UDPServer implements Runnable
 	public static final String LOG_OUT_ACK_INSTRUCTION = "logout";
 	public static final String HIGHSCORE_INSTRUCTION = "highscore";
 	public static final String GET_GAMES_INSTRUCTION =  "getgames";
+	public static final String CHOOSE_GAME_INSTRUCTION =  "choosegame";
 	
 	boolean recsive = true;
 	
@@ -165,6 +166,7 @@ public class UDPServer implements Runnable
 				ips[1] = packet.getAddress().getHostName();
 			}
 			this.send("1", ips[1]);
+			send(CHOOSE_GAME_INSTRUCTION, ips[0], port+1);
 			System.out.println(ips[1] + " | ip 1");
 			
 			serverSocket.close();
