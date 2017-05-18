@@ -30,8 +30,8 @@ int packet;
 int delayCount = 100;
 char messageToServer[6]; 
 int checkIfSent = -1;
-int motor1Clock;
-int motor2Clock;
+float motor1Clock;
+float motor2Clock;
 bool hasPressed = false;
 
 // An EthernetUDP instance to let us send and receive packets over UDP
@@ -52,7 +52,7 @@ void setup() {
   pinMode(7, OUTPUT);
   pinMode(8, OUTPUT);
   pinMode(9, OUTPUT);
-
+  pinMode(10, OUTPUT);
 }
 //sätter dem olika pinnarn 
 void turnOnLight(int packet){
@@ -123,29 +123,31 @@ void loop() {
   int sensorValue = analogRead(A1);
   packet = atoi(packetBuffer);
   int motorInt;
+  digitalWrite(10, LOW);
   if(packet >= 0 && packetBuffer[0] != '\0')
     turnOnLight(packet);
  // Serial.println(sensorValue);    
   
-  if(motor1Clock > 0) motorOn(8);
-  if(motor2Clock > 0) motorOn(9);
+
   if(packet == -3){
-    motor1Clock = 2;
+    motor1Clock = 1;
   }
   else if(packet == -4){
-    motor2Clock = 2;
+    motor2Clock = 1;
   }
+  if(motor1Clock > 0) motorOn(9);
+  if(motor2Clock > 0) motorOn(10);
   if(motor1Clock > 0){
-    motor1Clock--;
+    motor1Clock -= 1;
   }
   if(motor1Clock <= 0){
-     motorOff(8);
+     motorOff(9);
   }
   if(motor2Clock > 0){
-    motor2Clock--;
+    motor2Clock -= 1;
   }
   if(motor2Clock <= 0){
-     motorOff(9);
+     motorOff(10);
   }
   //kollar om innehållet i paketet har ändrats, om den har det så skicka tillbaka ett medelande till servern om inte gör inget.
   if(checkIfSent != packet){
