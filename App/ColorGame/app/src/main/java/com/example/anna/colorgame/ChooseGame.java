@@ -1,25 +1,15 @@
 package com.example.anna.colorgame;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.icu.util.TimeUnit;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
-public class ChooseGame extends AppCompatActivity implements View.OnClickListener {
+public class ChooseGame extends SuperActivity implements View.OnClickListener {
     private static final String TAG = "debugChoose";
-    private Player player;
-    private ProgressDialog pd;
-    private Class startThisClass = null;
-    private RecieveDataThread recieveDataThread;
-    private Thread thread;
-    private boolean start = false;
     private static final String SEMICOLON = ";";
-
+    private Class startNextActivityClass = null;
     private AsyncResponse delegate = new AsyncResponse() {
         /*
         Method that has result from AsyncTask as parameter.
@@ -29,46 +19,28 @@ public class ChooseGame extends AppCompatActivity implements View.OnClickListene
         @Override
         public void postResult(String result) {
             Log.d(TAG, "RESULTAT FRÅN SERVER: " + result);
-            if(result.contains("SocketTimeoutException")) {
-                pd.dismiss();
+            if (result.contains("SocketTimeoutException")) {
+                closeProgressDialog();
             }
         }
     };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.choose_game);
         Log.i(TAG, "onCreate().ChooseGame");
         Intent intent = getIntent();
-        player = (Player)intent.getSerializableExtra("player");
-
-        recieveDataThread = new RecieveDataThread(this, player, this);//added thread 05-16
-        thread = new Thread(recieveDataThread);
-        thread.start();
+        setPlayer((Player) intent.getSerializableExtra("player"));
+        startThreadChooseGame(this, getPlayer(), ChooseGame.this);
     }
+
     @Override
     protected void onStop() {//added 05-16 for thread
         Log.d(TAG, "onDestroy() ");
-        recieveDataThread.setIsRunning(false);
-        thread.interrupt();
+        closeReceiveThread();
         super.onStop();
     }
-
-    private void startProgressDialog(){
-        pd = new ProgressDialog(ChooseGame.this);
-        pd.setCanceledOnTouchOutside(false);
-        pd.setProgressStyle(pd.STYLE_SPINNER);
-        pd.setMessage("Waiting for opponent...");
-        pd.show();
-    }
-
-    public void startAsyncTask(String message) {//Button
-        ConnectToServer runner = new ConnectToServer(player.getChoosenIP(), delegate);
-        Log.d(TAG, "Task created");
-        Log.d(TAG, "Execute task");
-        runner.execute(message);
-    }
-
 
     /*
     This method is called when one of the buttons is clicked in the GUI.
@@ -77,34 +49,29 @@ public class ChooseGame extends AppCompatActivity implements View.OnClickListene
      */
     @Override
     public void onClick(View view) {
-       startProgressDialog();
+        startProgressDialog("Waiting for opponent...", this);
         Log.d(TAG, "onClick()-metod");
         String data = " ";
-        switch(view.getId()){
+        switch (view.getId()) {
             case R.id.buttonPuzzle:
-                this.startThisClass = PuzzleGame.class;
+                this.startNextActivityClass = PuzzleGame.class;
                 data = "PuzzleGame";
                 break;
             case R.id.buttonTraffic:
-                this.startThisClass = TrafficGame.class;
+                this.startNextActivityClass = TrafficGame.class;
                 data = "TrafficGame";
                 break;
             case R.id.buttonDuel:
-                this.startThisClass = DuelGame.class;
+                this.startNextActivityClass = DuelGame.class;
                 data = "DuelGame";
                 break;
         }
-        data += SEMICOLON + player.getUserID();
-        Log.d(TAG, "onClick-method data: " + String.valueOf(data));
-        startAsyncTask(data);
+        startAsyncTask(data + SEMICOLON + getPlayer().getUserID(), this.getPlayer(), delegate);//using new class. need delegate
     }
 
     public void startGame() {
-        Intent intent = null;
-        pd.dismiss();//when start=true, start next activity
-        intent = new Intent(this, startThisClass);
-        intent.putExtra("player", player);
-        startActivity(intent);
+        closeProgressDialog();//when start=true, start next activity
+        startNextActivity(getPlayer(), this, startNextActivityClass);
     }
 
     @Override
@@ -119,20 +86,7 @@ public class ChooseGame extends AppCompatActivity implements View.OnClickListene
 
     @Override
     public void onBackPressed() {
-        String message = "logout" + ";" + player.getUserID();
-        ConnectToServer connectToServer = new ConnectToServer(player);
-        Log.d(TAG, "connectToServer is created " + player.getName());
-        System.gc();
-        connectToServer.execute(message);
-
-        Log.d(TAG, "Creating new intent and sending data");
-
-        Intent intent = new Intent(this, MainMenu.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("player", player);
-        Log.d(TAG, "Starting new Activity");
-        startActivity(intent);
+        startAsyncTask("logout" + ";" + getPlayer().getUserID(), this.getPlayer(), delegate);//using new class. don't need delegate
+        startNextActivity(getPlayer(), this, MainMenu.class);
     }
-
 }
