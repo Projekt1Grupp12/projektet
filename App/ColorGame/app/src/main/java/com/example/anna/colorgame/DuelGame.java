@@ -13,7 +13,7 @@ public class DuelGame extends Game implements View.OnClickListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.gameMainLayout);
+        setContentView(R.layout.game_main_layout);
         final TextView viewToChange = (TextView) findViewById(R.id.textPuzzleGame);
         viewToChange.setText("Duel Game");
 

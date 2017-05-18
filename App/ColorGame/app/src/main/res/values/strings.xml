@@ -23,4 +23,5 @@
     <string name="duel_game">Duel Game</string>
     <string name="give_up">GIVE UP</string>
     <string name="title_activity_high_score">HighScore</string>
+    <string name="deathmatch">Deathmatch</string>
 </resources>

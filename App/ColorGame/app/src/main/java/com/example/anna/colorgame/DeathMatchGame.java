@@ -16,7 +16,7 @@ public class DeathMatchGame extends Game{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.gameMainLayout);
+        setContentView(R.layout.game_main_layout);
         final TextView viewToChange = (TextView) findViewById(R.id.textPuzzleGame);
         viewToChange.setText("Deathmatch Game");
 

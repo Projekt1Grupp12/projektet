@@ -35,30 +35,13 @@ public class ChooseGame extends AppCompatActivity implements View.OnClickListene
             if(result.contains("SocketTimeoutException")) {
                 pd.dismiss();
             }
-            if(result.contains(";")){
-                for(int i=0; i<result.split(";").length; i++){
-                    myButtons[i] = new Button(getApplicationContext());
-                    myButtons[i].setText(result.split(";")[i]);
-                }
-            }
         }
     };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.choose_game);
 
-
-
-        //getgames
-        startAsyncTask("getgames");
-
-        ConstraintLayout cl = (ConstraintLayout) findViewById(R.id.layout_ChooseGame);
-        for(int i = 0; i<myButtons.length; i++){
-            cl.addView(myButtons[i]);
-        }
-
-
-        setContentView(cl);
         Log.i(TAG, "onCreate().ChooseGame");
         Intent intent = getIntent();
         player = (Player)intent.getSerializableExtra("player");
@@ -113,6 +96,10 @@ public class ChooseGame extends AppCompatActivity implements View.OnClickListene
             case R.id.buttonDuel:
                 this.startThisClass = DuelGame.class;
                 data = "DuelGame";
+                break;
+            case R.id.buttonDeathmatch:
+                this.startThisClass = DeathMatchGame.class;
+                data = "DeathmatchGame";
                 break;
         }
         data += SEMICOLON + player.getUserID();
