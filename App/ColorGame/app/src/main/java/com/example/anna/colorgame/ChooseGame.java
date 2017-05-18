@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.icu.util.TimeUnit;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 
 public class ChooseGame extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "debugChoose";
@@ -19,6 +21,7 @@ public class ChooseGame extends AppCompatActivity implements View.OnClickListene
     private Thread thread;
     private boolean start = false;
     private static final String SEMICOLON = ";";
+    private Button [] myButtons;
 
     private AsyncResponse delegate = new AsyncResponse() {
         /*
@@ -32,12 +35,30 @@ public class ChooseGame extends AppCompatActivity implements View.OnClickListene
             if(result.contains("SocketTimeoutException")) {
                 pd.dismiss();
             }
+            if(result.contains(";")){
+                for(int i=0; i<result.split(";").length; i++){
+                    myButtons[i] = new Button(getApplicationContext());
+                    myButtons[i].setText(result.split(";")[i]);
+                }
+            }
         }
     };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.choose_game);
+
+
+
+        //getgames
+        startAsyncTask("getgames");
+
+        ConstraintLayout cl = (ConstraintLayout) findViewById(R.id.layout_ChooseGame);
+        for(int i = 0; i<myButtons.length; i++){
+            cl.addView(myButtons[i]);
+        }
+
+
+        setContentView(cl);
         Log.i(TAG, "onCreate().ChooseGame");
         Intent intent = getIntent();
         player = (Player)intent.getSerializableExtra("player");
