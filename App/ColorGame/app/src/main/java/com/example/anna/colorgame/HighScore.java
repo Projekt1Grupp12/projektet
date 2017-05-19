@@ -33,38 +33,34 @@ public class HighScore extends SuperActivity {
             TextView textViewMove = (TextView) findViewById(R.id.textViewMove);
             Log.d(TAG, "RESULTAT FRÅN SERVER " + result);
             if (result.contains("SocketTimeoutException")) {
-                showAlertDialog("Connections lost", "No connection to the Server. Try again later.");
+                showAlertDialog("Error fetching highscore", "Try again later.");
+                onBackPressed();
             }
             else if (result != null) {
+                closeProgressDialog();
                 textViewMove.setText(result);
                 Log.d(TAG, "Text updated");
                 //Music is played here.
-                if (mpHighScore.isPlaying()) {
-                    mpHighScore.stop();
-                }
                 setThread(new Thread() {
                     public void run() {
-                        while (isRunning) {
                             try {
-                                AssetFileDescriptor afd = getAssets().openFd("goodmove.mp3");
+                                AssetFileDescriptor afd = getAssets().openFd("intotheinfinitybeat.mp3");
                                 mpHighScore.stop();
                                 mpHighScore.reset();
                                 mpHighScore.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
                                 mpHighScore.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                                mpHighScore.setLooping(true);
                                 mpHighScore.prepare();
                                 mpHighScore.start();
-                                sleep(1000);
                             } catch (IOException e) {
                                 e.printStackTrace();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
                         }
                     }
                 });
                 getThread().start();
             } else {
                 showAlertDialog("There is no cake", "The cake is a lie!");
+                onBackPressed();
             }
         }
     };
@@ -78,6 +74,7 @@ public class HighScore extends SuperActivity {
         setAlertDialog(new AlertDialogClass(this));
         this.mpHighScore = MediaPlayer.create(this, R.raw.goodmove);
         startAsyncTask("highscore;" + getPlayer().getUserID(), getPlayer(), delegate);//using new class
+        startProgressDialog("Fetching highscore list...", this);
     }
 
     @Override
@@ -99,6 +96,7 @@ public class HighScore extends SuperActivity {
     @Override
     public void onBackPressed() {
         Log.d(TAG, "onBackPressed");
-        startNextActivity(getPlayer(), this, MainMenu.class);
+        mpHighScore.stop();
+        super.onBackPressed();
     }
 }
