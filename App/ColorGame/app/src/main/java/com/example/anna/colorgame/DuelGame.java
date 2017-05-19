@@ -32,14 +32,13 @@ public class DuelGame extends Game implements View.OnClickListener{
         activateMusic();
         startThread();
 
-        if(mpDuel.isPlaying()) {
-            mpDuel.stop();
-        }
+        this.mpDuel = MediaPlayer.create(this, R.raw.rushing);
         try {
             AssetFileDescriptor afd;
                 afd = getAssets().openFd("rushing.mp3");
             mpDuel.reset();
             mpDuel.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(),afd.getLength());
+            mpDuel.setLooping(true);
             mpDuel.prepare();
             mpDuel.start();
             } catch (IOException e) {
@@ -50,6 +49,7 @@ public class DuelGame extends Game implements View.OnClickListener{
     @Override
     protected void onDestroy() {
         Log.d(TAG, "onDestroy");
+        mpDuel.stop();
         closeReceiveThread();
         super.onDestroy();
     }

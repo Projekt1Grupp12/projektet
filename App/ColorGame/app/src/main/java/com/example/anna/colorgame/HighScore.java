@@ -33,8 +33,8 @@ public class HighScore extends SuperActivity {
             TextView textViewMove = (TextView) findViewById(R.id.textViewMove);
             Log.d(TAG, "RESULTAT FRÅN SERVER " + result);
             if (result.contains("SocketTimeoutException")) {
-                showAlertDialog("Error fetching highscore", "Try again later.");
-                onBackPressed();
+                closeProgressDialog();
+                showAlertDialog(HighScore.this, "Error fetching highscore", "Try again later.", "HighScore");
             }
             else if (result != null) {
                 closeProgressDialog();
@@ -58,9 +58,6 @@ public class HighScore extends SuperActivity {
                     }
                 });
                 getThread().start();
-            } else {
-                showAlertDialog("There is no cake", "The cake is a lie!");
-                onBackPressed();
             }
         }
     };
@@ -72,7 +69,7 @@ public class HighScore extends SuperActivity {
         Intent intent = getIntent();
         setPlayer((Player) intent.getSerializableExtra("player"));
         setAlertDialog(new AlertDialogClass(this));
-        this.mpHighScore = MediaPlayer.create(this, R.raw.goodmove);
+        this.mpHighScore = MediaPlayer.create(this, R.raw.intotheinfinitybeat);
         startAsyncTask("highscore;" + getPlayer().getUserID(), getPlayer(), delegate);//using new class
         startProgressDialog("Fetching highscore list...", this);
     }

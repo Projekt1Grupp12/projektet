@@ -179,4 +179,9 @@ public class SuperActivity extends AppCompatActivity {
         alertDialog.ButtonOK();
     }
 
+    public void showAlertDialog(HighScore thisClass, String title, String message, String dataMessage) {
+        alertDialog = new AlertDialogClass(thisClass, title, message, dataMessage);
+        alertDialog.ButtonOK();
+
+    }
 }
