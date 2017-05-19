@@ -303,6 +303,8 @@ public abstract class Game implements Runnable {
 			for(int i = 0; i < stepsCount.length; i++)
 				stepsCount[i] = 0;
 		}
+		for(int i = 0; i < players.length; i++)
+			players[i].onReset();
 		//server.resetSession();
 		gameOver = true;
 	}
