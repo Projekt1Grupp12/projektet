@@ -168,6 +168,7 @@ public class ServerView extends JPanel {
 			currentOutput.repaint();
 			
 			controller.setNextId(Integer.parseInt(nextIdField.getText()));
+			resetGame.setText("RESET, " + controller.getServer().hasStartedGame);
 		}
 	}
 

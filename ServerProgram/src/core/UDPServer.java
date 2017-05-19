@@ -112,7 +112,7 @@ public class UDPServer implements Runnable
 			serverSocket.receive(packet);
 			ips[0] = packet.getAddress().getHostName();
 			collectedPlayerNames[0] = putTogether(packet.getData());
-			while(putTogether(packet.getData(), 2).equals(START_GAME_INSTRUCTION) || putTogether(packet.getData()).equals(LOG_OUT_INSTRUCTION)) {
+			while(putTogether(packet.getData(), 2).equals(START_GAME_INSTRUCTION) || putTogether(packet.getData()).contains(LOG_OUT_INSTRUCTION)) {
 				serverSocket.receive(packet);
 				ips[0] = packet.getAddress().getHostName();
 			}
@@ -121,7 +121,7 @@ public class UDPServer implements Runnable
 			serverSocket.receive(packet);
 			ips[1] = packet.getAddress().getHostName();
 			collectedPlayerNames[1] = putTogether(packet.getData());
-			while(ips[0].equals(ips[1]) && playWithTwo || putTogether(packet.getData(), 2).equals(START_GAME_INSTRUCTION) || putTogether(packet.getData()).equals(LOG_OUT_INSTRUCTION)) {
+			while(ips[0].equals(ips[1]) && playWithTwo || putTogether(packet.getData(), 2).equals(START_GAME_INSTRUCTION) || putTogether(packet.getData()).contains(LOG_OUT_INSTRUCTION)) {
 				serverSocket.receive(packet);
 				
 				ips[1] = packet.getAddress().getHostName();
