@@ -140,8 +140,9 @@ public class ClientView extends JPanel {
 			
 			if(e.getSource() == logOut) {
 				try {
-					if(!controller.hasGottenGame) controller.send("logout;" + controller.getId());
-					else controller.hasGottenGame = false;
+					//if(!controller.hasGottenGame) controller.send("logout;" + controller.getId());
+					//else controller.hasGottenGame = false;
+					controller.send("highscore;"+controller.getId());
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}

@@ -34,6 +34,7 @@ public class UDPServer implements Runnable
 	public static final String LOG_OUT_ACK_INSTRUCTION = "logout";
 	public static final String HIGHSCORE_INSTRUCTION = "highscore";
 	public static final String GET_GAMES_INSTRUCTION =  "getgames";
+	public static final String CHOOSE_GAME_INSTRUCTION =  "choosegame";
 	
 	boolean recsive = true;
 	
@@ -121,9 +122,11 @@ public class UDPServer implements Runnable
 			collectedPlayerNames[1] = putTogether(packet.getData());
 			while(ips[0].equals(ips[1]) && playWithTwo || putTogether(packet.getData(), 2).equals(START_GAME_INSTRUCTION) || putTogether(packet.getData()).equals(LOG_OUT_INSTRUCTION)) {
 				serverSocket.receive(packet);
+				
 				ips[1] = packet.getAddress().getHostName();
 			}
 			send("1", ips[1]);
+			send(CHOOSE_GAME_INSTRUCTION, ips[0], port+1);
 			System.out.println(ips[1] + " | ip 1");
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -162,9 +165,15 @@ public class UDPServer implements Runnable
 			System.out.println(collectedPlayerNames[1]);
 			while(ips[0].equals(ips[1]) && playWithTwo || putTogether(packet.getData(), 2).equals(START_GAME_INSTRUCTION)) {
 				serverSocket.receive(packet);
+
+				if(putTogether(packet.getData()).split(";").length != 0 && putTogether(packet.getData()).split(";")[0].equals(HIGHSCORE_INSTRUCTION)) {
+					send(game.getHighscoreList(), ips[Integer.parseInt(putTogether(packet.getData()).split(";")[1])]);
+					send(game.getHighscoreList(), "localhost");
+				}
 				ips[1] = packet.getAddress().getHostName();
 			}
 			this.send("1", ips[1]);
+			send(CHOOSE_GAME_INSTRUCTION, ips[0], port+1);
 			System.out.println(ips[1] + " | ip 1");
 			
 			serverSocket.close();
