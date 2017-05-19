@@ -190,4 +190,11 @@ public class Player {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	/**
+	 * Run method on reset of game
+	 */
+	public void onReset() {
+		score = 0;
+	}
 }

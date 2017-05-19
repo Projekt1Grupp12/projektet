@@ -388,6 +388,7 @@ public class UDPServer implements Runnable
 					}
 					
 					if(input.equals(START_GAME_INSTRUCTION)) {
+						resetGame(game);
 						game.setTimer();
 						hasStartedGame = true;
 						game.update(input);
