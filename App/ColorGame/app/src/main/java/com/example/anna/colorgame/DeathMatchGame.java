@@ -1,9 +1,13 @@
 package com.example.anna.colorgame;
 
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
+
+import java.io.IOException;
 
 /**
  * Created by George on 2017-05-18.
@@ -12,6 +16,7 @@ import android.widget.TextView;
 public class DeathmatchGame extends Game{
     private static final String TAG = "debugPuzzleGame";
     private Player player;
+    private MediaPlayer mpDeathmatch = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,11 +32,24 @@ public class DeathmatchGame extends Game{
         setPlayer(this.player);
         activateMusic();
         startThread();
+        this.mpDeathmatch = MediaPlayer.create(this, R.raw.amongstcrystallight);
+        try {
+            AssetFileDescriptor afd;
+            afd = getAssets().openFd("amongstcrystallight.mp3");
+            mpDeathmatch.reset();
+            mpDeathmatch.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(),afd.getLength());
+            mpDeathmatch.setLooping(true);
+            mpDeathmatch.prepare();
+            mpDeathmatch.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     protected void onDestroy() {
         Log.d(TAG, "onDestroy");
+        mpDeathmatch.stop();
         closeReceiveThread();
         super.onDestroy();
     }
