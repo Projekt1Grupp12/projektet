@@ -116,9 +116,9 @@ public class HighscoreList {
 	 * @return the structured string
 	 */
 	public String toString() {
-		String tmp = "";
+		String tmp = "NAME | SCORE \n";
 		for(int i = 0; i < AMOUNT_OF_HIGHSCORE; i++) {
-			tmp += (i+1) + " { " + entries[i].getName() + " | " + entries[i].getScore() + " } \n";
+			tmp += (i+1) + "" + entries[i].getName() + " | " + entries[i].getScore() + "\n";
 		}
 		return tmp;
 	}

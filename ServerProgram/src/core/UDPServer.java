@@ -35,6 +35,7 @@ public class UDPServer implements Runnable
 	public static final String HIGHSCORE_INSTRUCTION = "highscore";
 	public static final String GET_GAMES_INSTRUCTION =  "getgames";
 	public static final String CHOOSE_GAME_INSTRUCTION =  "choosegame";
+	public static final String CHOOSE_GAME_REQUEST_INSTRUCTION =  "choosegame?";
 	
 	boolean recsive = true;
 	
@@ -111,7 +112,7 @@ public class UDPServer implements Runnable
 			serverSocket.receive(packet);
 			ips[0] = packet.getAddress().getHostName();
 			collectedPlayerNames[0] = putTogether(packet.getData());
-			while(putTogether(packet.getData(), 2).equals(START_GAME_INSTRUCTION) || putTogether(packet.getData()).equals(LOG_OUT_INSTRUCTION)) {
+			while(putTogether(packet.getData(), 2).equals(START_GAME_INSTRUCTION) || putTogether(packet.getData()).contains(LOG_OUT_INSTRUCTION)) {
 				serverSocket.receive(packet);
 				ips[0] = packet.getAddress().getHostName();
 			}
@@ -120,7 +121,7 @@ public class UDPServer implements Runnable
 			serverSocket.receive(packet);
 			ips[1] = packet.getAddress().getHostName();
 			collectedPlayerNames[1] = putTogether(packet.getData());
-			while(ips[0].equals(ips[1]) && playWithTwo || putTogether(packet.getData(), 2).equals(START_GAME_INSTRUCTION) || putTogether(packet.getData()).equals(LOG_OUT_INSTRUCTION)) {
+			while(ips[0].equals(ips[1]) && playWithTwo || putTogether(packet.getData(), 2).equals(START_GAME_INSTRUCTION) || putTogether(packet.getData()).contains(LOG_OUT_INSTRUCTION)) {
 				serverSocket.receive(packet);
 				
 				ips[1] = packet.getAddress().getHostName();
@@ -331,12 +332,19 @@ public class UDPServer implements Runnable
 				//System.out.println(input);
 				if(game.realTime) game.setInput(input);
 				//System.out.println(hasStartedGame);
+
 				if(!hasStartedGame) {
 					if(input.equals(GET_GAMES_INSTRUCTION)) {
 						String t = "";
 						for(int i = 0; i < games.length; i++)
 							t += games[i].getName() + ((i != games.length-1) ? ";" : "");
 						sendToPhone(t, 0);
+					}
+					
+					
+					
+					if(input.split(";").length != 1 && input.split(";")[0].equals(CHOOSE_GAME_REQUEST_INSTRUCTION) && input.split(";")[1].equals("0")) {
+						send(CHOOSE_GAME_INSTRUCTION, phoneIps[0], port+1);
 					}
 					
 					if(input.contains("Game")) {
