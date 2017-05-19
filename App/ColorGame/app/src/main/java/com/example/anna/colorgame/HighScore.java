@@ -69,6 +69,7 @@ public class HighScore extends SuperActivity {
         Intent intent = getIntent();
         setPlayer((Player) intent.getSerializableExtra("player"));
         setAlertDialog(new AlertDialogClass(this));
+
         this.mpHighScore = MediaPlayer.create(this, R.raw.intotheinfinitybeat);
         startAsyncTask("highscore;" + getPlayer().getUserID(), getPlayer(), delegate);//using new class
         startProgressDialog("Fetching highscore list...", this);
