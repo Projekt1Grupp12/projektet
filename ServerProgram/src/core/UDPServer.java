@@ -35,6 +35,7 @@ public class UDPServer implements Runnable
 	public static final String HIGHSCORE_INSTRUCTION = "highscore";
 	public static final String GET_GAMES_INSTRUCTION =  "getgames";
 	public static final String CHOOSE_GAME_INSTRUCTION =  "choosegame";
+	public static final String CHOOSE_GAME_REQUEST_INSTRUCTION =  "choosegame?";
 	
 	boolean recsive = true;
 	
@@ -331,12 +332,19 @@ public class UDPServer implements Runnable
 				//System.out.println(input);
 				if(game.realTime) game.setInput(input);
 				//System.out.println(hasStartedGame);
+
 				if(!hasStartedGame) {
 					if(input.equals(GET_GAMES_INSTRUCTION)) {
 						String t = "";
 						for(int i = 0; i < games.length; i++)
 							t += games[i].getName() + ((i != games.length-1) ? ";" : "");
 						sendToPhone(t, 0);
+					}
+					
+					
+					
+					if(input.split(";").length != 1 && input.split(";")[0].equals(CHOOSE_GAME_REQUEST_INSTRUCTION) && input.split(";")[1].equals("0")) {
+						send(CHOOSE_GAME_INSTRUCTION, phoneIps[0], port+1);
 					}
 					
 					if(input.contains("Game")) {
