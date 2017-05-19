@@ -11,7 +11,7 @@ import java.awt.Color;
 public class ScreenSimulatorController {
 	private ScreenSimulatorView view;
 	
-	private Color[] lightColors = {Color.RED, Color.YELLOW, Color.GREEN, Color.RED, Color.YELLOW, Color.GREEN};
+	private Color[] lightColors = {Color.GREEN, Color.YELLOW, Color.RED, Color.GREEN, Color.YELLOW, Color.RED};
 	
 	/**
 	 * create a controller with a specifc view

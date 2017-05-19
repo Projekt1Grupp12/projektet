@@ -57,7 +57,7 @@ public class TrafficGame extends Game {
 			hasPressedYellow[i] = false;
 			
 			if(lightState == RED) {
-				getPlayers()[i].setScreenBit(0);
+				getPlayers()[i].setScreenBit(2);
 				speed = 0;
 				fromRed = true;
 			}
@@ -65,13 +65,13 @@ public class TrafficGame extends Game {
 			if(lightState == YELLOW) {
 				getPlayers()[i].setScreenBit(1);
 				if(fromRed) {
-					getPlayers()[i].setScreenBit(0);
+					getPlayers()[i].setScreenBit(2);
 				}
 				speed = 2;
 			}
 			
 			if(lightState == GREEN) {
-				getPlayers()[i].setScreenBit(2);
+				getPlayers()[i].setScreenBit(0);
 				fromRed = false;
 				speed = 0;
 			}
