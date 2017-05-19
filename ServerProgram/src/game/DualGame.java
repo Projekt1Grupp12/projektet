@@ -161,4 +161,10 @@ public class DualGame extends Game {
 			e.printStackTrace();
 		}
 	}
+
+	@Override
+	public void onGameOver() {
+		// TODO Auto-generated method stub
+		
+	}
 }

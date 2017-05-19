@@ -184,4 +184,8 @@ public class PuzzelGame extends Game {
 	public void run() {
 		
 	}
+
+	public void onGameOver() {
+		delay = 0;
+	}
 }

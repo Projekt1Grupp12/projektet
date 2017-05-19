@@ -283,6 +283,7 @@ public abstract class Game implements Runnable {
 					sendToPhone("WIN!", i);
 					if(i == 0) sendToPhone("LOSE!", 1);
 					else sendToPhone("LOSE!", 0);
+					onGameOver();
 					setGameOver();
 				} catch (IOException e) {
 					
@@ -290,6 +291,11 @@ public abstract class Game implements Runnable {
 			}
 		}
 	}
+	
+	/**
+	 * Method to run on game over
+	 */
+	public abstract void onGameOver();
 	
 	/**
 	 * Sets the game to game over and update highscore list
