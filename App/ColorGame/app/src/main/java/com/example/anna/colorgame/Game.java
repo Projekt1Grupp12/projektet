@@ -37,7 +37,7 @@ public class Game extends AppCompatActivity implements View.OnClickListener{
         public void postResult(String result) {
             TextView textViewMove = (TextView) findViewById(R.id.textViewMove);
             Log.d(TAG, "Inside updateUI call 2");
-            textViewMove.setText(result);
+
             Log.d(TAG, "Text updated");
             //Music is played here.
             if(mpGood.isPlaying() || mpBad.isPlaying()) {
@@ -52,12 +52,14 @@ public class Game extends AppCompatActivity implements View.OnClickListener{
                     mpGood.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(),afd.getLength());
                     mpGood.prepare();
                     mpGood.start();
+                    textViewMove.setText(result);
                 } else if (result.contains("BAD")) {
                     afd = getAssets().openFd("badmove.mp3");
                     mpBad.reset();
                     mpBad.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
                     mpBad.prepare();
                     mpBad.start();
+                    textViewMove.setText(result);
                 }
             } catch (IllegalStateException e) {
                 e.printStackTrace();
