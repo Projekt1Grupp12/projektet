@@ -102,6 +102,14 @@ public class UDPServer implements Runnable
 	}
 	
 	/**
+	 * Constructor: creates a new instance of a UDPServer.
+	 * Starts a new thread running the UDPServer.
+	 */
+	private void LoginController() {
+		new Thread().start();
+	}
+	
+	/**
 	 * Get the IP addresses of the clients while the server has aldready been running, get the client player names and give them a player ID
 	 * @return the IP addresses of the clients
 	 */

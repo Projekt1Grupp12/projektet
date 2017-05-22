@@ -3,7 +3,6 @@ package com.example.anna.colorgame;
 
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 /**
  * Created by George on 2017-04-28.
@@ -14,19 +13,19 @@ public class GameOver extends AppCompatActivity {
     private String TAG = "GameOverDebug";
 
     //The alertDialog
-    private String text = null;// text to show in AlertDialog window
+    private String message = null;// message to show in AlertDialog window
 
     //Player and the new intents
     private Player player;
     private AlertDialogClass alertDialog = null;
     private Context context = null;
-    private String message = null;// "Give Up", "logout", "LOSE!", "WIN!"
+    private String dataMessage = null;// "Give Up", "logout", "LOSE!", "WIN!"
 
-    public GameOver(Context context, Player player, String message){
+    public GameOver(Context context, Player player, String dataMessage){
         this.context = context;
         this.player = new Player(player.getName(), player.getUserID(), player.getChoosenIP());
-        this.message = message;
-        setTextMessageOfAlertDialog(message);
+        this.dataMessage = dataMessage;
+        setTextMessageOfAlertDialog(dataMessage);
         displayMessage();
     }
 
@@ -34,11 +33,9 @@ public class GameOver extends AppCompatActivity {
         switch(message){
             case "WIN!":
                 setTextWinner();
-                playAgainMessage();
                 break;
             case "LOSE!":
                 setTextLoser();
-                playAgainMessage();
                 break;
             case "logout":
                 setTextLogout();
@@ -50,18 +47,18 @@ public class GameOver extends AppCompatActivity {
     }
 
     private void setTextWinner(){
-        this.text = "You are the winner!";
+        this.message = "You are the winner!";
     }
-    private void setTextLoser(){ this.text = "Epic fail!"; }
-    private void setTextGiveUp(){ this.text = "Game is interrupted." +"\nProgress will be lost";}
-    private void setTextLogout(){ this.text = "Game is interrupted." + "\nYou will be logged out";}
+    private void setTextLoser(){ this.message = "Epic fail!"; }
+    private void setTextGiveUp(){ this.message = "Game is interrupted." +"\nProgress will be lost";}
+    private void setTextLogout(){ this.message = "Game is interrupted." + "\nYou will be logged out";}
 
     /**
      * Prepares the alertDialog to display if player has won or lost the game
      */
     public void displayMessage(){
-        alertDialog = new AlertDialogClass(context, message);
-        alertDialog.setTextToShowInAlertDialog(text);
+        alertDialog = new AlertDialogClass(context, dataMessage);
+        alertDialog.setTextToShowInAlertDialog(message);
         alertDialog.setPlayer(player);
         alertDialog.ButtonOK();
     }
