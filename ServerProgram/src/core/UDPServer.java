@@ -36,6 +36,7 @@ public class UDPServer implements Runnable
 	public static final String GET_GAMES_INSTRUCTION =  "getgames";
 	public static final String CHOOSE_GAME_INSTRUCTION =  "choosegame";
 	public static final String CHOOSE_GAME_REQUEST_INSTRUCTION =  "choosegame?";
+	public static final String CHOOSE_MAX_SCORE_REQUEST_INSTRUCTION =  "scorelimit";
 	
 	boolean recsive = true;
 	
@@ -400,6 +401,12 @@ public class UDPServer implements Runnable
 						game.setTimer();
 						hasStartedGame = true;
 						game.update(input);
+					}
+					if(input.split(";")[0].equals(CHOOSE_MAX_SCORE_REQUEST_INSTRUCTION)) {
+						send("scorelmit set", phoneIps[0], port);
+						int maxScore = Integer.parseInt(input.split(";")[2]); //scorelimit
+						game.setMaxScore(maxScore);
+						
 					}
 				}
 				else {
