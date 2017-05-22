@@ -62,17 +62,4 @@ public class GameOver extends AppCompatActivity {
         alertDialog.setPlayer(player);
         alertDialog.ButtonOK();
     }
-
-    /**
-     * Prepares the alertDialogClass to ask the player if they want
-     * to play again or not.
-     */
-    private void playAgainMessage() {
-        alertDialog = new AlertDialogClass(context, "New game?", " ");
-        alertDialog.setTextToShowInAlertDialog("Do you want to play again?");
-        alertDialog.setPlayer(player);
-        alertDialog.ButtonYesNo();
-    }
-
-
 }
