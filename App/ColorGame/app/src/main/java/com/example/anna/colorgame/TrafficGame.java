@@ -15,6 +15,7 @@ public class TrafficGame extends Game implements View.OnClickListener{
 
     private static final String TAG = "debugTraffic";
     private Player player;
+    private MediaPlayer mpTraffic = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,11 +32,25 @@ public class TrafficGame extends Game implements View.OnClickListener{
         setPlayer(this.player);
         activateMusic();
         startThread();
+
+        this.mpTraffic = MediaPlayer.create(this, R.raw.ghostmachine);
+        try {
+            AssetFileDescriptor afd;
+            afd = getAssets().openFd("ghostmachine.mp3");
+            mpTraffic.reset();
+            mpTraffic.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(),afd.getLength());
+            mpTraffic.setLooping(true);
+            mpTraffic.prepare();
+            mpTraffic.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     protected void onDestroy() {
         Log.d(TAG, "onDestroy");
+        mpTraffic.stop();
         closeReceiveThread();
         super.onDestroy();
     }
