@@ -151,6 +151,10 @@ public class SuperActivity extends AppCompatActivity {
         pd.show();
     }
 
+    public boolean isShowingProgressBar(){
+        return pd.isShowing();
+    }
+
     public void closeProgressDialog(){
         pd.dismiss();
     }
