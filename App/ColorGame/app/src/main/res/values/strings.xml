@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ColorGame</string>
+    <string name="app_name">LED GAMES</string>
     <string name="high_score">High Score</string>
     <string name="textview">TextView</string>
     <string name="login">Login</string>
@@ -24,4 +24,8 @@
     <string name="give_up">GIVE UP</string>
     <string name="title_activity_high_score">HighScore</string>
     <string name="deathmatch">Deathmatch</string>
+    <string name="background">background</string>
+    <string name="background1">background1</string>
+    <string name="backgground2">backgground2</string>
+    <string name="background3">background3</string>
 </resources>
