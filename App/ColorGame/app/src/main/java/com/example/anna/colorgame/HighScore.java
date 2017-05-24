@@ -13,7 +13,6 @@ import java.io.IOException;
 
 public class HighScore extends SuperActivity {
     private String TAG = "debugHighScore";
-    private boolean isRunning = true;
     private MediaPlayer mpHighScore;
     private AsyncResponse delegate = new AsyncResponse() {
 
@@ -68,16 +67,13 @@ public class HighScore extends SuperActivity {
         setContentView(R.layout.activity_high_score);
         Intent intent = getIntent();
         setPlayer((Player) intent.getSerializableExtra("player"));
-        setAlertDialog(new AlertDialogClass(this));
-
         this.mpHighScore = MediaPlayer.create(this, R.raw.intotheinfinitybeat);
-        startAsyncTask("highscore;" + getPlayer().getUserID(), getPlayer(), delegate);//using new class
+        sendDataToServer("highscore;" + getPlayer().getUserID(), getPlayer(), delegate);//using new class
         startProgressDialog("Fetching highscore list...", this);
     }
 
     @Override
     protected void onStop() {
-        isRunning = false;
         super.onStop();
     }
 
@@ -96,5 +92,17 @@ public class HighScore extends SuperActivity {
         Log.d(TAG, "onBackPressed");
         mpHighScore.stop();
         super.onBackPressed();
+    }
+
+    /**
+     *This method is used to show specified AlertDialog in HighScore activity.
+     * @param thisClass
+     * @param title
+     * @param message
+     * @param dataMessage
+     */
+    private void showAlertDialog(HighScore thisClass, String title, String message, String dataMessage) {
+        AlertDialogClass alertDialog = new AlertDialogClass(thisClass, title, message, dataMessage);
+        alertDialog.ButtonOK();
     }
 }

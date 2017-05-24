@@ -69,15 +69,15 @@ public class SuperActivity extends AppCompatActivity {
     }
 
     /**
-     * This method creates new AsyncTask and sends specified message to server.
-     * @param message
+     * This method creates new AsyncTask and sends specified data to server.
+     * @param data
      * @param player
      * @param delegate
      */
-    public void startAsyncTask(String message, Player player, AsyncResponse delegate) {
+    public void sendDataToServer(String data, Player player, AsyncResponse delegate) {
         ConnectToServer runner = new ConnectToServer(player.getChoosenIP(), delegate);
         System.gc();
-        runner.execute(message);
+        runner.execute(data);
     }
 
     /**
@@ -96,10 +96,10 @@ public class SuperActivity extends AppCompatActivity {
     }
 
     /**
-     * This method validates Ip address. It is called when focus state of editIPText is changed.
-     * If IP is correct return true and if not return false
-     * @param str
-     * @return
+     * This method validates IP address in EditText field. It is called when focus state of
+     * editIPText is changed. If IP is correct return true and if not return false
+     * @param str ip to validate
+     * @return boolean
      */
     public boolean validateIP(String str) {
         Log.d(TAG, "validateIP " + str);
@@ -123,10 +123,11 @@ public class SuperActivity extends AppCompatActivity {
     }
 
     /**
-     * This method validates name in the namefield.
-     * Returns true if name is correct, otherwise false.
-     * @param str
-     * @return
+     * This method validates name in EditText field. It is called when user pushes "Login" button.
+     * If edit field is empty or if name is more than 20 character long the input is incorrect and
+     * method will return false, else true.
+     * @param str name to validate
+     * @return boolean
      */
     public boolean validateName(String str) {
         Log.d(TAG, "validateName " + str);
@@ -159,18 +160,18 @@ public class SuperActivity extends AppCompatActivity {
         pd.dismiss();
     }
 
-    public Thread startThreadMainMenu(Context context, Player player, MainMenu mainMenu){
+    public void startThreadMainMenu(Context context, Player player, MainMenu mainMenu){
         recieveDataThread = new RecieveDataThread(context, player, mainMenu);
         thread = new Thread(recieveDataThread);
         thread.start();
-        return thread;
+
     }
 
-    public Thread startThreadChooseGame(Context context, Player player, ChooseGame chooseGame){
+    public void startThreadChooseGame(Context context, Player player, ChooseGame chooseGame){
         recieveDataThread = new RecieveDataThread(context, player, chooseGame);
         thread = new Thread(recieveDataThread);
         thread.start();
-        return thread;
+
     }
 
     public void closeReceiveThread(){//this method closes socket, ends run method and stops the thread
@@ -178,14 +179,4 @@ public class SuperActivity extends AppCompatActivity {
         thread.interrupt();
     }
 
-    public void showAlertDialog(String title, String message){
-        alertDialog.setTitleMessage(title, message);
-        alertDialog.ButtonOK();
-    }
-
-    public void showAlertDialog(HighScore thisClass, String title, String message, String dataMessage) {
-        alertDialog = new AlertDialogClass(thisClass, title, message, dataMessage);
-        alertDialog.ButtonOK();
-
-    }
 }
