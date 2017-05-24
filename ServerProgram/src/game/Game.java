@@ -204,7 +204,7 @@ public abstract class Game implements Runnable {
 	 * @return if red is pressed
 	 */
 	public boolean redPressed(Player player) {
-		return input.equals("3;"+player.getId());
+		return input.equals("1;"+player.getId());
 	}
 	
 	/**
@@ -213,7 +213,7 @@ public abstract class Game implements Runnable {
 	 * @return if green is pressed
 	 */
 	public boolean greenPressed(Player player) {
-		return input.equals("1;"+player.getId());
+		return input.equals("3;"+player.getId());
 	}
 	
 	/**

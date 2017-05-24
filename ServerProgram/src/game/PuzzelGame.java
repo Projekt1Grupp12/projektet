@@ -178,7 +178,7 @@ public class PuzzelGame extends Game {
 	 * @return the name of the game
 	 */
 	public String getName() {
-		return "Puzzle Game";
+		return "PuzzleGame";
 	}
 	
 	public void run() {

@@ -362,6 +362,7 @@ public class UDPServer implements Runnable
 						sendToClientSimulator(ACK_INSTRUCTION, 0);
 						
 						send(playerPickedGame.split(";")[0], phoneIps[1], port+1);
+						
 						sendToClientSimulator(playerPickedGame.split(";")[0], playerPickedGame.split(";")[1].equals("0") ? 1 : 0);
 						
 						for(int i = 0; i < games.length; i++) {
@@ -402,6 +403,9 @@ public class UDPServer implements Runnable
 						hasStartedGame = true;
 						game.update(input);
 					}
+					
+					System.out.println((input.split(";")[0].equals(CHOOSE_MAX_SCORE_REQUEST_INSTRUCTION)) + " | " + input.split(";")[0]);
+					
 					if(input.split(";")[0].equals(CHOOSE_MAX_SCORE_REQUEST_INSTRUCTION)) {
 						send("scorelmit set", phoneIps[0], port);
 						int maxScore = Integer.parseInt(input.split(";")[2]); //scorelimit

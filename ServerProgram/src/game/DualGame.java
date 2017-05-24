@@ -147,7 +147,7 @@ public class DualGame extends Game {
 	 * @return the name 
 	 */
 	public String getName() {
-		return "Duel Game";
+		return "DuelGame";
 	}
 	
 	/**

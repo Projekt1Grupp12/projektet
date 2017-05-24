@@ -174,7 +174,7 @@ public class TrafficGame extends Game {
 	 * @return the game name
 	 */
 	public String getName() {
-		return "Traffic Game";
+		return "TrafficGame";
 	}
 	
 	/**

@@ -150,7 +150,7 @@ public class ClientView extends JPanel {
 			
 			if(e.getSource() == joinButton) {
 				try {
-					if(!controller.hasGottenGame) controller.send("Ready?;" + controller.getId());
+					if(!controller.hasGottenGame) controller.send("ready?;" + controller.getId());
 					else controller.send("ready;" + controller.getId());
 					//controller.send("highscore;" + controller.getId());
 					try {
