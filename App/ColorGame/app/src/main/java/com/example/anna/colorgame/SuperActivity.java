@@ -20,10 +20,18 @@ public class SuperActivity extends AppCompatActivity {
     private Class startNextActivityClass = null;
     private AlertDialogClass alertDialog;
 
+    /**
+     * This method returns an instance of AlertDialogClass used in SuperActivity.
+     * @return
+     */
     public AlertDialogClass getAlertDialog() {
         return alertDialog;
     }
 
+    /**
+     * This method initiates AlertDialogClass instance with specified value.
+     * @param alertDialog
+     */
     public void setAlertDialog(AlertDialogClass alertDialog) {
         this.alertDialog = alertDialog;
     }
@@ -44,18 +52,34 @@ public class SuperActivity extends AppCompatActivity {
         this.recieveDataThread = recieveDataThread;
     }
 
+    /**
+     * This method returns an instance of a Thread that is used in SuperActivity.
+     * @return
+     */
     public Thread getThread() {
         return thread;
     }
 
+    /**
+     * This method initiates Thread instance with specified value.
+     * @param thread
+     */
     public void setThread(Thread thread) {
         this.thread = thread;
     }
 
+    /**
+     * This method returns an instance of Player class used in SuperActivity.
+     * @return
+     */
     public Player getPlayer() {
         return player;
     }
 
+    /**
+     * This method initiates Player class instance with specified value.
+     * @param player
+     */
     public void setPlayer(Player player) {
         this.player = player;
     }
@@ -152,10 +176,17 @@ public class SuperActivity extends AppCompatActivity {
         pd.show();
     }
 
+    /**
+     * This method is used to determine if ProgressDialog is showing or not.
+     * @return
+     */
     public boolean isShowingProgressBar(){
         return pd.isShowing();
     }
 
+    /**
+     * This method closes ProgressDialog
+     */
     public void closeProgressDialog(){
         pd.dismiss();
     }
