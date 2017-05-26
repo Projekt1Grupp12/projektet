@@ -3,7 +3,6 @@ package com.example.anna.colorgame;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
-
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -12,10 +11,10 @@ import android.widget.TextView;
 import java.io.IOException;
 
 /**
- * Created by George on 2017-05-09.
+ * This class is a super class for every game in this application. It is created to store variables
+ * and methods shared by all game classes.
  */
-
-public class Game extends AppCompatActivity implements View.OnClickListener{
+public class Game extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "debugGame";
     private static final String RED = "3";
     private static final String YELLOW = "2";
@@ -25,9 +24,13 @@ public class Game extends AppCompatActivity implements View.OnClickListener{
     private Player player;
     private MediaPlayer mpGood;
     private MediaPlayer mpBad;
-    private RecieveDataThread recieveDataThread;
+    private ReceiveDataThread receiveDataThread;
     private Thread thread;
 
+    /**
+     * This is used to get result from AsyncTask.
+     * Different actions are taken depending on the result.
+     */
     private AsyncResponse delegate = new AsyncResponse() {
         /*
         Method that has result from AsyncTask as parameter.
@@ -36,11 +39,8 @@ public class Game extends AppCompatActivity implements View.OnClickListener{
         @Override
         public void postResult(String result) {
             TextView textViewMove = (TextView) findViewById(R.id.textViewMove);
-            Log.d(TAG, "Inside updateUI call 2");
-
-            Log.d(TAG, "Text updated");
             //Music is played here.
-            if(mpGood.isPlaying() || mpBad.isPlaying()) {
+            if (mpGood.isPlaying() || mpBad.isPlaying()) {
                 mpGood.stop();
                 mpBad.stop();
             }
@@ -49,7 +49,7 @@ public class Game extends AppCompatActivity implements View.OnClickListener{
                 if (result.contains("GOOD")) {
                     afd = getAssets().openFd("goodmove.mp3");
                     mpGood.reset();
-                    mpGood.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(),afd.getLength());
+                    mpGood.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
                     mpGood.prepare();
                     mpGood.start();
                     textViewMove.setText(result);
@@ -61,25 +61,25 @@ public class Game extends AppCompatActivity implements View.OnClickListener{
                     mpBad.start();
                     textViewMove.setText(result);
                 }
-            } catch (IllegalStateException e) {
-                e.printStackTrace();
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     };
 
-
-    public void setPlayer(Player player){
+    /**
+     * This method is used to initiate a player instance with specified value.
+     *
+     * @param player Player
+     */
+    public void setPlayer(Player player) {
         this.player = player;
-        String toShow= "IP: " + player.getChoosenIP() + " Name: " + player.getName() + " UserID: " + player.getUserID();
-        //Show information in TextView
-        //TextView textViewIP = (TextView) findViewById(R.id.textViewIP);
-        //textViewIP.setText(toShow);
     }
 
-    public void activateMusic(){
+    /**
+     * This method instantiates MediaPlayer instances with specified values.
+     */
+    public void activateMusic() {
         this.mpGood = MediaPlayer.create(this, R.raw.goodmove);
         this.mpBad = MediaPlayer.create(this, R.raw.badmove);
     }
@@ -87,12 +87,13 @@ public class Game extends AppCompatActivity implements View.OnClickListener{
     /**
      * This method is called when one of the buttons is clicked in the GUI.
      * Which button is pushed is stored in data variable.
-     * Then the semicolon and userID is added to data string and sent to startAsyncTask method.
-     * @param view
+     * Then the semicolon and userID is added to data string and sent to sendDataToServer method.
+     *
+     * @param view View
      */
     @Override
     public void onClick(View view) {
-        switch(view.getId()){
+        switch (view.getId()) {
             case R.id.greenButton:
                 data = GREEN;
                 break;
@@ -105,16 +106,17 @@ public class Game extends AppCompatActivity implements View.OnClickListener{
         }
         String temp = data;
         data += SEMICOLON + player.getUserID();
-        startAsyncTask(temp, data);
+        sendDataToServer(temp, data);
     }
 
     /**
      * This method is used to create new instance of a ConnectToServer class and send data as
      * parameter to doInBackground method of that class.
-     * @param color
-     * @param data
+     *
+     * @param color String
+     * @param data  String
      */
-    public void startAsyncTask(String color, String data){
+    public void sendDataToServer(String color, String data) {
         Log.d(TAG, "Create task. " + color);
         ConnectToServer runner = new ConnectToServer(player.getChoosenIP(), delegate);
         System.gc();
@@ -123,38 +125,44 @@ public class Game extends AppCompatActivity implements View.OnClickListener{
     }
 
     /**
-     *  Handler and new thread
+     * This method is used to start a thread that listens for incoming data from server.
      */
-    public void startThread(){
-        recieveDataThread = new RecieveDataThread(this, player);
-        thread = new Thread(recieveDataThread);
+    public void startThread() {
+        receiveDataThread = new ReceiveDataThread(this, player);
+        thread = new Thread(receiveDataThread);
         thread.start();
-    }
-    public void closeReceiveThread(){//this method closes socket, ends run method and stops the thread
-        recieveDataThread.setIsRunning(false);
-        thread.interrupt();
-    }
-
-    public AsyncResponse getDelgate(){
-        return this.delegate;
     }
 
     /**
-     * Shows AlertDialog in PuzzleGame activity.
+     * This method is used to close the thread. It stops while loop and interrupts the thread.
      */
-    public void showAlertDialog(Context context){
-        GameOver gameOver = new GameOver(context, this.player, "Give Up");
+    public void closeThread() {
+        receiveDataThread.setIsRunning(false);
+        thread.interrupt();
+    }
+
+    /**
+     * This method is used to show AlertDialog in game activity.
+     * It is called when GiveUp button is pushed.
+     */
+    public void showAlertDialog(Context context) {
+        new GameOver(context, this.player, "Give Up");
 
     }
 
     /**
      * This method is called when button "Give Up" is clicked.
-     * @param view
+     *
+     * @param view View
      */
-    public void giveUp(View view){
+    public void giveUp(View view) {
         showAlertDialog(this);
     }
 
+    /**
+     * This method is called when user navigates using Back button on the screen.
+     * AlertDialog is shown by calling showAlertDialog() method.
+     */
     @Override
     public void onBackPressed() {
         showAlertDialog(this);

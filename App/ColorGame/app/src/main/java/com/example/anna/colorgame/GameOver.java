@@ -5,23 +5,22 @@ import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 
 /**
- * Created by George on 2017-04-28.
+ * This class is used when the game is over to show AlertDialogs to player.
  */
-
 public class GameOver extends AppCompatActivity {
-
-    private String TAG = "GameOverDebug";
-
-    //The alertDialog
     private String message = null;// message to show in AlertDialog window
-
-    //Player and the new intents
     private Player player;
-    private AlertDialogClass alertDialog = null;
     private Context context = null;
     private String dataMessage = null;// "Give Up", "logout", "LOSE!", "WIN!"
 
-    public GameOver(Context context, Player player, String dataMessage){
+    /**
+     * This constructor creates new instance of GameOver class with specified parameters.
+     *
+     * @param context     Context
+     * @param player      Player
+     * @param dataMessage String
+     */
+    public GameOver(Context context, Player player, String dataMessage) {
         this.context = context;
         this.player = new Player(player.getName(), player.getUserID(), player.getChoosenIP());
         this.dataMessage = dataMessage;
@@ -29,35 +28,33 @@ public class GameOver extends AppCompatActivity {
         displayMessage();
     }
 
-    private void setTextMessageOfAlertDialog(String message){
-        switch(message){
+    /**
+     * This method is used to choose text that will be shown in AlertDialog.
+     *
+     * @param message String
+     */
+    private void setTextMessageOfAlertDialog(String message) {
+        switch (message) {
             case "WIN!":
-                setTextWinner();
+                this.message = "You are the winner!";
                 break;
             case "LOSE!":
-                setTextLoser();
+                this.message = "Epic fail!";
                 break;
             case "logout":
-                setTextLogout();
+                this.message = "Game is interrupted." + "\nYou will be logged out";
                 break;
             case "Give Up":
-                setTextGiveUp();
+                this.message = "Game is interrupted." + "\nProgress will be lost";
                 break;
         }
     }
 
-    private void setTextWinner(){
-        this.message = "You are the winner!";
-    }
-    private void setTextLoser(){ this.message = "Epic fail!"; }
-    private void setTextGiveUp(){ this.message = "Game is interrupted." +"\nProgress will be lost";}
-    private void setTextLogout(){ this.message = "Game is interrupted." + "\nYou will be logged out";}
-
     /**
-     * Prepares the alertDialog to display if player has won or lost the game
+     * This method creates an AlertDialog to display when player won or lost the game.
      */
-    public void displayMessage(){
-        alertDialog = new AlertDialogClass(context, dataMessage);
+    public void displayMessage() {
+        AlertDialogClass alertDialog = new AlertDialogClass(context, dataMessage);
         alertDialog.setTextToShowInAlertDialog(message);
         alertDialog.setPlayer(player);
         alertDialog.ButtonOK();
