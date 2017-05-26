@@ -10,26 +10,32 @@ import android.widget.TextView;
 import java.io.IOException;
 
 /**
- * Created by George on 2017-05-18.
+ * This class is an game activity for Death match game that shows GUI specified for this game.
+ * It has three buttons with different colors and a three TextView.
+ * TextView shows different information to the user.(Move, points)
  */
-
 public class DeathmatchGame extends Game{
     private static final String TAG = "debugPuzzleGame";
-    private Player player;
     private MediaPlayer mpDeathmatch = null;
 
+    /**
+     * In this method a TextView is created to show Game name to player. Next Intent is used to
+     * get data send to this activity. Player variable is instantiated in the super class and
+     * MediaPlayer variable is instantiated with files.
+     * Thread is started to listen for incoming data from server.
+     *
+     * @param savedInstanceState Bundle
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_main_layout);
         final TextView viewToChange = (TextView) findViewById(R.id.textPuzzleGame);
         viewToChange.setText("Deathmatch Game");
-
-        //Get the intent that started this activity and extract the string
         Log.d(TAG, "DeathmatchGame, onCreate method. Creating an intent");
         Intent intent = getIntent();
-        player = (Player) intent.getSerializableExtra("player");
-        setPlayer(this.player);
+        Player player = (Player) intent.getSerializableExtra("player");
+        setPlayer(player);
         activateMusic();
         startThread();
         this.mpDeathmatch = MediaPlayer.create(this, R.raw.amongstcrystallight);
@@ -46,11 +52,15 @@ public class DeathmatchGame extends Game{
         }
     }
 
+    /**
+     * When this method is called mpDeathmatch.stop() is called to stop music, closeThread() is called to
+     * stop the thread and last super.onDestroy() is called to end this activity.
+     */
     @Override
     protected void onDestroy() {
         Log.d(TAG, "onDestroy");
         mpDeathmatch.stop();
-        closeReceiveThread();
+        closeThread();
         super.onDestroy();
     }
 }

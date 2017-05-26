@@ -7,35 +7,50 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketTimeoutException;
- /*
-This class extends AsyncTask and is used to send a request with data to server, and get a response
-with data from server.
-Parameter in doInBackground method is data that will be sent to the server.
-*/
 
+/**
+ * This class extends AsyncTask and is used to send a request with data to server, and to get a
+ * response with data from server.
+ * DatagramSocket is used for communication with server. Data is sent in DatagramPackets.
+ */
 public class ConnectToServer extends AsyncTask<String, String, String> {
     private static final int PORT = 4444;
     private static final String TAG = "ServerConnectDebug";
     private String ip = null;
     private AsyncResponse delegate = null;
-    private Player player;
     private int constructor = 0;
-    private boolean connection = false;
 
-    public ConnectToServer(String ip, AsyncResponse delegate){
-        this.constructor=1;
-        this.ip=ip;
+    /**
+     * This constructor creates an instance of ConnectToServer class and initiates it with specified
+     * values.
+     *
+     * @param ip       String
+     * @param delegate AsyncResponse
+     */
+    public ConnectToServer(String ip, AsyncResponse delegate) {
+        this.constructor = 1;
+        this.ip = ip;
         this.delegate = delegate;
     }
-    public ConnectToServer(Player player){//added constructor with one parameter for cases where we dont need delegate to update UI
-        this.constructor=2;
-        this.player=player;
-        this.ip=player.getChoosenIP();
+
+    /**
+     * This constructor creates an instance of ConnectToServer class and initiates it with specified
+     * values
+     *
+     * @param player Player
+     */
+    public ConnectToServer(Player player) {
+        this.constructor = 2;
+        this.ip = player.getChoosenIP();
     }
-    /*
-    This method is used to estabilish connection with server.
-    Parameter is data that will be sent to the server.
-    It returns data received from the server to onPostExecute method.
+
+    /**
+     * This method is used to send specified data message to server and wait for response. If server
+     * doesn't respond in 3 seconds SocketTimeOutException is cast to inform about bad connection or
+     * connection loss.
+     *
+     * @param message String
+     * @return result String
      */
     @Override
     protected String doInBackground(String... message) {
@@ -45,66 +60,64 @@ public class ConnectToServer extends AsyncTask<String, String, String> {
             Log.d(TAG, "Asynctask. Creating Socket and IPAdress");
             clientSocket = new DatagramSocket(PORT);
             InetAddress IPAddress = InetAddress.getByName(ip);
-
-            Log.d(TAG, "Asynctask. Initialising byte arrays");
-            byte[] sendData = new byte[64];
+            byte[] sendData;
             byte[] receiveData = new byte[128];
             String sentence = message[0];
             Log.d(TAG, "SKICKAT TILL SERVER:" + sentence);
-            Log.d(TAG, "Asynctask. Sending user input to server");
             sendData = sentence.getBytes();
             DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, PORT);
-
             clientSocket.send(sendPacket);
-
-            Log.d(TAG, "Asynctask. Recieving response from server");
             DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
-            Log.d(TAG, "clientSocket.setSoTimeout(3000)");
-
-
             clientSocket.setSoTimeout(5000);
             Log.d(TAG, "Asynctask. Waiting for response");
             clientSocket.receive(receivePacket);
-
-
             Log.d(TAG, "Asynctask. Reading DatagramPacket we got from server");
             messageFromServer = putChar(receiveData, receiveData.length);
         } catch (SocketTimeoutException e) {
-            if(messageFromServer.isEmpty())
+            if (messageFromServer.isEmpty())
                 Log.d(TAG, "EMPTY MESSAGE");
             messageFromServer = "SocketTimeoutException";
-            Log.e(TAG, "SocketTimeoutException");
-        }catch (IOException e) {
-            Log.e(TAG, e.getMessage());
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         clientSocket.close();
         return messageFromServer;
     }
-    /*
-    This method is called right after doInBackground method is complete.
-    This method uses instance of AsyncResponce to call postResult method and send data stored in
-    result as parameter.
+
+    /**
+     * This method is called right after doInBackground method is complete.
+     * It uses instance of AsyncResponce to call postResult method and send data stored in result as
+     * parameter.
+     *
+     * @param result String
      */
     @Override
-    protected void onPostExecute(String result){
-        if(constructor==1){
+    protected void onPostExecute(String result) {
+        if (constructor == 1) {
             delegate.postResult(result);
-        }else if(constructor==2){
+        } else if (constructor == 2) {
             Log.d(TAG, "result" + result);
-        }else if(constructor==0){
+        } else if (constructor == 0) {
             Log.d(TAG, "result" + result);
         }
     }
-    /*
-    This method is used to sort data received from server to sort away all of the "0".
+
+    /**
+     * This method is used to sort data received from server, specifically to sort away all of the
+     * "0".
+     *
+     * @param receiveData byte[]
+     * @param legth           int
+     * @return messageFromServer String
      */
-    private String putChar(byte[] receiveData, int l){
-        String tmp = "";
-        for(int i=0; i<l; i++) {
+    private String putChar(byte[] receiveData, int legth) {
+        String messageFromServer = "";
+        for (int i = 0; i < legth; i++) {
             if (receiveData[i] != 0) {
-                tmp += (char) receiveData[i];
+                messageFromServer += (char) receiveData[i];
             }
         }
-        return tmp;
+        return messageFromServer;
     }
 }
