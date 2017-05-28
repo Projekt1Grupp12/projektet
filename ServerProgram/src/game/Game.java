@@ -229,8 +229,16 @@ public abstract class Game implements Runnable {
 	 * Get the players in the game
 	 * @return the  players
 	 */
-	public Player[] getPlayers() {
+	/*public Player[] getPlayers() {
 		return players;
+	}*/
+	
+	public int getPlayerAmount() {
+		return players.length;
+	}
+	
+	public Player getPlayer(int index) {
+		return players[index];
 	}
 	
 	/**
@@ -276,8 +284,8 @@ public abstract class Game implements Runnable {
 	 * Check if a player has won, set game over if so
 	 */
 	public void checkIfWon() {
-		for(int i = 0; i < getPlayers().length; i++) {
-			if(getPlayers()[i].getScore() >= getMaxScore()-1) {
+		for(int i = 0; i < players.length; i++) {
+			if(players[i].getScore() >= getMaxScore()-1) {
 				winningPlayer = i;
 				try {
 					sendToPhone("WIN!", i);

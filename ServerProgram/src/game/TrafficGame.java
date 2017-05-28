@@ -37,8 +37,8 @@ public class TrafficGame extends Game {
 		delay = -1;
 		maxDelay = 96;
 		hasPressedYellow = new boolean[2];
-		for(int i = 0; i < getPlayers().length; i++) {
-			getPlayers()[i].setScreenBit(0);
+		for(int i = 0; i < getPlayerAmount(); i++) {
+			getPlayer(i).setScreenBit(0);
 		}
 		
 		realTime = true;
@@ -52,26 +52,26 @@ public class TrafficGame extends Game {
 	public void stepLight() {
 		lightState += fromRed ? 1 : -1;
 		
-		for(int i = 0; i < getPlayers().length; i++) {
-			getPlayers()[i].flushScreen();
+		for(int i = 0; i < getPlayerAmount(); i++) {
+			getPlayer(i).flushScreen();
 			hasPressedYellow[i] = false;
 			
 			if(lightState == RED) {
-				getPlayers()[i].setScreenBit(0);
+				getPlayer(i).setScreenBit(0);
 				speed = 0;
 				fromRed = true;
 			}
 			
 			if(lightState == YELLOW) {
-				getPlayers()[i].setScreenBit(1);
+				getPlayer(i).setScreenBit(1);
 				if(fromRed) {
-					getPlayers()[i].setScreenBit(0);
+					getPlayer(i).setScreenBit(0);
 				}
 				speed = 2;
 			}
 			
 			if(lightState == GREEN) {
-				getPlayers()[i].setScreenBit(2);
+				getPlayer(i).setScreenBit(2);
 				fromRed = false;
 				speed = 0;
 			}
@@ -84,7 +84,7 @@ public class TrafficGame extends Game {
 	 * @param player the player to send bad feedback to
 	 */
 	public void sendBadFeedback(int index) throws IOException {
-		sendToPhone("BAD MOVE!" +  getPlayers()[index].getScore(), index);
+		sendToPhone("BAD MOVE!" +  getPlayer(index).getScore(), index);
 	}
 	
 	/**
@@ -93,8 +93,8 @@ public class TrafficGame extends Game {
 	 * @param player the player to send good feedback to
 	 */
 	public void sendGoodFeedback(int index) throws IOException {
-		getPlayers()[index].addScore();
-		sendToPhone("GOOD MOVE!"  +  getPlayers()[index].getScore(), index);
+		getPlayer(index).addScore();
+		sendToPhone("GOOD MOVE!"  +  getPlayer(index).getScore(), index);
 		takeProgressStep(index);
 		setInput("");
 	}
@@ -154,10 +154,10 @@ public class TrafficGame extends Game {
 		
 		checkIfWon();
 		
-		for(int i = 0; i < getPlayers().length; i++) {
+		for(int i = 0; i < getPlayerAmount(); i++) {
 			checkGoodInput(i);
-			getPlayers()[i].setAmountPressed(0);
-			getPlayers()[i].flushColorsPressed();
+			getPlayer(i).setAmountPressed(0);
+			getPlayer(i).flushColorsPressed();
 		}
 		
 		updateMessageDelay += 1;

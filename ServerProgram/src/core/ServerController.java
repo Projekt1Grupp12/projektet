@@ -45,9 +45,9 @@ public class ServerController {
 	 * Update the simluators screen with the screen data and mask form the player
 	 */
 	public void updateSimulatorScreen() {
-		for(int i = 0; i < server.getPlayers().length; i++) {
-			for(int j = 0; j < server.getPlayers()[i].lightsOn().length; j++) {
-				if(server.getPlayers()[i].lightsOn()[j] && (server.getPlayers()[i].getMaskScreen() & (1L << j)) != 0)
+		for(int i = 0; i < server.getPlayerAmount(); i++) {
+			for(int j = 0; j < server.getPlayer(i).lightsOn().length; j++) {
+				if(server.getPlayer(i).lightsOn()[j] && (server.getPlayer(i).getMaskScreen() & (1L << j)) != 0)
 					view.getScreenSimulatorController().setLight(j + (3*i));
 				else 
 					view.getScreenSimulatorController().clearLight(j + (3*i));

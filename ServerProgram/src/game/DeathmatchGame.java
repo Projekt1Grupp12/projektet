@@ -17,18 +17,18 @@ public class DeathmatchGame extends Game {
 	}
 
 	public void sendBadFeedback(int index) throws IOException {
-		sendToPhone("BAD MOVE! " +  getPlayers()[index].getScore(), getPlayers()[index].getId());
+		sendToPhone("BAD MOVE! " +  getPlayer(index).getScore(), index);
 	}
 
 	public void sendGoodFeedback(int index) throws IOException {
-		getPlayers()[index].addScore();
-		sendToPhone("GOOD MOVE! " +  getPlayers()[index].getScore(), getPlayers()[index].getId());
+		getPlayer(index).addScore();
+		sendToPhone("GOOD MOVE! " +  getPlayer(index).getScore(), getPlayer(index).getId());
 	}
 	
 	public void movePlayer(int index) throws IOException {
-		sendToArdurino((index == 0) ? "0" + getPlayers()[1].getScreen() : getPlayers()[0].getScreen() + "0");
-		getPlayers()[index].flushScreen();
-		getPlayers()[index].setScreenBit(position[index]);
+		sendToArdurino((index == 0) ? "0" + getPlayer(1).getScreen() : getPlayer(0).getScreen() + "0");
+		getPlayer(index).flushScreen();
+		getPlayer(index).setScreenBit(position[index]);
 	
 		String tmp = "0";	
 		sendToArdurino(((setupFullScreen() < 10) ? tmp + setupFullScreen() : setupFullScreen()+"") + "");
@@ -37,7 +37,7 @@ public class DeathmatchGame extends Game {
 	public void update(String input) throws IOException {
 		setInput(input);
 		
-		for(int i = 0; i < getPlayers().length; i++) {
+		for(int i = 0; i < getPlayerAmount(); i++) {
 			if(redPressed(i) && position[i] < 2) {
 				position[i] += 1;
 				movePlayer(i);

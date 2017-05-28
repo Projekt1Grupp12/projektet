@@ -40,7 +40,7 @@ public class PuzzelGame extends Game {
 	 * @param player the player to send bad feedback to
 	 */
 	public void sendBadFeedback(int index) throws IOException {
-		sendToPhone("BAD MOVE! " +  getPlayers()[index].getScore(), index);
+		sendToPhone("BAD MOVE! " +  getPlayer(index).getScore(), index);
 	}
 
 	/**
@@ -48,8 +48,8 @@ public class PuzzelGame extends Game {
 	 * @param player the player to send good feedback to
 	 */
 	public void sendGoodFeedback(int index) throws IOException {
-		getPlayers()[index].addScore();
-		sendToPhone("GOOD MOVE! " +  getPlayers()[index].getScore(), index);
+		getPlayer(index).addScore();
+		sendToPhone("GOOD MOVE! " +  getPlayer(index).getScore(), index);
 		takeProgressStep(index);
 	}
 	
@@ -59,11 +59,11 @@ public class PuzzelGame extends Game {
 	 * @return if the player has pressed a lit up color
 	 */
 	public boolean checkGoodInput(int index) {
-		for(int i = 0; i < getPlayers()[index].lightsOn().length; i++) {
-			if(getPlayers()[index].lightsOn()[i] && colorsPressed(index)[i] && !getPlayers()[index].getColorsPressed()[i]) {
-				getPlayers()[index].setAmountPressed(getPlayers()[index].getAmountPressed()+1);
-				getPlayers()[index].setColorsPressed(true, i);
-				getPlayers()[index].clearMaskBit(i);
+		for(int i = 0; i < getPlayer(index).lightsOn().length; i++) {
+			if(getPlayer(index).lightsOn()[i] && colorsPressed(index)[i] && !getPlayer(index).getColorsPressed()[i]) {
+				getPlayer(index).setAmountPressed(getPlayer(index).getAmountPressed()+1);
+				getPlayer(index).setColorsPressed(true, i);
+				getPlayer(index).clearMaskBit(i);
 				try {
 					sendToArdurino(setupFullScreen() + "");
 					sendGoodFeedback(index);
@@ -71,7 +71,7 @@ public class PuzzelGame extends Game {
 					e.printStackTrace();
 				}
 			} else {
-				if(!getPlayers()[index].lightsOn()[i] && colorsPressed(index)[i] || colorsPressed(index)[i] && getPlayers()[index].getColorsPressed()[i]) {
+				if(!getPlayer(index).lightsOn()[i] && colorsPressed(index)[i] || colorsPressed(index)[i] && getPlayer(index).getColorsPressed()[i]) {
 					try {
 						sendBadFeedback(index);
 					} catch (IOException e) {
@@ -81,7 +81,7 @@ public class PuzzelGame extends Game {
 			}
 		}
 		
-		return getPlayers()[index].getAmountPressed() == getPlayers()[index].amountLightsOn() && getPlayers()[index].amountLightsOn() != 0;
+		return getPlayer(index).getAmountPressed() == getPlayer(index).amountLightsOn() && getPlayer(index).amountLightsOn() != 0;
 	}
 	
 	/**
@@ -91,16 +91,16 @@ public class PuzzelGame extends Game {
 	public void changeLights() throws IOException {
 		flushFullScreen();
 
-		int[] amountToLightUp = new int[getPlayers().length];
+		int[] amountToLightUp = new int[getPlayerAmount()];
 		
 		for(int i = 0; i < amountToLightUp.length; i++) {
 			amountToLightUp[i] = random.nextInt(2)+1;
 		}
 		
-		for(int i = 0; i < getPlayers().length; i++) {
-			getPlayers()[i].flushScreen();
+		for(int i = 0; i < getPlayerAmount(); i++) {
+			getPlayer(i).flushScreen();
 			for(int j = 0; j < amountToLightUp[i]; j++) {
-				getPlayers()[i].setScreenBit(BetterRandom.random(0, 3));
+				getPlayer(i).setScreenBit(BetterRandom.random(0, 3));
 			}
 		}
 		
@@ -113,15 +113,15 @@ public class PuzzelGame extends Game {
 	 * @throws IOException
 	 */
 	public void changeLights(int index) throws IOException {
-		sendToArdurino((index == 0) ? "0" + getPlayers()[1].getScreen() : getPlayers()[0].getScreen() + "0");
-		getPlayers()[index].flushMask();
+		sendToArdurino((index == 0) ? "0" + getPlayer(1).getScreen() : getPlayer(0).getScreen() + "0");
+		getPlayer(index).flushMask();
 		int amountToLightUp = 0;
 
 		amountToLightUp = random.nextInt(2)+1;
 		
-		getPlayers()[index].flushScreen();
+		getPlayer(index).flushScreen();
 		for(int i = 0; i < amountToLightUp; i++) {
-			getPlayers()[index].setScreenBit(BetterRandom.random(0, 3));
+			getPlayer(index).setScreenBit(BetterRandom.random(0, 3));
 		}
 		
 		String tmp = "0";
@@ -154,14 +154,14 @@ public class PuzzelGame extends Game {
 		
 		checkIfWon();
 		
-		for(int i = 0; i < getPlayers().length; i++) {
-			if(getPlayers()[i].amountLightsOn() == 0) {
+		for(int i = 0; i < getPlayerAmount(); i++) {
+			if(getPlayer(i).amountLightsOn() == 0) {
 				changeLights(i);
 				break;
 			}
 			if(!gameOver && checkGoodInput(i)) {
-				getPlayers()[i].setAmountPressed(0);
-				getPlayers()[i].flushColorsPressed();
+				getPlayer(i).setAmountPressed(0);
+				getPlayer(i).flushColorsPressed();
 				changeLights(i);
 			}
 		}

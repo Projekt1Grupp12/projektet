@@ -190,8 +190,8 @@ public class UDPServer implements Runnable {
 			e.printStackTrace();
 		}
 		
-		for(int i = 0; i < game.getPlayers().length; i++)
-			getPlayers()[i].setName(collectedPlayerNames[i]);
+		for(int i = 0; i < game.getPlayerAmount(); i++)
+			game.getPlayer(i).setName(collectedPlayerNames[i]);
 			
 		return ips;
 	}
@@ -433,8 +433,12 @@ public class UDPServer implements Runnable {
 	 * Get the players in the game
 	 * @return the players
 	 */
-	public Player[] getPlayers() {
-		return this.game.getPlayers();
+	public Player getPlayer(int index) {
+		return game.getPlayer(index);
+	}
+	
+	public int getPlayerAmount() {
+		return game.getPlayerAmount();
 	}
 	
 	/**

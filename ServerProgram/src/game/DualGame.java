@@ -41,7 +41,7 @@ public class DualGame extends Game {
 	 * @param player the player to send bad feedback to
 	 */
 	public void sendBadFeedback(int index) throws IOException {
-		sendToPhone("DEAD! " +  getPlayers()[index].getScore(), index);
+		sendToPhone("BAD MOVE! " +  getPlayer(index).getScore(), index);
 	}
 
 	/**
@@ -49,7 +49,7 @@ public class DualGame extends Game {
 	 * @param player the player to send good feedback to
 	 */
 	public void sendGoodFeedback(int index) throws IOException {
-		sendToPhone("YOU WIN! " +  getPlayers()[index].getScore(), index);
+		sendToPhone("GOOD MOVE! " +  getPlayer(index).getScore(), index);
 	}
 	
 	/**
@@ -65,8 +65,8 @@ public class DualGame extends Game {
 			if(state >= 3) {
 				shot = false;
 				state = -1;
-				for(int i = 0; i < getPlayers().length; i++) {
-					getPlayers()[i].flushScreen();
+				for(int i = 0; i < getPlayerAmount(); i++) {
+					getPlayer(i).flushScreen();
 				}
 				maxDelay = 128+96;
 			}
@@ -75,9 +75,9 @@ public class DualGame extends Game {
 			delay = 0;
 			
 			lightUp = BetterRandom.random(0, 3);
-			for(int i = 0; i < getPlayers().length; i++) {
+			for(int i = 0; i < getPlayerAmount(); i++) {
 				if(state == 2) {
-					getPlayers()[i].setScreenBit(lightUp); 
+					getPlayer(i).setScreenBit(lightUp); 
 					sendToArdurino(setupFullScreen() + "");
 				}
 				else {
@@ -89,10 +89,10 @@ public class DualGame extends Game {
 		
 		checkIfWon();
 		
-		for(int i = 0; i < getPlayers().length; i++) {
+		for(int i = 0; i < getPlayerAmount(); i++) {
 			checkGoodInput(i);
-			getPlayers()[i].setAmountPressed(0);
-			getPlayers()[i].flushColorsPressed();
+			getPlayer(i).setAmountPressed(0);
+			getPlayer(i).flushColorsPressed();
 		}
 		
 		input = "";
@@ -111,11 +111,11 @@ public class DualGame extends Game {
 	 * @return if the player hit the other or if the miss fired
 	 */
 	public boolean checkGoodInput(int index) {
-		if(!shot && (getPlayers()[index].lightsOn()[lightUp] && colorsPressed(index)[lightUp])  && state == 2) {
+		if(!shot && (getPlayer(index).lightsOn()[lightUp] && colorsPressed(index)[lightUp])  && state == 2) {
 			shot = true;
 			try {
 				sendGoodFeedback(index);
-				if(getPlayers()[index].getId() == 0) {
+				if(getPlayer(index).getId() == 0) {
 					sendBadFeedback(1);
 				} else {
 					sendBadFeedback(0);
@@ -129,7 +129,7 @@ public class DualGame extends Game {
 		if((redPressed(index) || yellowPressed(index) || greenPressed(index)) && state != 2) {
 			try {
 				sendBadFeedback(index);
-				if(getPlayers()[index].getId() == 0) {
+				if(getPlayer(index).getId() == 0) {
 					sendGoodFeedback(1);
 				} else {
 					sendGoodFeedback(0);
