@@ -22,7 +22,7 @@ public class DualGame extends Game {
 	private boolean blink;
 	
 	/**
-	 * create a puzzel game with a set of players and server
+	 * create a duel game with a set of players and server
 	 * @param players the set of players
 	 * @param server the server
 	 */
@@ -38,7 +38,7 @@ public class DualGame extends Game {
 	
 	/**
 	 * Send bad move and the score to the player
-	 * @param player the player to send bad feedback to
+	 * @param index the player to send bad feedback to
 	 */
 	public void sendBadFeedback(int index) throws IOException {
 		sendToPhone("BAD MOVE! " +  getPlayer(index).getScore(), index);
@@ -46,7 +46,7 @@ public class DualGame extends Game {
 
 	/**
 	 * Raise the player score, send good move and score and move the engine one step
-	 * @param player the player to send good feedback to
+	 * @param index the player to send good feedback to
 	 */
 	public void sendGoodFeedback(int index) throws IOException {
 		sendToPhone("GOOD MOVE! " +  getPlayer(index).getScore(), index);
@@ -107,7 +107,7 @@ public class DualGame extends Game {
 	
 	/**
 	 * Check which player shot who first
-	 * @param player the player to check
+	 * @param index the player to check
 	 * @return if the player hit the other or if the miss fired
 	 */
 	public boolean checkGoodInput(int index) {

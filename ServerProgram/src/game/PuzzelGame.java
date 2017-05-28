@@ -37,7 +37,7 @@ public class PuzzelGame extends Game {
 	
 	/**
 	 * Send bad move and the score to the player
-	 * @param player the player to send bad feedback to
+	 * @param index the player to send bad feedback to
 	 */
 	public void sendBadFeedback(int index) throws IOException {
 		sendToPhone("BAD MOVE! " +  getPlayer(index).getScore(), index);
@@ -45,7 +45,7 @@ public class PuzzelGame extends Game {
 
 	/**
 	 * Raise the player score, send good move and score and move the engine one step
-	 * @param player the player to send good feedback to
+	 * @param index the player to send good feedback to
 	 */
 	public void sendGoodFeedback(int index) throws IOException {
 		getPlayer(index).addScore();
@@ -55,7 +55,7 @@ public class PuzzelGame extends Game {
 	
 	/**
 	 * Check if the player has done a move, i.e press a light that is lit up, send badfeed back if anything else is pressed
-	 * @param player the player to check
+	 * @param index the player to check
 	 * @return if the player has pressed a lit up color
 	 */
 	public boolean checkGoodInput(int index) {

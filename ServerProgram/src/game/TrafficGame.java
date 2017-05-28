@@ -28,7 +28,7 @@ public class TrafficGame extends Game {
 	private String message = "STANDING STILL! ";
 	
 	/**
-	 * create a puzzel game with a set of players and server
+	 * create a duel game with a set of players and server
 	 * @param players the set of players
 	 * @param server the server
 	 */
@@ -81,7 +81,7 @@ public class TrafficGame extends Game {
 	
 	/**
 	 * Send bad move and the score to the player
-	 * @param player the player to send bad feedback to
+	 * @param index the player to send bad feedback to
 	 */
 	public void sendBadFeedback(int index) throws IOException {
 		sendToPhone("BAD MOVE!" +  getPlayer(index).getScore(), index);
@@ -90,7 +90,7 @@ public class TrafficGame extends Game {
 	/**
 	 * Raise the player score, send good move and score and move the engine one step and clear the input so that
 	 * the player doesn't continuesly press after not pressing
-	 * @param player the player to send good feedback to
+	 * @param index the player to send good feedback to
 	 */
 	public void sendGoodFeedback(int index) throws IOException {
 		getPlayer(index).addScore();
@@ -102,7 +102,7 @@ public class TrafficGame extends Game {
 	/**
 	 * Check if player is pressing when it's green or once when its {yellow, red} or if they are pressing
 	 * at the wrong time
-	 * @param the player to check
+	 * @param index the player to check
 	 * @return if the player did good
 	 */
 	public boolean checkGoodInput(int index) {

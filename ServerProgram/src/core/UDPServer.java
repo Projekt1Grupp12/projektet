@@ -430,13 +430,17 @@ public class UDPServer implements Runnable {
 	}
 	
 	/**
-	 * Get the players in the game
-	 * @return the players
+	 * Get the player at specifc index in the game being run on the server
+	 * @return the player
 	 */
 	public Player getPlayer(int index) {
 		return game.getPlayer(index);
 	}
 	
+	/**
+	 * Get amount of players in the game being run on the server
+	 * @return the amount of players
+	 */
 	public int getPlayerAmount() {
 		return game.getPlayerAmount();
 	}

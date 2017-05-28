@@ -163,14 +163,14 @@ public abstract class Game implements Runnable {
 	
 	/**
 	 * Send bad feedback to a player
-	 * @param player the player that is getting the feedback
+	 * @param index the player that is getting the feedback
 	 * @throws IOException
 	 */
 	public abstract void sendBadFeedback(int index) throws IOException;
 	
 	/**
 	 * Send good feedback to a player
-	 * @param player the player that is getting the feedback
+	 * @param index the player that is getting the feedback
 	 * @throws IOException
 	 */
 	public abstract void sendGoodFeedback(int index) throws IOException;
@@ -184,14 +184,14 @@ public abstract class Game implements Runnable {
 	
 	/**
 	 * Check the input of the player is good and return true if it is
-	 * @param player the player to check
+	 * @param index the player to check
 	 * @return the players preformance
 	 */
 	public abstract boolean checkGoodInput(int index);
 	
 	/**
 	 * Get the colors pressed
-	 * @param player the players button to check
+	 * @param index the players button to check
 	 * @return the pressed colors
 	 */
 	public boolean[] colorsPressed(int index) {
@@ -200,7 +200,7 @@ public abstract class Game implements Runnable {
 	
 	/**
 	 * Check if red button is pressed
-	 * @param player the player to check
+	 * @param index the player to check
 	 * @return if red is pressed
 	 */
 	public boolean redPressed(int index) {
@@ -209,7 +209,7 @@ public abstract class Game implements Runnable {
 	
 	/**
 	 * Check if green button is pressed
-	 * @param player the player to check
+	 * @param index the player to check
 	 * @return if green is pressed
 	 */
 	public boolean greenPressed(int index) {
@@ -218,25 +218,27 @@ public abstract class Game implements Runnable {
 	
 	/**
 	 * Check if yellow button is pressed
-	 * @param player the player to check
+	 * @param index the player to check
 	 * @return if yellow is pressed
 	 */
 	public boolean yellowPressed(int index) {
 		return input.equals("2;"+index);
 	}
 	
-	/**
-	 * Get the players in the game
-	 * @return the  players
-	 */
-	/*public Player[] getPlayers() {
-		return players;
-	}*/
 	
+	/**
+	 * Get the amount of players in the game
+	 * @return the amount of players
+	 */
 	public int getPlayerAmount() {
 		return players.length;
 	}
 	
+	/**
+	 * get a player at a specifc index
+	 * @param index the index
+	 * @return the player
+	 */
 	public Player getPlayer(int index) {
 		return players[index];
 	}
