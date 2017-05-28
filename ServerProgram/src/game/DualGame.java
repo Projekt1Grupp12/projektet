@@ -40,16 +40,16 @@ public class DualGame extends Game {
 	 * Send bad move and the score to the player
 	 * @param player the player to send bad feedback to
 	 */
-	public void sendBadFeedback(Player player) throws IOException {
-		sendToPhone("DEAD! " +  player.getScore(), player.getId());
+	public void sendBadFeedback(int index) throws IOException {
+		sendToPhone("DEAD! " +  getPlayers()[index].getScore(), index);
 	}
 
 	/**
 	 * Raise the player score, send good move and score and move the engine one step
 	 * @param player the player to send good feedback to
 	 */
-	public void sendGoodFeedback(Player player) throws IOException {
-		sendToPhone("YOU WIN! " +  player.getScore(), player.getId());
+	public void sendGoodFeedback(int index) throws IOException {
+		sendToPhone("YOU WIN! " +  getPlayers()[index].getScore(), index);
 	}
 	
 	/**
@@ -90,7 +90,7 @@ public class DualGame extends Game {
 		checkIfWon();
 		
 		for(int i = 0; i < getPlayers().length; i++) {
-			checkGoodInput(getPlayers()[i]);
+			checkGoodInput(i);
 			getPlayers()[i].setAmountPressed(0);
 			getPlayers()[i].flushColorsPressed();
 		}
@@ -110,15 +110,15 @@ public class DualGame extends Game {
 	 * @param player the player to check
 	 * @return if the player hit the other or if the miss fired
 	 */
-	public boolean checkGoodInput(Player player) {
-		if(!shot && (player.lightsOn()[lightUp] && colorsPressed(player)[lightUp])  && state == 2) {
+	public boolean checkGoodInput(int index) {
+		if(!shot && (getPlayers()[index].lightsOn()[lightUp] && colorsPressed(index)[lightUp])  && state == 2) {
 			shot = true;
 			try {
-				sendGoodFeedback(player);
-				if(player.getId() == 0) {
-					sendBadFeedback(getPlayers()[1]);
+				sendGoodFeedback(index);
+				if(getPlayers()[index].getId() == 0) {
+					sendBadFeedback(1);
 				} else {
-					sendBadFeedback(getPlayers()[0]);
+					sendBadFeedback(0);
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -126,13 +126,13 @@ public class DualGame extends Game {
 			return true;
 		}
 		
-		if((redPressed(player) || yellowPressed(player) || greenPressed(player)) && state != 2) {
+		if((redPressed(index) || yellowPressed(index) || greenPressed(index)) && state != 2) {
 			try {
-				sendBadFeedback(player);
-				if(player.getId() == 0) {
-					sendGoodFeedback(getPlayers()[1]);
+				sendBadFeedback(index);
+				if(getPlayers()[index].getId() == 0) {
+					sendGoodFeedback(1);
 				} else {
-					sendGoodFeedback(getPlayers()[0]);
+					sendGoodFeedback(0);
 				}
 			} catch (IOException e) {
 				e.printStackTrace();

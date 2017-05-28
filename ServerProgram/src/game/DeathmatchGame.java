@@ -16,13 +16,13 @@ public class DeathmatchGame extends Game {
 		firerate = new int[2];
 	}
 
-	public void sendBadFeedback(Player player) throws IOException {
-		sendToPhone("BAD MOVE! " +  player.getScore(), player.getId());
+	public void sendBadFeedback(int index) throws IOException {
+		sendToPhone("BAD MOVE! " +  getPlayers()[index].getScore(), getPlayers()[index].getId());
 	}
 
-	public void sendGoodFeedback(Player player) throws IOException {
-		player.addScore();
-		sendToPhone("GOOD MOVE! " +  player.getScore(), player.getId());
+	public void sendGoodFeedback(int index) throws IOException {
+		getPlayers()[index].addScore();
+		sendToPhone("GOOD MOVE! " +  getPlayers()[index].getScore(), getPlayers()[index].getId());
 	}
 	
 	public void movePlayer(int index) throws IOException {
@@ -38,19 +38,19 @@ public class DeathmatchGame extends Game {
 		setInput(input);
 		
 		for(int i = 0; i < getPlayers().length; i++) {
-			if(redPressed(getPlayers()[i]) && position[i] < 2) {
+			if(redPressed(i) && position[i] < 2) {
 				position[i] += 1;
 				movePlayer(i);
 			}
 			
-			if(greenPressed(getPlayers()[i]) && position[i] > 0) {
+			if(greenPressed(i) && position[i] > 0) {
 				position[i] -= 1;
 				movePlayer(i);
 			}
 			
-			if(checkGoodInput(getPlayers()[i])) {
-				sendGoodFeedback(getPlayers()[i]);
-				sendBadFeedback(getPlayers()[i == 0 ? 1 : 0]);
+			if(checkGoodInput(i)) {
+				sendGoodFeedback(i);
+				sendBadFeedback(i == 0 ? 1 : 0);
 			}
 		}
 		
@@ -64,8 +64,8 @@ public class DeathmatchGame extends Game {
 		}
 	}
 
-	public boolean checkGoodInput(Player player) {
-		if(yellowPressed(player) && position[player.getId()] == position[player.getId() == 0 ? 1 : 0]) {
+	public boolean checkGoodInput(int index) {
+		if(yellowPressed(index) && position[index] == position[index == 0 ? 1 : 0]) {
 			return true;
 		}
 		

@@ -28,7 +28,7 @@ public class ClientView extends JPanel {
 	private JButton joinButton = new JButton("JOIN");
 	private JButton logOut = new JButton("Logut");
 	
-	private Color[] colors = new Color[]{Color.GREEN, Color.YELLOW, Color.RED};
+	private Color[] colors = new Color[]{Color.RED, Color.YELLOW, Color.GREEN};
 	private String[] gameNames = new String[]{" ", "Puzzle Game", "Traffic Game", "Duel Game"};
 	
 	private JLabel feedback = new JLabel();

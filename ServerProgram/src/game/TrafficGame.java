@@ -57,7 +57,7 @@ public class TrafficGame extends Game {
 			hasPressedYellow[i] = false;
 			
 			if(lightState == RED) {
-				getPlayers()[i].setScreenBit(2);
+				getPlayers()[i].setScreenBit(0);
 				speed = 0;
 				fromRed = true;
 			}
@@ -65,13 +65,13 @@ public class TrafficGame extends Game {
 			if(lightState == YELLOW) {
 				getPlayers()[i].setScreenBit(1);
 				if(fromRed) {
-					getPlayers()[i].setScreenBit(2);
+					getPlayers()[i].setScreenBit(0);
 				}
 				speed = 2;
 			}
 			
 			if(lightState == GREEN) {
-				getPlayers()[i].setScreenBit(0);
+				getPlayers()[i].setScreenBit(2);
 				fromRed = false;
 				speed = 0;
 			}
@@ -83,8 +83,8 @@ public class TrafficGame extends Game {
 	 * Send bad move and the score to the player
 	 * @param player the player to send bad feedback to
 	 */
-	public void sendBadFeedback(Player player) throws IOException {
-		sendToPhone("BAD MOVE!" +  player.getScore(), player.getId());
+	public void sendBadFeedback(int index) throws IOException {
+		sendToPhone("BAD MOVE!" +  getPlayers()[index].getScore(), index);
 	}
 	
 	/**
@@ -92,10 +92,10 @@ public class TrafficGame extends Game {
 	 * the player doesn't continuesly press after not pressing
 	 * @param player the player to send good feedback to
 	 */
-	public void sendGoodFeedback(Player player) throws IOException {
-		player.addScore();
-		sendToPhone("GOOD MOVE!"  +  player.getScore(), player.getId());
-		takeProgressStep(player.getId());
+	public void sendGoodFeedback(int index) throws IOException {
+		getPlayers()[index].addScore();
+		sendToPhone("GOOD MOVE!"  +  getPlayers()[index].getScore(), index);
+		takeProgressStep(index);
 		setInput("");
 	}
 	
@@ -105,17 +105,17 @@ public class TrafficGame extends Game {
 	 * @param the player to check
 	 * @return if the player did good
 	 */
-	public boolean checkGoodInput(Player player) {
-		boolean condition = (redPressed(player) || yellowPressed(player) || greenPressed(player));
+	public boolean checkGoodInput(int index) {
+		boolean condition = (redPressed(index) || yellowPressed(index) || greenPressed(index));
 	
 		try {
-			if(condition && (lightState == GREEN || (lightState == YELLOW && !hasPressedYellow[player.getId()] && fromRed))) {
+			if(condition && (lightState == GREEN || (lightState == YELLOW && !hasPressedYellow[index] && fromRed))) {
 				if(lightState == YELLOW)
-					hasPressedYellow[player.getId()] = true;
-				sendGoodFeedback(player);
+					hasPressedYellow[index] = true;
+				sendGoodFeedback(index);
 			}
-			else if(condition && (lightState != GREEN || (lightState == YELLOW && hasPressedYellow[player.getId()]) || lightState == RED))
-				sendBadFeedback(player);
+			else if(condition && (lightState != GREEN || (lightState == YELLOW && hasPressedYellow[index]) || lightState == RED))
+				sendBadFeedback(index);
 			else {
 				
 			}
@@ -155,7 +155,7 @@ public class TrafficGame extends Game {
 		checkIfWon();
 		
 		for(int i = 0; i < getPlayers().length; i++) {
-			checkGoodInput(getPlayers()[i]);
+			checkGoodInput(i);
 			getPlayers()[i].setAmountPressed(0);
 			getPlayers()[i].flushColorsPressed();
 		}

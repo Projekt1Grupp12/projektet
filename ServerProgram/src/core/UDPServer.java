@@ -18,8 +18,7 @@ import game.TrafficGame;
  * @author tom.leonardsson
  *
  */
-public class UDPServer implements Runnable
-{	
+public class UDPServer implements Runnable {	
 	final int RECIVE_BUFFER_SIZE = BetterRandom.powerOfTwo(5);
 	
 	public static final String EXIT_INSTRUCTION = "exit";
@@ -348,9 +347,7 @@ public class UDPServer implements Runnable
 						for(int i = 0; i < games.length; i++)
 							t += games[i].getName() + ((i != games.length-1) ? ";" : "");
 						sendToPhone(t, 0);
-					}
-					
-					
+					}			
 					
 					if(input.split(";").length != 1 && input.split(";")[0].equals(CHOOSE_GAME_REQUEST_INSTRUCTION) && input.split(";")[1].equals("0")) {
 						send(CHOOSE_GAME_INSTRUCTION, phoneIps[0], port+1);

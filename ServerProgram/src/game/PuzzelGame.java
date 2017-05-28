@@ -39,18 +39,18 @@ public class PuzzelGame extends Game {
 	 * Send bad move and the score to the player
 	 * @param player the player to send bad feedback to
 	 */
-	public void sendBadFeedback(Player player) throws IOException {
-		sendToPhone("BAD MOVE! " +  player.getScore(), player.getId());
+	public void sendBadFeedback(int index) throws IOException {
+		sendToPhone("BAD MOVE! " +  getPlayers()[index].getScore(), index);
 	}
 
 	/**
 	 * Raise the player score, send good move and score and move the engine one step
 	 * @param player the player to send good feedback to
 	 */
-	public void sendGoodFeedback(Player player) throws IOException {
-		player.addScore();
-		sendToPhone("GOOD MOVE! " +  player.getScore(), player.getId());
-		takeProgressStep(player.getId());
+	public void sendGoodFeedback(int index) throws IOException {
+		getPlayers()[index].addScore();
+		sendToPhone("GOOD MOVE! " +  getPlayers()[index].getScore(), index);
+		takeProgressStep(index);
 	}
 	
 	/**
@@ -58,22 +58,22 @@ public class PuzzelGame extends Game {
 	 * @param player the player to check
 	 * @return if the player has pressed a lit up color
 	 */
-	public boolean checkGoodInput(Player player) {
-		for(int i = 0; i < player.lightsOn().length; i++) {
-			if(player.lightsOn()[i] && colorsPressed(player)[i] && !player.getColorsPressed()[i]) {
-				player.setAmountPressed(player.getAmountPressed()+1);
-				player.setColorsPressed(true, i);
-				player.clearMaskBit(i);
+	public boolean checkGoodInput(int index) {
+		for(int i = 0; i < getPlayers()[index].lightsOn().length; i++) {
+			if(getPlayers()[index].lightsOn()[i] && colorsPressed(index)[i] && !getPlayers()[index].getColorsPressed()[i]) {
+				getPlayers()[index].setAmountPressed(getPlayers()[index].getAmountPressed()+1);
+				getPlayers()[index].setColorsPressed(true, i);
+				getPlayers()[index].clearMaskBit(i);
 				try {
 					sendToArdurino(setupFullScreen() + "");
-					sendGoodFeedback(player);
+					sendGoodFeedback(index);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			} else {
-				if(!player.lightsOn()[i] && colorsPressed(player)[i] || colorsPressed(player)[i] && player.getColorsPressed()[i]) {
+				if(!getPlayers()[index].lightsOn()[i] && colorsPressed(index)[i] || colorsPressed(index)[i] && getPlayers()[index].getColorsPressed()[i]) {
 					try {
-						sendBadFeedback(player);
+						sendBadFeedback(index);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -81,7 +81,7 @@ public class PuzzelGame extends Game {
 			}
 		}
 		
-		return player.getAmountPressed() == player.amountLightsOn() && player.amountLightsOn() != 0;
+		return getPlayers()[index].getAmountPressed() == getPlayers()[index].amountLightsOn() && getPlayers()[index].amountLightsOn() != 0;
 	}
 	
 	/**
@@ -159,7 +159,7 @@ public class PuzzelGame extends Game {
 				changeLights(i);
 				break;
 			}
-			if(!gameOver && checkGoodInput(getPlayers()[i])) {
+			if(!gameOver && checkGoodInput(i)) {
 				getPlayers()[i].setAmountPressed(0);
 				getPlayers()[i].flushColorsPressed();
 				changeLights(i);

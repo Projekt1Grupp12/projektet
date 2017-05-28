@@ -166,14 +166,14 @@ public abstract class Game implements Runnable {
 	 * @param player the player that is getting the feedback
 	 * @throws IOException
 	 */
-	public abstract void sendBadFeedback(Player player) throws IOException;
+	public abstract void sendBadFeedback(int index) throws IOException;
 	
 	/**
 	 * Send good feedback to a player
 	 * @param player the player that is getting the feedback
 	 * @throws IOException
 	 */
-	public abstract void sendGoodFeedback(Player player) throws IOException;
+	public abstract void sendGoodFeedback(int index) throws IOException;
 	
 	/**
 	 * The main game loop, where game logic is updated
@@ -187,15 +187,15 @@ public abstract class Game implements Runnable {
 	 * @param player the player to check
 	 * @return the players preformance
 	 */
-	public abstract boolean checkGoodInput(Player player);
+	public abstract boolean checkGoodInput(int index);
 	
 	/**
 	 * Get the colors pressed
 	 * @param player the players button to check
 	 * @return the pressed colors
 	 */
-	public boolean[] colorsPressed(Player player) {
-		return new boolean[]{greenPressed(player), yellowPressed(player), redPressed(player)};
+	public boolean[] colorsPressed(int index) {
+		return new boolean[]{greenPressed(index), yellowPressed(index), redPressed(index)};
 	}
 	
 	/**
@@ -203,8 +203,8 @@ public abstract class Game implements Runnable {
 	 * @param player the player to check
 	 * @return if red is pressed
 	 */
-	public boolean redPressed(Player player) {
-		return input.equals("1;"+player.getId());
+	public boolean redPressed(int index) {
+		return input.equals("1;"+index);
 	}
 	
 	/**
@@ -212,8 +212,8 @@ public abstract class Game implements Runnable {
 	 * @param player the player to check
 	 * @return if green is pressed
 	 */
-	public boolean greenPressed(Player player) {
-		return input.equals("3;"+player.getId());
+	public boolean greenPressed(int index) {
+		return input.equals("3;"+index);
 	}
 	
 	/**
@@ -221,8 +221,8 @@ public abstract class Game implements Runnable {
 	 * @param player the player to check
 	 * @return if yellow is pressed
 	 */
-	public boolean yellowPressed(Player player) {
-		return input.equals("2;"+player.getId());
+	public boolean yellowPressed(int index) {
+		return input.equals("2;"+index);
 	}
 	
 	/**
