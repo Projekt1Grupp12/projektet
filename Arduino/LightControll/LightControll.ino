@@ -43,7 +43,7 @@ void setup() {
   Udp.begin(localPort);
 
   Serial.begin(9600);
-  //sätter pinnarna på shielden till outputs.
+  //sätter pinnarna på shielden, dem som används till outputs.
   pinMode(2, OUTPUT);
   pinMode(3, OUTPUT);
   pinMode(4, OUTPUT);
@@ -120,6 +120,7 @@ void loop() {
   // if there's data available, read a packet
   int packetSize = Udp.parsePacket();
   Udp.read(packetBuffer, 16);
+  //läser av A1 pinnen /knappen
   int sensorValue = analogRead(A1);
   packet = atoi(packetBuffer);
   int motorInt;
@@ -128,7 +129,7 @@ void loop() {
     turnOnLight(packet);
  // Serial.println(sensorValue);    
   
-
+ // sätter på motorerna en kort stund så att inte den rör sig för länge
   if(packet == -3){
     motor1Clock = 1;
   }
@@ -158,7 +159,7 @@ void loop() {
     Serial.println(messageToServer);
     checkIfSent = packet;
   }
-  
+  // kollar om knappen är nedtryckt, om den är så skicka en -2 udp paket till servern. Kollar också så att inte kanppen spammar servern utan skickar bara e gång.
   if(sensorValue >= 1023){
     sensorValue = 1;
     Udp.beginPacket(serverIp, localPort);
