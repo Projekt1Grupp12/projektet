@@ -142,6 +142,7 @@ public class ServerView extends JPanel {
 		messagePanel.add(createClient);
 		messagePanel.add(games);
 		messagePanel.add(twoPlayers);
+		twoPlayers.setSelected(true);
 		twoPlayers.addActionListener(b);
 		ItemChangeListener itemChangeListener = new ItemChangeListener();
 		games.addItemListener(itemChangeListener);
