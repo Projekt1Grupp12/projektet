@@ -419,13 +419,13 @@ public class UDPServer implements Runnable {
 				}
 				else {
 					if(!game.realTime) game.update(input);
-				}
-				
-				if(input.split(";")[0].equals(LOG_OUT_INSTRUCTION)) {
-					sendToPhone(LOG_OUT_ACK_INSTRUCTION, Integer.parseInt(input.split(";")[1]));
-					send(LOG_OUT_ACK_INSTRUCTION, phoneIps[Integer.parseInt(input.split(";")[1]) == 0 ? 1 : 0], 4445);
-					hasStartedGame = false;
-					resetSession();
+					
+					if(input.split(";")[0].equals(LOG_OUT_INSTRUCTION)) {
+						sendToPhone(LOG_OUT_ACK_INSTRUCTION, Integer.parseInt(input.split(";")[1]));
+						send(LOG_OUT_ACK_INSTRUCTION, phoneIps[Integer.parseInt(input.split(";")[1]) == 0 ? 1 : 0], 4445);
+						hasStartedGame = false;
+						resetSession();
+					}
 				}
 
 				receiveData = new byte[RECIVE_BUFFER_SIZE];
