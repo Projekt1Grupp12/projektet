@@ -28,4 +28,7 @@
     <string name="background1">background1</string>
     <string name="backgground2">backgground2</string>
     <string name="background3">background3</string>
+    <string name="_9">9</string>
+    <string name="_45">45</string>
+    <string name="score_limit">Score limit:</string>
 </resources>
