@@ -14,7 +14,7 @@ import java.io.IOException;
  * It has three buttons with different colors and a three TextView.
  * TextView shows different information to the user.(Move, points)
  */
-public class DeathmatchGame extends Game{
+public class DeathMatchGame extends Game{
     private static final String TAG = "debugPuzzleGame";
     private MediaPlayer mpDeathmatch = null;
 
@@ -32,7 +32,7 @@ public class DeathmatchGame extends Game{
         setContentView(R.layout.game_main_layout);
         final TextView viewToChange = (TextView) findViewById(R.id.textPuzzleGame);
         viewToChange.setText("Deathmatch Game");
-        Log.d(TAG, "DeathmatchGame, onCreate method. Creating an intent");
+        Log.d(TAG, "DeathMatchGame, onCreate method. Creating an intent");
         Intent intent = getIntent();
         Player player = (Player) intent.getSerializableExtra("player");
         setPlayer(player);
