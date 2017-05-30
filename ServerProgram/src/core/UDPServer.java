@@ -342,6 +342,13 @@ public class UDPServer implements Runnable {
 				//System.out.println(hasStartedGame);
 
 				if(!hasStartedGame) {
+					if(input.split(";")[0].equals(LOG_OUT_INSTRUCTION)) {
+						sendToPhone(LOG_OUT_ACK_INSTRUCTION, Integer.parseInt(input.split(";")[1]));
+						send(LOG_OUT_ACK_INSTRUCTION, phoneIps[Integer.parseInt(input.split(";")[1]) == 0 ? 1 : 0], 4445);
+						hasStartedGame = false;
+						resetSession();
+					}
+					
 					if(input.equals(GET_GAMES_INSTRUCTION)) {
 						String t = "";
 						for(int i = 0; i < games.length; i++)
