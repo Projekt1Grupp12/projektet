@@ -167,7 +167,12 @@ public class SuperActivity extends AppCompatActivity {
      * @return boolean
      */
     public boolean isShowingProgressDialog() {
-        return pd.isShowing();
+        try{
+            return pd.isShowing();
+        }catch(NullPointerException e){
+            Log.d(TAG, e.toString());
+            return false;
+        }
     }
 
     /**
