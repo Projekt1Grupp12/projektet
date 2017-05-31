@@ -48,7 +48,7 @@ public class Parser {
 	
 	private int count;
 	
-	private boolean firstBitHalf = false;
+	private boolean firstBitHalf = true;
 	
 	private Instruction currentInstruction;
 	
@@ -59,7 +59,7 @@ public class Parser {
 	}
 	
 	public void update(String input) {
-		if(!input.equals("-2"))
+		if(!input.equals("-2")) {
 			for(int i = 0; i < 3; i++) {
 				if(Integer.parseInt(input.charAt(0) + "") == (i+1)) {
 					if(currentPart.charAt(i) == '0') {
@@ -77,33 +77,55 @@ public class Parser {
 					}
 				}
 			}
+			input = "";
+		}
 		
 		if(input.equals(ENTER_INSTRUCTION)) {
 			currentLine += currentPart;
-			System.out.println(currentLine);
+			currentPart = "000";
+			
 			if(!firstBitHalf) {
 				if(count == 0) {
-					currentInstruction = getInstruction(Integer.parseInt(currentLine));
+					currentInstruction = getInstruction(Integer.parseInt(currentLine, 2));
 				}
+				
+				if(count == 0) System.out.println(currentLine + " | " + getInstruction(Integer.parseInt(currentLine, 2)).getName());
+				else System.out.println(currentLine);
 				
 				currentLine += " ";
 				
 				count += 1;
 				
-				if(currentInstruction != null && count > currentInstruction.getParameters().length) {
-					total += currentLine + "\n";
+				if(currentInstruction != null && (count > currentInstruction.getParameters().length || currentInstruction.getParameters()[0] == -1)) {
+					String newLine = currentLine;
+					
+					if(currentInstruction.getParameters()[0] != -1) {
+						newLine = "";
+						String t[] = currentLine.split(" ");
+					
+						for(int i = 0; i < t.length; i++) {
+							if(i == 0) newLine += getInstruction(Integer.parseInt(t[i], 2)).getName()  + ((i != t.length-1) ? " " : "");
+							else newLine += translateParamter(Integer.parseInt(t[0], 2), i-1, Integer.parseInt(t[i], 2)) + ((i != t.length-1) ? " " : "");
+						}
+					}
+					if(newLine.equals("000000 ")) newLine = "NOP";
+					total += newLine + "\n";
 					currentLine = "";
 					currentPart = "000";
 					count = 0;
+					currentInstruction = null;
 				}
 			}
 			
 			firstBitHalf = !firstBitHalf;
 			input = "";
 		}
+		
+		System.out.println(total);
 	}
 	
 	public String translateParamter(int value, int index, int parameter) {
+		System.out.println("para: " + parameter);
 		if(getInstruction(value).getParameters()[index] == REGISTER) {
 			if(parameter <= 32) return "r"+parameter;
 			if(parameter <= 41) return PINS_PORTS[parameter-33];
@@ -141,10 +163,29 @@ public class Parser {
 	
 	public static void main(String[] args) {
 		Parser p = new Parser();
+		p.update("-2");
+		p.update("-2");
 		
 		p.update("2");
 		p.update("-2");
-		p.update("1");
+		p.update("-2");
+		p.update("2");
+		p.update("-2");
+		p.update("2");
+		p.update("-2");
+		p.update("3");
+		p.update("-2");
+		p.update("-2");
+		
+		p.update("3");
+		p.update("-2");
+		p.update("-2");
+		p.update("-2");
+		
+		p.update("2");
+		p.update("-2");
+		p.update("2");
+		p.update("-2");
 		p.update("-2");
 	}
 }
