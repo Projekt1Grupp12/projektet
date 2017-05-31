@@ -1,5 +1,10 @@
 package lysdiodOS;
 
+/**
+ * 
+ * @author tom.leonardsson
+ *
+ */
 public class Parser {
 	private final int REGISTER = 0, STRING = 1, NUMBER = 2;
 	

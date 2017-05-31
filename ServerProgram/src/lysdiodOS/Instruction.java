@@ -1,5 +1,10 @@
 package lysdiodOS;
 
+/**
+ * 
+ * @author tom.leonardsson
+ *
+ */
 public class Instruction {
 	private int value;
 	
