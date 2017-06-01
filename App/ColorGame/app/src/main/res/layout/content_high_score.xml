@@ -39,7 +39,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/imageView4"
-        android:layout_marginTop="8dp" />
+        android:layout_marginTop="44dp" />
 
 
 </android.support.constraint.ConstraintLayout>
