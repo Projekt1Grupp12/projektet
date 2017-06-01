@@ -14,7 +14,7 @@ import java.io.IOException;
  * This class is a super class for every game in this application. It is created to store variables
  * and methods shared by all game classes.
  */
-public class Game extends AppCompatActivity implements View.OnClickListener {
+public abstract class Game extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "debugGame";
     private static final String GREEN = "1";
     private static final String YELLOW = "2";

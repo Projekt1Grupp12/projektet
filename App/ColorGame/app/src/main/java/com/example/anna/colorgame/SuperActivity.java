@@ -10,7 +10,7 @@ import android.util.Log;
  * This class is a super class for MainFrame, MainMenu, ChooseGame and HighScore activities.
  * It has a set of variables and methods used in those activities.
  */
-public class SuperActivity extends AppCompatActivity {
+public abstract class SuperActivity extends AppCompatActivity {
     private static final String TAG = "debug SuperActivity";
     private ReceiveDataThread receiveDataThread;
     private Thread thread;
