@@ -16,9 +16,9 @@ import java.io.IOException;
  */
 public class Game extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "debugGame";
-    private static final String RED = "1";
+    private static final String GREEN = "1";
     private static final String YELLOW = "2";
-    private static final String GREEN = "3";
+    private static final String RED = "3";
     private static final String SEMICOLON = ";";
     private String data = "";
     private Player player;
