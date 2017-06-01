@@ -109,7 +109,7 @@ public class DeathmatchGame extends Game {
 	 * @return the name of the game
 	 */
 	public String getName() {
-		return "Deathmatch Game";
+		return "DeathmatchGame";
 	}
 	
 	/**

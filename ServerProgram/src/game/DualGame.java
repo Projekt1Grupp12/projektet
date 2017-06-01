@@ -49,6 +49,7 @@ public class DualGame extends Game {
 	 * @param index the player to send good feedback to
 	 */
 	public void sendGoodFeedback(int index) throws IOException {
+		getPlayer(index).addScore();
 		sendToPhone("GOOD MOVE! " +  getPlayer(index).getScore(), index);
 	}
 	
