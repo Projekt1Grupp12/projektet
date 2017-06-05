@@ -72,6 +72,8 @@ public class UDPServer implements Runnable {
 	
 	public boolean reset;
 	
+	private int playersConnected = 0;
+	
 	/**
 	 * Create a server with a specifc port
 	 * @param port
@@ -96,7 +98,9 @@ public class UDPServer implements Runnable {
 	 * Setup the IP address
 	 */
 	public void setup() {
-		phoneIps = getIps();
+		byte[] receiveData = new byte[RECIVE_BUFFER_SIZE];
+		DatagramPacket packet = new DatagramPacket(receiveData, receiveData.length);
+		phoneIps = getIps(packet);
 		ardurinoIp = "192.168.0.2";
 		hasSetup = true;
 	}
@@ -140,51 +144,101 @@ public class UDPServer implements Runnable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		return ips;
 	}
-	
+
 	/**
 	 * Listen for messages to pick up client IP address and their player name and give them a spot and player id
 	 * @return the IP address of the clients
 	 */
-	public String[] getIps() {
+	public String[] getIps(DatagramPacket packet) {
 		String[] ips = new String[2];
-		byte[] receiveData = new byte[RECIVE_BUFFER_SIZE];
-		
-		DatagramPacket packet = new DatagramPacket(receiveData, receiveData.length);
+		//		byte[] receiveData = new byte[RECIVE_BUFFER_SIZE];
+
+		//		DatagramPacket packet = new DatagramPacket(receiveData, receiveData.length);
 		try {
+			/**
+			 * Added a while loop in order to wait for 2 players to connect
+			 * and at the same time be able to handle requests from userID 0
+			 * if userID 0 is connected and waiting for another player to connect.
+			 * 
+			 */
 			serverSocket = new DatagramSocket(4444);
-
-			serverSocket.receive(packet);
-			inputHistory = putTogether(packet.getData()) + "  : " + (inputHistoryIndex++) + " : " + packet.getAddress().getHostName() + "\n" + inputHistory;
-			ips[0] = packet.getAddress().getHostName();
-			collectedPlayerNames[0] = putTogether(packet.getData());
-			System.out.println(collectedPlayerNames[0]);
-			while(putTogether(packet.getData(), 2).equals(START_GAME_INSTRUCTION)) {
+			while(playersConnected<2){
 				serverSocket.receive(packet);
-				ips[0] = packet.getAddress().getHostName();
-			}
-			send("0", ips[0]);
-			System.out.println(ips[0] + " | ip 0");
-			serverSocket.receive(packet);
-			inputHistory = putTogether(packet.getData()) + "  : " + (inputHistoryIndex++) + " : " + packet.getAddress().getHostName() + "\n" + inputHistory;
-			ips[1] = packet.getAddress().getHostName();
-			collectedPlayerNames[1] = putTogether(packet.getData());
-			System.out.println(collectedPlayerNames[1]);
-			while(ips[0].equals(ips[1]) && playWithTwo || putTogether(packet.getData(), 2).equals(START_GAME_INSTRUCTION)) {
-				serverSocket.receive(packet);
+				inputHistory = putTogether(packet.getData()) + "  : " + (inputHistoryIndex++) + " : " + packet.getAddress().getHostName() + "\n" + inputHistory;
 
-				if(putTogether(packet.getData()).split(";").length != 0 && putTogether(packet.getData()).split(";")[0].equals(HIGHSCORE_INSTRUCTION)) {
-					send(game.getHighscoreList(), ips[Integer.parseInt(putTogether(packet.getData()).split(";")[1])]);
-					send(game.getHighscoreList(), "localhost");
-				}
-				ips[1] = packet.getAddress().getHostName();
-			}
-			this.send("1", ips[1]);
-			send(CHOOSE_GAME_INSTRUCTION, ips[0], port+1);
-			System.out.println(ips[1] + " | ip 1");
+				ips[playersConnected] = packet.getAddress().getHostName();
+				playersConnected++;
+				/**
+				 * Is this while-loop a safety check? Meaning to prevent wrong data from
+				 * blocking the server?
+				 */
+				
+				if(playersConnected == 1)
+					while(ips[playersConnected-1].equals(ips[playersConnected]) && playWithTwo || putTogether(packet.getData(), 2).equals(START_GAME_INSTRUCTION)) {
+						System.out.println("First while-loop");
+						serverSocket.receive(packet);
+
+						if(putTogether(packet.getData()).split(";").length != 0 && putTogether(packet.getData()).split(";")[playersConnected-1].equals(HIGHSCORE_INSTRUCTION)) {
+							send(game.getHighscoreList(), ips[Integer.parseInt(putTogether(packet.getData()).split(";")[playersConnected])]);
+							send(game.getHighscoreList(), "localhost");
+						}
+							ips[playersConnected] = packet.getAddress().getHostName();
+							playersConnected++;
+					}
+
 			
+				while(putTogether(packet.getData(), 2).equals(START_GAME_INSTRUCTION)) {
+					System.out.println("Second while-loop");
+					serverSocket.receive(packet);
+					ips[playersConnected] = packet.getAddress().getHostName();
+					playersConnected++;
+				}
+
+				send(String.valueOf(playersConnected-1), ips[playersConnected-1]);
+				System.out.println(ips[playersConnected] + " | ip " + String.valueOf(playersConnected));
+				
+				/**
+				 * Pasted code block to handle request from userID 0 while waiting 
+				 * for usderID 1 to connect.
+				 */
+				String input = putTogether(packet.getData());
+				if(input.split(";")[0].equals(TIMEOUT_INSTRUCTION)) {
+					sendToPhone(TIMEOUT_ACK_INSTRUCTION, Integer.parseInt(input.split(";")[1]));
+					sendToClientSimulator(TIMEOUT_ACK_INSTRUCTION, Integer.parseInt(input.split(";")[1]));
+				}
+
+				if(input.split(";")[0].equals(HIGHSCORE_INSTRUCTION)) {
+					sendToPhone(game.getHighscoreList(), Integer.parseInt(input.split(";")[1]));
+					sendToClientSimulator(game.getHighscoreList(), Integer.parseInt(input.split(";")[1]));
+				}
+				if(input.split(";")[0].equals(LOG_OUT_INSTRUCTION)) {
+					sendToPhone(LOG_OUT_ACK_INSTRUCTION, Integer.parseInt(input.split(";")[1]));
+					send(LOG_OUT_ACK_INSTRUCTION, phoneIps[Integer.parseInt(input.split(";")[1]) == 0 ? 1 : 0], 4445);
+					hasStartedGame = false;
+					resetSession();
+				}
+
+				//Moved this codeblock from top to bottom
+
+				collectedPlayerNames[playersConnected] = putTogether(packet.getData());
+				System.out.println(collectedPlayerNames[playersConnected]);
+				//Added code:
+				//Next player that will connect
+				System.out.println("playersConnected: " + playersConnected);
+				/**
+				 * ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ new code ^^^^^^^^^^^^^^^^^^^^^^^^^
+				 */
+			}
+			/**
+			 * Moved this outside while-loop because this code is executed when 2 players are
+			 * connected. Condition for above while-loop to terminate is that 2 players are 
+			 * connected
+			 */
+			send(CHOOSE_GAME_INSTRUCTION, ips[playersConnected-1], port+1);
+			System.out.println("Closing socket...");
 			serverSocket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
